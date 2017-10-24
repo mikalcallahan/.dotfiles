@@ -1,0 +1,11 @@
+crisidev/chunkwm/chunkwm
+git
+neofetch
+neovim
+node
+pipes-sh
+koekeishiya/formulae/skhd
+swiftlint
+tmux
+zsh
+zsh-completions

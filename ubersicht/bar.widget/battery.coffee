@@ -1,0 +1,24 @@
+command: "pmset -g batt | egrep '([0-9]+\%).*' -o --colour=auto | cut -f1 -d';'"
+
+refreshFrequency: 1000 # ms
+
+render: (output) ->
+  "bat <span>#{output}</span>"
+
+style: """
+  -webkit-font-smoothing: antialiased
+  align-items: center
+  background-color: #98bcbd
+  color: #171717
+  display: flex
+  font: .7em 'SF Mono'
+  height: 30px
+  justify-content: center
+  right: 7.75em
+  padding: 0 1em
+  text-align: center
+  text-transform: lowercase
+  top: 0
+  width: 6%
+"""
+#background-color: #ffde99 #ffbebd #dfbebd

@@ -1,0 +1,69 @@
+"  Info: neovimrc
+"  Author: Mikal Callahan
+
+"  Begin neovimrc
+
+" Vim Plug (https://github.com/junegunn/vim-plug)
+" Specify a directory for plugins
+" - For Neovim: ~/.local/share/nvim/plugged
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.local/share/nvim/plugged')
+
+" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
+Plug 'junegunn/vim-easy-align'
+Plug 'Shougo/deoplete.nvim' " nvim keyboard completion
+Plug 'keith/swift.vim' " swift syntax highlight
+Plug 'mitsuse/autocomplete-swift' " swift syntax autocomplete
+Plug 'kchmck/vim-coffee-script' " coffee script highlight
+Plug 'wakatime/vim-wakatime' " wakatime
+Plug 'itchyny/lightline.vim' " lightline statusbar
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ }
+Plug 'Shutnik/jshint2.vim' " JS Linter
+set runtimepath+=~/.vim/bundle/jshint2.vim/
+Plug 'hail2u/vim-css3-syntax' " CSS syntax highlight
+augroup VimCSS3Syntax
+  autocmd!
+
+  autocmd FileType css setlocal iskeyword+=-
+augroup END
+Plug 'tpope/vim-haml' " SCSS/SASS syntax highlight
+" Plug 'scrooloose/nerdtree' " File explorer
+" autocmd vimenter * NERDTree " NERDTree open on start
+
+" Initialize plugin system
+call plug#end()
+
+" Auto-indent
+set autoindent
+
+" Display line numbers
+set number
+
+" Read file type
+filetype on
+filetype indent on
+filetype plugin on
+
+" Auto reload files changed outside of vim
+set autoread
+
+" Shift and Tab width
+set shiftwidth=2
+set softtabstop=2
+
+" Smart cases
+set smartcase
+
+" Word Wrap
+set wrap
+
+" Syntax highlighting
+syntax on
+
+" Hide mode (because of lightline)
+set noshowmode
+
+" Open files in new tab
+let g:netrw_browse_split = 3
