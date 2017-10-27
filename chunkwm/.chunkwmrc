@@ -30,10 +30,10 @@ chunkc set global_desktop_offset_left    35 #20
 chunkc set global_desktop_offset_right   35 #20
 chunkc set global_desktop_offset_gap     15 
 
-#chunkc set 1_desktop_offset_top          190
-#chunkc set 1_desktop_offset_bottom       190
-#chunkc set 1_desktop_offset_left         190
-#chunkc set 1_desktop_offset_right        190
+chunkc set 1_desktop_offset_top          80
+chunkc set 1_desktop_offset_bottom       50
+chunkc set 1_desktop_offset_left         200
+chunkc set 1_desktop_offset_right        200
 #chunkc set 1_desktop_offset_gap          15
 
 #chunkc set 3_desktop_offset_top          190
@@ -100,6 +100,7 @@ chunkc core::load ffm.so
 #       to pass value containing a whitespace.
 #
 
+chunkc tiling::rule--owner \"Apple Music\" --state float
 chunkc tiling::rule --owner Spotify --role AXWindow --subrole AXDialog --state tile
 chunkc tiling::rule --owner Finder --name Copy --state float
 chunkc tiling::rule --owner \"App Store\" --state float
