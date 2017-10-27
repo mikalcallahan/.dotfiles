@@ -9,7 +9,7 @@ render: (output) ->
 style: """
   -webkit-font-smoothing: antialiased
   align-items: center
-  background-color: #98bcbd
+  background-color: transparent
   color: #171717
   display: flex
   font: .7em 'SF Mono'

@@ -17,9 +17,9 @@ style:
   background-color: #ffde99
   color: #99736e
   display: flex
-  font: .7em 'SF Mono'
-  height: 2.85em
-  justify-content: center
+  font: .4em 'SF Mono'
+  height: 30px
+  justify-content: flex-start
   left: 0
   text-align: center
   top: 0

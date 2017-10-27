@@ -12,4 +12,4 @@ style: """
   width: 100%
   z-index: -1
 """
-# background-color: #fbf8ef #171717 #616161 #4b4b4b
+# background-color: #fbf8ef #171717 #616161 #4b4b4b #98cbd

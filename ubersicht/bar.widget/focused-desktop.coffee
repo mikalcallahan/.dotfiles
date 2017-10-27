@@ -10,7 +10,7 @@ render: (output) ->
 style: """
   -webkit-font-smoothing: antialiased
   align-items: center
-  background-color: #ffde99 
+  background-color: #ffde99
   color: #171717
   display: flex
   font: .7em 'SF Mono'
@@ -19,7 +19,7 @@ style: """
   left: 0
   text-align: center
   top: 0
-  width: 6%;
+  width: 6%
 """
-# background-color: #ffbebd #98bb99 #98bcbd
+# background-color: #ffbebd #98bb99 #98bcbd #ffde99
 # color: #99736e #84a89a #fcfdfd
