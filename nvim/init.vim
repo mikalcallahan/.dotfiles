@@ -67,6 +67,9 @@ filetype on
 filetype indent on
 filetype plugin on
 
+" Set spell on for file types txt, latex, markdown
+autocmd FileType markdown, md, latex, tex, txt, text setlocal spell
+
 " Shift and Tab width
 set shiftwidth=2
 set softtabstop=2
@@ -79,3 +82,4 @@ syntax on
 
 " Word Wrap
 set wrap
+

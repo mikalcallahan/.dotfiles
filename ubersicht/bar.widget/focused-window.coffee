@@ -9,13 +9,13 @@ style: """
   -webkit-font-smoothing: antialiased
   align-items: center
   background-color: transparent
-  color: #171717
+  color: #e9e9e9
   display: flex
   font: .7em 'SF Mono'
   height: 30px
   justify-content: center
-  left: 6.8em
-  padding: 0 1em
+  left: 7em
+  padding: 0 1.5em
   text-align: center
   text-transform: lowercase
   top: 0
@@ -27,5 +27,5 @@ style: """
     white-space: nowrap
 """
 # background-color: #98bcbd #616161 #719672 #98bb99
-# color: #fcfdfd #84a89a #99736e #e9e9e9
+# color: #fcfdfd #84a89a #99736e #e9e9e9 #171717
 # whitespace: nowrap

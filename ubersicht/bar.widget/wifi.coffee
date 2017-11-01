@@ -8,8 +8,8 @@ render: (output) ->
 style: """
   -webkit-font-smoothing: antialiased
   align-items: center
-  background-color:#ffde99
-  color: #171717
+  background-color: #96bcdc
+  color: #333333
   display: flex
   font: .7em 'SF Mono'
   height: 30px
@@ -27,7 +27,7 @@ style: """
     white-space: nowrap
 """
 # background-color: #98bcbd #ffbebd #baddfc #dfbebd #98bb99 #ffde99
-
+# color: #171717
 ###  
 getWifiStatus: (status, netName, netIP) ->
 

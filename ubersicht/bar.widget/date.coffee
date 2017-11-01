@@ -10,7 +10,7 @@ style: """
   -webkit-font-smoothing: antialiased
   align-items: center
   background-color: transparent	
-  color: #171717
+  color: #e9e9e9
   display: flex
   font: .7em 'SF Mono'
   height: 30px
@@ -19,4 +19,4 @@ style: """
   top: 0
   width: 100%
   """
-#color: #EFF1F3 #e9e9e9
+#color: #EFF1F3 #e9e9e9 #171717
