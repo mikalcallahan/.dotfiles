@@ -1,6 +1,6 @@
 "  Info: neovimrc
 "  Author: Mikal Callahan
-
+"
 "  Begin neovimrc
 
 " Vim Plug (https://github.com/junegunn/vim-plug)
@@ -12,7 +12,9 @@ call plug#begin('~/.local/share/nvim/plugged')
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
 Plug 'junegunn/vim-easy-align' " beautify
 Plug 'junegunn/seoul256.vim' " seoul256 colorschme <3
-Plug 'Shougo/deoplete.nvim' " nvim keyboard completion
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " nvim keyboard completion
+let g:deoplete#enable_at_startup = 1 " use deoplete
+
 Plug 'keith/swift.vim' " swift syntax highlight
 Plug 'mitsuse/autocomplete-swift' " swift syntax autocomplete
 Plug 'kchmck/vim-coffee-script' " coffee script highlight
@@ -32,7 +34,9 @@ augroup VimCSS3Syntax
   autocmd FileType css setlocal iskeyword+=-
 augroup END
 Plug 'tpope/vim-haml' " SCSS/SASS syntax highlight
-" Plug 'scrooloose/nerdtree' " File explorer
+Plug 'tpope/vim-vinegar' "Tim Pope's Vinegar
+"Plug 'scrooloose/nerdtree' " File explorer
+
 " autocmd vimenter * NERDTree " NERDTree open on start
 
 " Initialize plugin system
@@ -61,6 +65,9 @@ set mouse=a
 
 " Open files in new tab
 let g:netrw_browse_split = 3
+
+" Open netrw with (Control - i)
+map <C-i> :Explore<CR>
 
 " Read file type
 filetype on

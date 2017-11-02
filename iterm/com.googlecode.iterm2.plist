@@ -576,13 +576,6 @@ Minimize</string>
 			<key>Text</key>
 			<string></string>
 		</dict>
-		<key>0xf72b-0x0</key>
-		<dict>
-			<key>Action</key>
-			<integer>4</integer>
-			<key>Text</key>
-			<string></string>
-		</dict>
 		<key>0xf72b-0x100000</key>
 		<dict>
 			<key>Action</key>
@@ -692,11 +685,11 @@ Minimize</string>
 	<key>NSWindow Frame SUUpdateAlert</key>
 	<string>330 306 620 392 0 0 1280 800 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>174 154 937 512 0 0 1280 800 </string>
+	<string>170 314 958 451 0 0 1280 800 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>200 50 880 670 0 0 1280 800 </string>
+	<string>200 55 880 318 0 0 1280 800 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>202 399 875 314 0 0 1280 800 </string>
+	<string>200 397 880 318 0 0 1280 800 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
 	<string>202 399 427 314 0 0 1280 800 </string>
 	<key>New Bookmarks</key>
@@ -2701,7 +2694,7 @@ Minimize</string>
 	<key>NoSyncInstallationId</key>
 	<string>0EAAF740-750B-4783-AFE6-E6E4723BD934</string>
 	<key>NoSyncLastTipTime</key>
-	<real>531098042.99313402</real>
+	<real>531273465.77824402</real>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
@@ -2733,6 +2726,8 @@ Minimize</string>
 		<string>0017</string>
 		<string>0018</string>
 		<string>0019</string>
+		<string>0020</string>
+		<string>0021</string>
 	</array>
 	<key>OpenTmuxWindowsIn</key>
 	<integer>0</integer>
@@ -2773,6 +2768,8 @@ Minimize</string>
 	<string>/Users/mikal/.dotfiles/iterm</string>
 	<key>PromptOnQuit</key>
 	<false/>
+	<key>SUAutomaticallyUpdate</key>
+	<true/>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUFeedAlternateAppNameKey</key>
@@ -2782,7 +2779,7 @@ Minimize</string>
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2017-10-30T20:32:36Z</date>
+	<date>2017-11-01T23:57:45Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>Secure Input</key>
@@ -2816,7 +2813,7 @@ Minimize</string>
 	<key>findMode_iTerm</key>
 	<integer>0</integer>
 	<key>iTerm Version</key>
-	<string>3.1.20171026-nightly</string>
+	<string>3.1.20171031-nightly</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>0</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>
