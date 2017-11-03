@@ -12,7 +12,11 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # tmux integration
 export TERM=screen-256color
 
-## alias
+# set nvim to default editor
+export VISUAL=nvim
+export EDITOR="$VISUAL"
+
+# #alias
 alias zshrc='nvim ~/.zshrc' # zshrc gets opened in neovim
 alias csusm='cd ~/Documents/school/csusm' # cd to csusm
 alias web='cd ~/Documents/programming/web' # cd to web
