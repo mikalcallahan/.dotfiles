@@ -31,7 +31,10 @@ alias brew-backup='brew leaves >> ~/.dotfiles/homebrew/homebrew-packages.txt' #	
 # alias wal-random='wal -i /Users/mikal/Pictures/wallpapers' # wal command for random wal
 
 ## user scripts
-#print 'Welcome Daddy,' # Print Daddy
+# print 'Welcome Daddy,' # Print Daddy
 ~/Documents/programming/scripts/QuoteScript/QuoteScript # launch QuoteScript [swift scripting]
+
+# load pywal colorscheme
+# (wal -r) # import colorscheme from wal [run in background '&', hide shell job message '()']
 
 source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" # prezto config

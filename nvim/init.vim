@@ -34,7 +34,7 @@ augroup VimCSS3Syntax
   autocmd FileType css setlocal iskeyword+=-
 augroup END
 Plug 'tpope/vim-haml' " SCSS/SASS syntax highlight
-Plug 'tpope/vim-vinegar' "Tim Pope's Vinegar
+Plug 'tpope/vim-vinegar' " Tim Pope's Vinegar
 "Plug 'scrooloose/nerdtree' " File explorer
 
 " autocmd vimenter * NERDTree " NERDTree open on start
@@ -75,7 +75,7 @@ filetype indent on
 filetype plugin on
 
 " Set spell on for file types txt, latex, markdown
-autocmd FileType markdown, md, latex, tex, txt, text setlocal spell
+autocmd FileType md, latex, tex, txt, text setlocal spell
 
 " Shift and Tab width
 set shiftwidth=2

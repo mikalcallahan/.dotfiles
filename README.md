@@ -5,9 +5,10 @@
 - iterm
 - nvim
 - skhd
+- tmux
 - ubersicht
 - zsh
 
 **_happy hunty_**
 
-#### updated: 24 october 2017
+#### updated: 09 November 2017
