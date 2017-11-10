@@ -26,6 +26,7 @@ alias mc='cd ~/Documents/school/mira-costa' # cd to mira costa
 alias nvimrc='nvim ~/.dotfiles/nvim/init.vim' # nvimrc to edit init.vim
 alias lh='ls -d .*' # show hidden files/directories only
 alias brew-backup='brew leaves >> ~/.dotfiles/homebrew/homebrew-packages.txt' #	backup homebrew packages
+alias shutdown='automator ~/.dotfiles/automator/shutdown.workflow' # end all applications and shutdown
 # alias brewfont='brew cask install caskroom/fonts/' # shortcut to install fonts a lil easier
 # alias vim=nvim	# vim = nvim
 # alias wal-random='wal -i /Users/mikal/Pictures/wallpapers' # wal command for random wal

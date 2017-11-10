@@ -8,11 +8,11 @@ render: (output) ->
 style: """
   -webkit-font-smoothing: antialiased
   align-items: center
-  background-color: #96bcdc
+  background-color: #dcabaa
   color: #333333
   display: flex
   font: .7em 'SF Mono'
-  height: 30px
+  height: 25px
   justify-content: center
   padding: 0 1em
   right: 18em

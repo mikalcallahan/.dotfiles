@@ -6,7 +6,7 @@ render: (output) ->
 style: """
   background-color: #262626
   font: .7em 'SF Mono'
-  height: 30px
+  height: 25px
   opacity: .999
   width: 100%
   z-index: -1
