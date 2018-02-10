@@ -3,90 +3,84 @@
 "
 "  Begin neovimrc
 
-" Vim Plug (https://github.com/junegunn/vim-plug)
+
+" PLUGINS
+" --------------------
 " Specify a directory for plugins
-" - For Neovim ~/.local/share/nvim/plugged
-" - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.local/share/nvim/plugged')
 
-" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
-Plug 'junegunn/vim-easy-align' " beautify
+" A E S T H E T I C S ~~~~
 Plug 'junegunn/seoul256.vim' " seoul256 colorschme <3
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " nvim keyboard completion
-let g:deoplete#enable_at_startup = 1 " use deoplete
-
-Plug 'keith/swift.vim' " swift syntax highlight
-Plug 'mitsuse/autocomplete-swift' " swift syntax autocomplete
-Plug 'kchmck/vim-coffee-script' " coffee script highlight
-Plug 'wakatime/vim-wakatime' " wakatime
+Plug 'ap/vim-css-color' " css colors inline
 Plug 'itchyny/lightline.vim' " lightline statusbar
-let g:lightline = {
-      \ 'colorscheme': 'seoul256',
-      \ }
 
-Plug 'Shutnik/jshint2.vim' " JS Linter
-set runtimepath+=~/.vim/bundle/jshint2.vim/
+" Autocomplete :
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " nvim keyboard completion
+let g:deoplete#enable_at_startup = 1 " run deoplete at startup
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>" " tab completion for deoplete
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>" " tab reverse completion for deoplete
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>" " tab enter for results
 
-Plug 'hail2u/vim-css3-syntax' " CSS syntax highlight
-augroup VimCSS3Syntax
+" Language Syntax :
+Plug 'kchmck/vim-coffee-script' " coffee script highlight
+Plug 'hail2u/vim-css3-syntax' " css syntax highlight
+augroup VimCSS3Syntax " vertical align, box shadow, etc syntax
   autocmd!
-
   autocmd FileType css setlocal iskeyword+=-
 augroup END
+Plug 'mxw/vim-jsx' " jsx highlighting
+Plug 'keith/swift.vim' " swift syntax highlight
 Plug 'tpope/vim-haml' " SCSS/SASS syntax highlight
+Plug 'mitsuse/autocomplete-swift' " swift syntax autocomplete
+Plug 'posva/vim-vue' " vue syntax
+
+" Linting :
+Plug 'neomake/neomake' " neomake real time linter
+" Plug 'Shutnik/jshint2.vim' " JS Linter
+" set runtimepath+=~/.vim/bundle/jshint2.vim/
+
+" Extras :
+Plug 'scrooloose/nerdtree' " NERDTree File explorer
+Plug 'Xuyuanp/nerdtree-git-plugin' " NERDTree git support
 Plug 'tpope/vim-vinegar' " Tim Pope's Vinegar
-"Plug 'scrooloose/nerdtree' " File explorer
+Plug 'wakatime/vim-wakatime' " wakatime
 
-" autocmd vimenter * NERDTree " NERDTree open on start
-
-" Initialize plugin system
+" End plugin system
 call plug#end()
 
-" Auto-indent
-set autoindent
+" CONFIG
+" --------------------
+"
+set autoindent " auto indent 
+set autoread " auto reload files changed outside of vim
+" set noh " disable search highlights until next search
+set number " display line numbers
+set expandtab " insert spaces when tab is used
+set mouse=a " (mickey) mouse mode on
+let g:netrw_browse_split = 3 " open netrw files in new tab
+filetype plugin on " plugins for file type
+filetype on " read file type
+autocmd FileType md, latex, tex, txt, text setlocal spell " spellcheck for file types txt, latex, markdown
+set showmatch " show matching brackets
+set shiftwidth=2 " shift width = 2 [ < and > commands ]
+set tabstop=2 " hard tabs = 2 spaces
+set softtabstop=2 " soft tabs = 2 spaces
+set smartcase " smart cases
+syntax on " syntax highlight
+set wrap " word wrap
 
-" Auto reload files changed outside of vim
-set autoread
-
-" Display line numbers
-set number
-
-" Hide lightline middle bar
-let s:palette = g:lightline#colorscheme#{g:lightline.colorscheme}#palette
+" Lightline Config
+"
+set noshowmode " hide bottom bar (because of lightline)
+let g:lightline = {
+      \ 'colorscheme': 'seoul256',
+      \	'active': {
+      \	  'right': [ [ 'percent' ],
+      \		     [ 'filetype' ] ]
+      \	},
+      \ }
+let s:palette = g:lightline#colorscheme#{g:lightline.colorscheme}#palette  " hide lightline middle bar
 let s:palette.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
 let s:palette.inactive.middle = s:palette.normal.middle
 let s:palette.tabline.middle = s:palette.normal.middle
-
-" Hide mode (because of lightline)
-set noshowmode
-
-" Mouse mode
-set mouse=a
-
-" Open files in new tab
-let g:netrw_browse_split = 3
-
-" Open netrw with (Control - i)
-map <C-i> :Explore<CR>
-
-" Read file type
-filetype on
-filetype indent on
-filetype plugin on
-
-" Set spell on for file types txt, latex, markdown
-autocmd FileType md, latex, tex, txt, text setlocal spell
-
-" Shift and Tab width
-set shiftwidth=2
-set softtabstop=2
-
-" Smart cases
-set smartcase
-
-" Syntax highlighting
-syntax on
-
-" Word Wrap
-set wrap
 

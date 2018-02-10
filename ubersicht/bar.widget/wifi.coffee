@@ -12,7 +12,7 @@ style: """
   color: #333333
   display: flex
   font: .7em 'SF Mono'
-  height: 25px
+  height: 1.855em;
   justify-content: center
   padding: 0 1em
   right: 18em
@@ -24,6 +24,7 @@ style: """
     display: block
     overflow: hidden
     text-overflow: ellipsis
+    word-spacing: -0.70em;
     white-space: nowrap
 """
 # background-color: #98bcbd #ffbebd #baddfc #dfbebd #98bb99 #ffde99

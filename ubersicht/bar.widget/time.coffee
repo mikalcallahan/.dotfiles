@@ -13,7 +13,7 @@ style: """
   color: #e9e9e9
   display: flex
   font: .7em 'SF Mono'
-  height: 25px
+  height: 20px
   justify-content: center
   padding: 0 .75em 0 .5em
   right: 0

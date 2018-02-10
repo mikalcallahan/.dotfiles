@@ -14,7 +14,7 @@ style: """
   color: #333333
   display: flex
   font: .7em 'SF Mono'
-  height: 25px
+  height: 1.85em
   justify-content: center
   left: 0 
   text-align: center
@@ -23,3 +23,4 @@ style: """
 """
 # background-color: #ffbebd #98bb99 #98bcbd #ffde99
 # color: #99736e #84a89a #fcfdfd #171717
+# height: 20px

@@ -16,25 +16,29 @@ export TERM=screen-256color
 export VISUAL=nvim
 export EDITOR="$VISUAL"
 
+# android studio
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+
 # #alias
 alias zshrc='nvim ~/.zshrc' # zshrc gets opened in neovim
-alias csusm='cd ~/Documents/school/csusm' # cd to csusm
-alias web='cd ~/Documents/programming/web' # cd to web
-alias ios='cd ~/Documents/programming/iOS' # cd to iOS
-alias scripts='cd ~/Documents/programming/scripts' # cd to scripts
-alias mc='cd ~/Documents/school/mira-costa' # cd to mira costa
 alias nvimrc='nvim ~/.dotfiles/nvim/init.vim' # nvimrc to edit init.vim
-alias lh='ls -d .*' # show hidden files/directories only
-alias brew-backup='brew leaves >> ~/.dotfiles/homebrew/homebrew-packages.txt' #	backup homebrew packages
+alias dev='cd ~/Documents/development/' # cd to development folder
+alias lsa='ls -a ' # list all files [ * ]
+alias brew backup='brew leaves >> ~/.dotfiles/homebrew/homebrew-packages.txt' #	backup homebrew packages
 alias shutdown='automator ~/.dotfiles/automator/shutdown.workflow' # end all applications and shutdown
-# alias brewfont='brew cask install caskroom/fonts/' # shortcut to install fonts a lil easier
+alias yarn build='npm run-script build' # make things a little more yarn-like
+alias vtop='vtop -t monokai' # vtop theme
 # alias vim=nvim	# vim = nvim
 # alias wal-random='wal -i /Users/mikal/Pictures/wallpapers' # wal command for random wal
 
+# (wal -r &) # load wal colorscheme
 ## user scripts
 # print 'Welcome Daddy,' # Print Daddy
-~/Documents/programming/scripts/QuoteScript/QuoteScript # launch QuoteScript [swift scripting]
+~/Documents/development/scripts/QuoteScript/QuoteScript # launch QuoteScript [swift scripting]
 
+ 
 # load pywal colorscheme
 # (wal -r) # import colorscheme from wal [run in background '&', hide shell job message '()']
 

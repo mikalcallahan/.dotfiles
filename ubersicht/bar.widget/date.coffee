@@ -1,4 +1,4 @@
-command: "date +%A\" %d %b %y\""
+command: "LANG=fr_CA date +%A\" %d %b %y\""
 #command: "date +\"%a %d %b\""
 
 refreshFrequency: 1000 # ms
@@ -13,9 +13,10 @@ style: """
   color: #e9e9e9
   display: flex
   font: .7em 'SF Mono'
-  height: 25px
+  height: 20px
   justify-content: center
   letter-spacing: 0.05em
+  text-transform: lowercase
   top: 0
   width: 100%
   """
