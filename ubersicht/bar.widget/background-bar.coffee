@@ -7,7 +7,7 @@ style: """
   background-color: #262626
   box-shadow: 0px 1.5px 1.5px rgba(0,0,0,0,.8)
   font: .7em 'SF Mono'
-  height: 1.860em;
+  height: 1.4rem;
   opacity: .999
   width: 100%
   z-index: -1

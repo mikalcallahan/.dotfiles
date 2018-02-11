@@ -14,11 +14,10 @@ style: """
   color: #333333
   display: flex
   font: .7em 'SF Mono'
-  height: 1.85em
+  height: 1.4rem
   justify-content: center
   left: 0 
   text-align: center
-  top: 0
   width: 6%
 """
 # background-color: #ffbebd #98bb99 #98bcbd #ffde99

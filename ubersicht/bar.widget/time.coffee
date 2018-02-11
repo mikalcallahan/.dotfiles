@@ -13,12 +13,11 @@ style: """
   color: #e9e9e9
   display: flex
   font: .7em 'SF Mono'
-  height: 20px
+  height: 1.4rem
   justify-content: center
   padding: 0 .75em 0 .5em
   right: 0
   text-align: center
-  top: 0
   width: 5%
   """
 # background-color: #dfbebd #98bcbd #98bb99

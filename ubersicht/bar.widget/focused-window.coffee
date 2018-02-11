@@ -18,7 +18,6 @@ style: """
   padding: 0 1.5em
   text-align: center
   text-transform: lowercase
-  top: 0
   width: 20%
   span
     display: block

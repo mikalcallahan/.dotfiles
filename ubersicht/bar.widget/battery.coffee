@@ -12,9 +12,9 @@ style: """
   color: #e9e9e9
   display: flex
   font: .7em 'SF Mono'
-  height: 20px
+  height: 1.4rem
   justify-content: center
-  right: 7.5em
+  right: 6em
   padding: 0 .65em 0 1em
   text-align: center
   text-transform: lowercase
