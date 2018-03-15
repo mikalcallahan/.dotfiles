@@ -13,8 +13,8 @@ style: """
   background-color: #dcabaa
   color: #333333
   display: flex
-  font: .7em 'SF Mono'
-  height: 1.4rem
+  font: .75em 'Inconsolata'
+  height: 1.3rem
   justify-content: center
   left: 0 
   text-align: center

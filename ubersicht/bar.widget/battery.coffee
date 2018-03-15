@@ -11,8 +11,8 @@ style: """
   background-color: transparent
   color: #e9e9e9
   display: flex
-  font: .7em 'SF Mono'
-  height: 1.4rem
+  font: .75em 'Inconsolata'
+  height: 1.3rem
   justify-content: center
   right: 6em
   padding: 0 .65em 0 1em

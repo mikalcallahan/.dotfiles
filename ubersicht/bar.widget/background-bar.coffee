@@ -4,10 +4,10 @@ render: (output) ->
   ""
 
 style: """
-  background-color: #262626
+  background-color: #232323
   box-shadow: 0px 1.5px 1.5px rgba(0,0,0,0,.8)
-  font: .7em 'SF Mono'
-  height: 1.4rem;
+  font: .75em 'Inconsolata'
+  height: 1.3rem;
   opacity: .999
   width: 100%
   z-index: -1

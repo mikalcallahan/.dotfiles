@@ -12,10 +12,10 @@ style: """
   background-color: transparent
   color: #e9e9e9
   display: flex
-  font: .7em 'SF Mono'
-  height: 1.4rem
+  font: .75rem 'Inconsolata'
+  height: 1.3rem
   justify-content: center
-  letter-spacing: 0.05em
+  letter-spacing: 0.04rem
   text-transform: lowercase
   width: 100%
   """
