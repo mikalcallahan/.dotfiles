@@ -40,6 +40,7 @@ Plug 'neomake/neomake' " neomake real time linter
 " set runtimepath+=~/.vim/bundle/jshint2.vim/
 
 " Extras :
+Plug '/usr/local/opt/fzf' " fuzzy finder
 Plug 'scrooloose/nerdtree' " NERDTree File explorer
 Plug 'Xuyuanp/nerdtree-git-plugin' " NERDTree git support
 Plug 'tpope/vim-vinegar' " Tim Pope's Vinegar

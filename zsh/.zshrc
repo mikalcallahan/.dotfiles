@@ -39,7 +39,7 @@ alias icloud-drive='cd ~/Library/Mobile\ Documents/com~apple~CloudDocs' # cd to 
 # (wal -r &) # load wal colorscheme
 ## user scripts
 # print 'Welcome Daddy,' # Print Daddy
-~/Documents/development/scripts/QuoteScript/QuoteScript # launch QuoteScript [swift scripting]
+# ~/Documents/development/scripts/QuoteScript/QuoteScript # launch QuoteScript [swift scripting]
 
  
 # load pywal colorscheme

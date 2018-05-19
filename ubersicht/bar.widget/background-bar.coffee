@@ -1,10 +1,10 @@
-refreshFrequency: false
+refreshFrequency: 1000
 
 render: (output) ->
   ""
 
 style: """
-  background-color: #232323
+  background-color: rgba(34,34,34,0.85)
   box-shadow: 0px 1.5px 1.5px rgba(0,0,0,0,.8)
   font: .75em 'Inconsolata'
   height: 1.3rem;
