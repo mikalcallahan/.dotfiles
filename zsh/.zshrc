@@ -10,6 +10,7 @@ source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" # prezto config
 # iTerm integration 😏
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+
 # tmux integration
 export TERM=screen-256color
 
@@ -38,8 +39,12 @@ alias icloud-drive='cd ~/Library/Mobile\ Documents/com~apple~CloudDocs' # cd to 
 
 # (wal -r &) # load wal colorscheme
 ## user scripts
-# print 'Welcome Daddy,' # Print Daddy
-# ~/Documents/development/scripts/QuoteScript/QuoteScript # launch QuoteScript [swift scripting]
+print 'Welcome Daddy,' # Print Daddy
+function () {
+  # local isMacOS=/Applications/
+  # if(cd isMacOs)
+  ~/Documents/developpment/scripts/QuoteScript/QuoteScript # launch QuoteScript [swift scripting]
+}
 
  
 # load pywal colorscheme

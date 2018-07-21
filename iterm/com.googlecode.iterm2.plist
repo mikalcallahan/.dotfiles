@@ -1560,11 +1560,11 @@ Minimize</string>
 	<key>NSWindow Frame SUUpdateAlert</key>
 	<string>330 306 620 392 0 0 1280 800 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>262 -55 918 401 0 0 1280 800 </string>
+	<string>174 225 1018 447 0 0 1280 800 </string>
 	<key>NSWindow Frame UKCrashReporter</key>
 	<string>200 65 880 660 0 0 1280 800 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>200 70 880 649 0 0 1280 800 </string>
+	<string>201 71 878 648 0 0 1280 800 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>200 70 880 649 0 0 1280 800 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -4873,16 +4873,16 @@ Minimize</string>
 				<key>Alpha Component</key>
 				<real>1</real>
 				<key>Blue Component</key>
-				<real>0.73423302173614502</real>
+				<real>0.73333333333333328</real>
 				<key>Color Space</key>
 				<string>sRGB</string>
 				<key>Green Component</key>
-				<real>0.35916060209274292</real>
+				<real>0.35686274509803922</real>
 				<key>Red Component</key>
 				<real>0.0</real>
 			</dict>
 			<key>Minimum Contrast</key>
-			<real>0.11856356534090909</real>
+			<real>0.16854580965909091</real>
 			<key>Mouse Reporting</key>
 			<true/>
 			<key>Name</key>
@@ -5000,6 +5000,51 @@ Minimize</string>
 	<integer>0</integer>
 	<key>NoSyncPermissionToShowTip</key>
 	<true/>
+	<key>NoSyncRecordedVariableNames</key>
+	<dict>
+		<key>1</key>
+		<array>
+			<string>session.termid</string>
+			<string>session.autoName</string>
+			<string>session.tmuxClientName</string>
+			<string>session.columns</string>
+			<string>session.jobName</string>
+			<string>session.creationTimeString</string>
+			<string>session.rows</string>
+			<string>session.path</string>
+			<string>session.profileName</string>
+			<string>session.lastCommand</string>
+			<string>session.presentationName</string>
+			<string>session.tmuxWindowTitle</string>
+			<string>session.hostname</string>
+			<string>session.id</string>
+			<string>session.tmuxRole</string>
+			<string>session.username</string>
+			<string>session.tty</string>
+			<string>session.autoLogId</string>
+			<string>session.name</string>
+		</array>
+		<key>2</key>
+		<array>
+			<string>currentSession</string>
+			<string>currentSession.session.termid</string>
+			<string>currentSession.session.name</string>
+			<string>currentSession.session.path</string>
+			<string>currentSession.session.rows</string>
+			<string>currentSession.session.hostname</string>
+			<string>currentSession.session.tty</string>
+			<string>currentSession.session.lastCommand</string>
+			<string>currentSession.session.presentationName</string>
+			<string>currentSession.session.username</string>
+			<string>tmuxWindow</string>
+			<string>currentSession.session.jobName</string>
+			<string>currentSession.session.columns</string>
+		</array>
+		<key>4</key>
+		<array>
+			<string>pid</string>
+		</array>
+	</dict>
 	<key>NoSyncTimeOfFirstLaunchOfVersionWithTip</key>
 	<real>528090541.27856803</real>
 	<key>NoSyncTipsToNotShow</key>
@@ -5132,7 +5177,7 @@ Minimize</string>
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-05-19T02:39:38Z</date>
+	<date>2018-07-17T07:22:55Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>Secure Input</key>
@@ -5162,7 +5207,7 @@ Minimize</string>
 	<key>UKCrashReporterLastCrashReportDate</key>
 	<real>1522875520</real>
 	<key>UseBorder</key>
-	<true/>
+	<false/>
 	<key>WindowNumber</key>
 	<false/>
 	<key>WordCharacters</key>
@@ -5170,7 +5215,7 @@ Minimize</string>
 	<key>findMode_iTerm</key>
 	<integer>0</integer>
 	<key>iTerm Version</key>
-	<string>3.2.20180517-nightly</string>
+	<string>3.2.20180712-nightly</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>0</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>

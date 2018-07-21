@@ -10,8 +10,8 @@ render: (output) ->
 style: """
   -webkit-font-smoothing: antialiased
   align-items: center
-  background-color: rgba(204,204,204,1)
-  color: #333333
+  background-color: rgba(84,53,53,1)
+  color: #e9e9e9
   display: flex
   font: .75em 'Inconsolata'
   height: 1.3rem
@@ -21,5 +21,6 @@ style: """
   width: 6%
 """
 # background-color: #ffbebd #98bb99 #98bcbd #ffde99 #dcabaa
+# background-color: rgba(204,204,204,1)
 # color: #99736e #84a89a #fcfdfd #171717
 # height: 20px

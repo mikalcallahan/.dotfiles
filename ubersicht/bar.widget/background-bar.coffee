@@ -4,11 +4,11 @@ render: (output) ->
   ""
 
 style: """
-  background-color: rgba(34,34,34,0.85)
+  background-color: rgba(34,34,34,0.95)
   box-shadow: 0px 1.5px 1.5px rgba(0,0,0,0,.8)
   font: .75em 'Inconsolata'
   height: 1.3rem;
-  opacity: .999
+  opacity: .006
   width: 100%
   z-index: -1
 """
