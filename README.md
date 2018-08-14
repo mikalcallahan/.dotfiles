@@ -8,7 +8,4 @@
 - tmux
 - ubersicht
 - zsh
-
-**_happy hunty_**
-
-#### updated: 09 November 2017
+#### updated: 14 Août 2018
