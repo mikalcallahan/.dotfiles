@@ -1,60 +1,21 @@
-! -- General Xdefaults -- !
 Xft.antialias: 1
-Xft.autohint: 0
-Xft.dpi: 180
+Xft.autohint: 1
+Xft.dpi: 182
 Xft.hinting: 1
 Xft.hintstyle: hintfull
 Xft.lcdfilter: lcddefault
 Xft.rgba: rgb
+Xursor.size: 34
 
-! -- urxvt -- !
-URxvt.font: xft:SFMono-Regular:pixelsize=21
-URxvt.geometry: 103x45
-URxvt.scrollBar: false
-URxvt.cursorBlink: true
-URxvt.internalBorder: 50
-URxvt*blurRadius: 10
-URxvt.termName:rxvt-unicode-256color
-! Copy paste
-URxvt.iso14755: False
-URxvt.clipboard.autocopy: False
-URxvt.keysym.Control-Shift-C: perl:clipboard:copy
-URxvt.keysym.Control-Shift-V: perl:clipboard:paste
-URxvt.clipboard.copycmd:  xsel -ib
-URxvt.clipboard.pastecmd: xsel -ob
-
-! -- urxvt colors -- !
-URxvt*background: #4B414C
-URxvt*foreground: #efefef
-! black
-URxvt*color0: #7f94a0
-! bright_black
-URxvt*color8: #7f94a0
-! red
-URxvt*color1: #818995
-! bright_red
-URxvt*color9: #818995
-! green
-URxvt*color2: #A5BE9E
-! bright_green
-URxvt*color10: #A5BE9E
-! yellow
-URxvt*color3: #afad84
-! bright_yellow
-URxvt*color11: #afad84
-! blue
-URxvt*color4: #efecb3
-! bright_blue
-URxvt*color12: #efecb3
-! magenta
-URxvt*color5: #efefef
-! bright_magenta
-URxvt*color13: #efefef
-! cyan
-URxvt*color6: #6c7570
-! bright_cyan
-URxvt*color14: #6c7570
-! white
-URxvt*color7: #ada38b
-! bright_white
-URxvt*color15: #efefef
+!urxvt
+URxvt*saveline: 15000
+URxvt*termName: rxvt-unicode
+URxvt*iso14755: false
+URxvt*depth: 32
+URxvt*scrollBar: false
+URxvt*scrollBar_right: false
+URxvt*internalBorder: 40
+URxvt*externalBorder: 20
+URxvt.font: xft:SF Mono:size=08
+URxvt*letterSpace: -1
+URxvt.underlineURLs: true
