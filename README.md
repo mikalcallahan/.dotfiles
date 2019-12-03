@@ -8,4 +8,4 @@
 - tmux
 - ubersicht
 - zsh
-#### updated: 14 Août 2018
+#### updated: 03 decembre 2019
