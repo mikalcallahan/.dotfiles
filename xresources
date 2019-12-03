@@ -1,0 +1,21 @@
+Xft.antialias: 1
+Xft.autohint: 1
+Xft.dpi: 182
+Xft.hinting: 1
+Xft.hintstyle: hintfull
+Xft.lcdfilter: lcddefault
+Xft.rgba: rgb
+Xursor.size: 34
+
+!urxvt
+URxvt*saveline: 15000
+URxvt*termName: rxvt-unicode
+URxvt*iso14755: false
+URxvt*depth: 32
+URxvt*scrollBar: false
+URxvt*scrollBar_right: false
+URxvt*internalBorder: 40
+URxvt*externalBorder: 20
+URxvt.font: xft:SF Mono:size=08
+URxvt*letterSpace: -1
+URxvt.underlineURLs: true

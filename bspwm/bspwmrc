@@ -1,0 +1,58 @@
+#!/bin/sh
+
+# key bindings
+sxhkd &
+
+# redshift
+redshift &
+
+# wallpaper & colors
+#wal -R &
+
+# wal -i ~/Images/wallpapers/simone-hutsch-TobrQ6tcTsI-unsplash.jpg &
+
+# panel
+sleep 1; polybar bspwm-bar &
+
+# libinput-gestures
+libinput-gestures &
+
+bspc monitor -d une deux trois quatre cinq
+
+# bspc monitor eDP1 -d une deux trois
+# xrandr monitor HDMI2 -d quatre cinq six
+
+# source the colors.
+. "${HOME}/.cache/wal/colors.sh"
+
+# Set the border colors.
+bspc config normal_border_color "$color1"
+bspc config active_border_color "$color2"
+bspc config focused_border_color "$color15"
+bspc config presel_feedback_color "$color1"
+
+bspc config border_width 3
+bspc config window_gap 14
+bspc config top_padding 80
+bspc config right_padding 175
+bspc config bottom_padding 70
+bspc config left_padding 175
+
+bspc config -d ^1 top_padding 250
+bspc config -d ^1 bottom_padding 200
+bspc config -d ^1 left_padding 375
+bspc config -d ^1 right_padding 375
+
+bspc config split_ratio 0.50
+bspc config borderless_monocle false
+bspc config gapless_monocle false
+bspc config paddingless_monocle false
+
+bspc config click_to_focus true
+bspc config focus_follows_pointer true
+
+bspc rule -a Gimp desktop='^8' state=floating follow=on
+bspc rule -a Chromium desktop='^2'
+bspc rule -a mplayer2 state=floating
+bspc rule -a Kupfer.py focus=on
+bspc rule -a Screenkey manage=off
