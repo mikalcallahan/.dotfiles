@@ -19,3 +19,8 @@ URxvt*externalBorder: 20
 URxvt.font: xft:SF Mono:size=08
 URxvt*letterSpace: -1
 URxvt.underlineURLs: true
+URxvt.perl-ext-common:  ...,clipboard,...
+URxvt.clipboard.autocopy: true
+URxvt.keysym.C-c: perl:clipboard:copy
+URxvt.keysym.C-v: perl:clipboard:paste
+

@@ -7,15 +7,13 @@ sxhkd &
 redshift &
 
 # wallpaper & colors
-#wal -R &
-
-# wal -i ~/Images/wallpapers/simone-hutsch-TobrQ6tcTsI-unsplash.jpg &
+wal -R &
 
 # panel
-sleep 1; polybar bspwm-bar &
+~/.config/polybar/polybar.sh
 
 # libinput-gestures
-libinput-gestures &
+#libinput-gestures &
 
 bspc monitor -d une deux trois quatre cinq
 
