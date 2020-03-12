@@ -10,9 +10,10 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>" " tab enter for results
 
 " Plug 'dense-analysis/ale'            " Ale linting
 Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'} " autocomplete
-Plug '/usr/bin/fzf'                  " Fuzzy Finder searches
-Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " fzf
+Plug 'junegunn/fzf.vim'              " fzf vim
 Plug 'junegunn/goyo.vim'             " Goyo - Distraction free writing
+Plug 'dylanaraps/fff.vim'            " FFF File browser
 Plug 'itchyny/lightline.vim'         " lightline statusbar
 " Plug 'sbdchd/neoformat'              " neoformat code formatter
 " Plug 'neomake/neomake'               " neomake linter
@@ -49,6 +50,7 @@ syntax on                     " syntax on
 set wrap                      " wordwrap
 set laststatus=2
 
+" set colors
 let g:seoul256_background = 235
 colo wal
 
@@ -107,3 +109,15 @@ let s:palette.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]        " hi
 " --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
 " --color: Search color options
 command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+
+" Search Files with Ctrl-P
+nnoremap <C-p> :Files<Cr>
+
+" Open fff on press of 'f'
+nnoremap f :F<CR>
+
+" Vertical split (NERDtree style).
+let g:fff#split = "200vnew"
+
+" Open split on the left side (NERDtree style).
+let g:fff#split_direction = "nosplitbelow nosplitright"
