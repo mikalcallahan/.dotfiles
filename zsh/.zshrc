@@ -39,4 +39,14 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
+alias gotop="gotop-cjbassi"
+
 conscient
+
+###-tns-completion-start-###
+if [ -f /home/mikal/.tnsrc ]; then 
+    source /home/mikal/.tnsrc 
+fi
+###-tns-completion-end-###
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

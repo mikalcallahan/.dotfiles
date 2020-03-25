@@ -5,7 +5,7 @@ Xft.hinting: 1
 Xft.hintstyle: hintfull
 Xft.lcdfilter: lcddefault
 Xft.rgba: rgb
-Xursor.size: 34
+Xcursor.size: 34
 
 !urxvt
 URxvt*saveline: 15000
@@ -19,8 +19,10 @@ URxvt*externalBorder: 20
 URxvt.font: xft:SF Mono:size=09
 URxvt*letterSpace: -1
 URxvt.underlineURLs: true
-URxvt.perl-ext-common:  ...,clipboard,...
+!URxvt.perl-ext-common:  ...,clipboard,... !!! OLD COPY PASTE ?
+!URxvt.keysym.c-C: perl:clipboard:copy
+!URxvt.keysym.c-V: perl:clipboard:paste
+URxvt.perl-ext-common: default
 URxvt.clipboard.autocopy: true
-URxvt.keysym.C-c: perl:clipboard:copy
-URxvt.keysym.C-v: perl:clipboard:paste
-
+URxvt.keysym.Shift-Control-V: eval:paste_clipboard
+URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard

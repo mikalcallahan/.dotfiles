@@ -1,16 +1,19 @@
 #!/bin/sh
 
 # key bindings
-sxhkd &
+sxhkd -c ~/.dotfiles/sxkhd/sxhkdrc &
 
 # redshift
-redshift &
+#redshift &
 
 # wallpaper & colors
 wal -R &
 
 # panel
 ~/.config/polybar/polybar.sh
+
+# Logitech Mouse Inputs
+xinput set-prop "pointer:Logitech MX Master" 303 1 &
 
 # libinput-gestures
 #libinput-gestures &

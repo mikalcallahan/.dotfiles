@@ -8,7 +8,7 @@ ctrl + Return
 
 # program launcher
 ctrl + space
-	rofi -show run
+	rofi -combi-modi window,drun -show combi -modi combi
 
 # make sxhkd reload its configuration files
 ctrl + Escape
@@ -21,7 +21,6 @@ ctrl + shift + BackSpace
 # brightness mapped to keyboard
 XF86MonBrightness{Up,Down}
   light {-A 10,-U 10}
-
 
 # volume mapped to keyboard
 XF86Audio{RaiseVolume,LowerVolume}
@@ -42,7 +41,7 @@ ctrl + alt + Escape
 	bspc quit
 
 # close and kill
-ctrl + {_,shift + }w
+ctrl + {_,shift + }q
 	bspc node -{c,k}
 
 # alternate between the tiled and monocle layout
@@ -104,11 +103,11 @@ super + {o,i}
 	bspc wm -h on
 
 # focus or send to the given desktop
-super + shift + {1-9,0}
-	bspc {desktop -f,node -d} '^{1-9,10}'
+ctrl + shift + {1-9,0}
+	bspc node -d '^{1-9,10}'
 
-super + {1-9, 0}
-  bspc {desktop -f} '^{1-9,10}'
+# super + {1-9, 0}
+#  bspc {desktop -f} '^{1-9,10}'
 
 #
 # preselect
