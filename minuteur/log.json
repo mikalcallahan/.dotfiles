@@ -1,0 +1,267 @@
+{
+  "area": "vish",
+  "project": "vish-webapp / devices filter",
+  "desc": "actually filtering devices",
+  "start": 1575905485854,
+  "stop": 1575905485855,
+  "time": 30
+}{
+  "area": "vish-weball / devices",
+  "project": "vish-webapp / devices clean up code",
+  "desc": "",
+  "start": 1576003056360,
+  "stop": 1576003056362,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp /devices",
+  "desc": "Cleaning up the code",
+  "start": 1576008587730,
+  "stop": 1576008587732,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp/ devices",
+  "desc": "Clean up the rest of the code",
+  "start": 1576080133239,
+  "stop": 1576080133240,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp / services csv",
+  "desc": "catchup",
+  "start": 1578927641109,
+  "stop": 1578927641111,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp/ services csv",
+  "desc": "Upload not finishing",
+  "start": 1578949995594,
+  "stop": 1578949995596,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp/csv upload",
+  "desc": "setup",
+  "start": 1579014730945,
+  "stop": 1579014730947,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp/employee csv upload",
+  "desc": "SETTUPPP",
+  "start": 1579031754717,
+  "stop": 1579031754719,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish/webapp employees import",
+  "desc": "setup",
+  "start": 1579100973796,
+  "stop": 1579100973797,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-setup /webapp",
+  "desc": "organiser",
+  "start": 1579187596572,
+  "stop": 1579187596574,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp /setup",
+  "desc": "setupp",
+  "start": 1579273760514,
+  "stop": 1579273760515,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp/login page - functionality design",
+  "desc": "planning the functionality",
+  "start": 1579279484824,
+  "stop": 1579279484826,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp / setup",
+  "desc": "setup",
+  "start": 1579532763222,
+  "stop": 1579532763224,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp",
+  "desc": "main page login",
+  "start": 1579622571649,
+  "stop": 1579622571651,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp/ email validation",
+  "desc": "setup",
+  "start": 1579708540544,
+  "stop": 1579708540545,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-setup/webapp",
+  "desc": "Setup",
+  "start": 1579794627077,
+  "stop": 1579794627079,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp/ employee email validation",
+  "desc": "Unique emails not working",
+  "start": 1579797240692,
+  "stop": 1579797240694,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp/ email validation",
+  "desc": "Figuring out why validation won't apply",
+  "start": 1579805439581,
+  "stop": 1579805439583,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp/ email validation",
+  "desc": "Empty email with unique validation",
+  "start": 1579880529290,
+  "stop": 1579880529292,
+  "time": 30
+}{
+  "area": "personal",
+  "project": "CV",
+  "desc": "écris description à vish",
+  "start": 1579979219500,
+  "stop": 1579979219502,
+  "time": 30
+}{
+  "area": "programmer",
+  "project": "open-assestment",
+  "desc": "Setup",
+  "start": 1581173589628,
+  "stop": 1581173589630,
+  "time": 30
+}{
+  "area": "programmer",
+  "project": "open-assesment",
+  "desc": "Commence spotify integration",
+  "start": 1581176185831,
+  "stop": 1581176185833,
+  "time": 30
+}{
+  "area": "programmer",
+  "project": "open-assessment",
+  "desc": "Figure out spotify inte",
+  "start": 1581185891208,
+  "stop": 1581185891210,
+  "time": 30
+}{
+  "area": "programmer",
+  "project": "open-assessment",
+  "desc": "spotify integration",
+  "start": 1581190139169,
+  "stop": 1581190139171,
+  "time": 30
+}{
+  "area": "programmer",
+  "project": "open-assessment",
+  "desc": "still spotify--long break to talk with eva",
+  "start": 1581199232332,
+  "stop": 1581199232332,
+  "time": 30
+}{
+  "area": "programmer",
+  "project": "open assessment",
+  "desc": "new api",
+  "start": 1581205263733,
+  "stop": 1581205263735,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "webapp - updates",
+  "desc": "New udpates here",
+  "start": 1581350449559,
+  "stop": 1581350449561,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "setup",
+  "desc": "...",
+  "start": 1581434125208,
+  "stop": 1581434125210,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-widget refactor",
+  "desc": "setup",
+  "start": 1582128215765,
+  "stop": 1582128215766,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "organisation",
+  "desc": "organisation",
+  "start": 1582645425032,
+  "stop": 1582645425033,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-refactor",
+  "desc": "setup",
+  "start": 1582726668121,
+  "stop": 1582726668122,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-refactor",
+  "desc": "",
+  "start": 1582732512649,
+  "stop": 1582732512651,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "tablet http-refactor",
+  "desc": "",
+  "start": 1582746652873,
+  "stop": 1582746652875,
+  "time": 30
+}{
+  "area": "lifestyle",
+  "project": "vuejs - préparation (open)",
+  "desc": "voir haute",
+  "start": 1583092671272,
+  "stop": 1583092671274,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish- commence",
+  "desc": "setup",
+  "start": 1583762685762,
+  "stop": 1583762685763,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "setup",
+  "desc": "setup",
+  "start": 1583848774727,
+  "stop": 1583848774728,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "webapp / cachingHttpRepository",
+  "desc": "PATCH not working",
+  "start": 1585230055042,
+  "stop": 1585230055043,
+  "time": 30
+}{
+  "area": "vish",
+  "project": "vish-webapp / refactor",
+  "desc": "commencer",
+  "start": 1585315781317,
+  "stop": 1585315781319,
+  "time": 30
+}
