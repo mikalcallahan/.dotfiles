@@ -15,7 +15,7 @@ ctrl + Escape
 	pkill -USR1 -x sxhkd
 
 # make bspmwm reload cong files
-ctrl + shift + BackSpace
+ctrl + shift + Escape
   killall vanela; bspwmrc
 
 # brightness mapped to keyboard

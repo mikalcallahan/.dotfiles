@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# xresources
+xrdb -merge ~/.Xresources
+
 # key bindings
 sxhkd -c ~/.dotfiles/sxkhd/sxhkdrc &
 
@@ -10,10 +13,10 @@ redshift &
 wal -R &
 
 # panel
-~/.config/polybar/polybar.sh
+~/.config/polybar/polybar.sh &
 
 # Logitech Mouse Inputs
-xinput set-prop "pointer:Logitech MX Master" 303 1 &
+xinput set-prop "pointer:Logitech MX Master" 'libinput Natural Scrolling Enabled' 1 &
 
 # libinput-gestures
 #libinput-gestures &
