@@ -1,20 +1,4 @@
-;==========================================================
-;
-;
-;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
-;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
-;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
-;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
-;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
-;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
-;
-;
-;   To learn more about how to configure Polybar
-;   go to https://github.com/polybar/polybar
-;
-;   The README contains a lot of information
-;
-;==========================================================
+# polybar layout
 
 [colors]
 background = ${xrdb:color0:#222}
@@ -28,7 +12,7 @@ alert = ${xrdb:color3:#222}
 [bar/bar]
 ;monitor = ${env:MONITOR:HDMI-1}
 width = 100%
-height = 2%
+height = 4%
 offset-x = 0
 offset-y = 0
 radius = 0
@@ -37,8 +21,9 @@ fixed-center = false
 background = ${colors.background}
 foreground = ${colors.foreground}
 
-line-size = 3
+line-size = 4
 line-color = #f00
+locale = fr_CA
 
 border-size = 2
 border-color = #00000000
@@ -49,29 +34,15 @@ padding-right = 2
 module-margin-left = 1
 module-margin-right = 2
 
-font-0 = San Francisco Text:pixelsize=14;1
+font-0 = "San Francisco Text:size=16:antialias=false;2"
 font-1 = unifont:fontformat=truetype:size=12:antialias=false;0
-font-2 = "Font Awesome 5 Pro:style=Regular:pixelsize=13;2"
-#font-2 = siji:pixelsize=14;1
+font-2 = "Font Awesome 5 Pro:style=Regular:pixelsize=14;2"
 
-modules-left = bspwm i3
-modules-center = mpd
+modules-left = bspwm
+modules-center = xwindow
 modules-right = pulseaudio wlan battery eth temperature date powermenu
 
-#tray-position = right
-#tray-padding = 6
-#tray-background = #00000000
-
-;wm-restack = bspwm
-;wm-restack = i3
-
-;override-redirect = true
-
-;scroll-up = bspwm-desknext
-;scroll-down = bspwm-deskprev
-
-;scroll-up = i3wm-wsnext
-;scroll-down = i3wm-wsprev
+wm-restack = bspwm
 
 cursor-click = pointer
 cursor-scroll = ns-resize
@@ -109,6 +80,8 @@ label-unmounted-foreground = ${colors.foreground-alt}
 [module/bspwm]
 type = internal/bspwm
 
+height = 100%
+
 label-focused = %index%
 label-focused-background = ${colors.background-alt}
 label-focused-underline= ${colors.primary}
@@ -124,9 +97,6 @@ label-urgent-padding = 2
 label-empty = %index%
 label-empty-foreground = ${colors.foreground-alt}
 label-empty-padding = 2
-
-; Separator in between workspaces
-; label-separator = |
 
 [module/i3]
 type = internal/i3
@@ -222,6 +192,8 @@ type = internal/network
 interface = wlp3s0
 interval = 3.0
 
+height = 100%
+
 format-connected = <ramp-signal> <label-connected>
 format-connected-underline = ${colors.alert}
 label-connected = %essid%
@@ -241,6 +213,8 @@ type = internal/network
 interface = eno1
 interval = 3.0
 
+height = 100%
+
 format-connected-underline = ${colors.alert}
 format-connected-prefix = 
 format-connected-prefix-foreground = ${colors.foreground-alt}
@@ -250,23 +224,16 @@ label-disconnected = eth disconnected
 label-disconnected-foreground = ${colors.foreground-alt}
 
 [module/date]
-type = custom/script
-interval = 5
-exec = date "+%A %R"
-format-prefix = 
-format-prefix-foreground = ${colors.foreground-alt}
-format-underline = ${colors.primary}
-label = " %output%"
-
-[module/dateOG]
 type = internal/date
 interval = 5
 
 date = " %A"
-date-alt = " %Y-%m-%d"
+date-alt = " %A %d %B %y"
 
 time = %R
-time-alt = %H:%M:%S
+time-alt = %R
+
+height = 100%
 
 format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
@@ -275,6 +242,8 @@ label = %date% %time%
 
 [module/pulseaudio]
 type = internal/pulseaudio
+
+height = 100%
 
 format-volume = <ramp-volume> <label-volume>
 label-volume = %percentage%%
@@ -292,6 +261,8 @@ type = internal/battery
 battery = BAT0
 adapter = ADP1
 full-at = 98
+
+height = 100%
 
 format-charging = <animation-charging> <label-charging>
 format-charging-underline = ${colors.alert}
@@ -325,6 +296,8 @@ type = internal/temperature
 thermal-zone = 0
 warn-temperature = 60
 
+height = 100%
+
 format = <ramp> <label>
 format-underline = ${colors.alert}
 format-warn = <ramp> <label-warn>
@@ -342,31 +315,33 @@ ramp-foreground = ${colors.foreground-alt}
 [module/powermenu]
 type = custom/menu
 
-expand-right = true
-
+expand-right = false
 format-spacing = 1
 
-label-open = 
+padding = 120
+
+label-open = 
 label-open-foreground = ${colors.secondary}
-label-close =  cancel
+label-close = 
 label-close-foreground = ${colors.secondary}
 label-separator = |
 label-separator-foreground = ${colors.foreground-alt}
 
-menu-0-0 = reboot
+menu-0-0 = "rédemarrage "
 menu-0-0-exec = menu-open-1
-menu-0-1 = power off
+menu-0-1 = "éteindre"
 menu-0-1-exec = menu-open-2
+menu-0-2 = "déconnexion"
+menu-0-2-exec = menu-open-3
 
-menu-1-0 = cancel
-menu-1-0-exec = menu-open-0
-menu-1-1 = reboot
-menu-1-1-exec = sudo reboot
+menu-1-0 = "rédemarrage "
+menu-1-0-exec = sudo reboot
 
-menu-2-0 = power off
+menu-2-0 = "éteindre "
 menu-2-0-exec = sudo poweroff
-menu-2-1 = cancel
-menu-2-1-exec = menu-open-0
+
+menu-3-0 = "déconnexion "
+menu-3-0-exec = bspc quit
 
 [settings]
 screenchange-reload = true
