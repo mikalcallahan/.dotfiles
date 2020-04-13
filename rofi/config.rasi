@@ -2,4 +2,5 @@ configuration {
   modi: "window,drun,ssh,combi";
   theme: "~/.cache/wal/colors-rofi-light.rasi";
   combi-modi: "window,drun,ssh";
+  font: "SF Mono 12";
 }

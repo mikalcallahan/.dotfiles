@@ -12,6 +12,9 @@ redshift &
 # wallpaper & colors
 wal -R &
 
+# notifications
+dunst &
+
 # panel
 ~/.config/polybar/polybar.sh &
 

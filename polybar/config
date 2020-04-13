@@ -227,7 +227,7 @@ label-disconnected-foreground = ${colors.foreground-alt}
 type = internal/date
 interval = 5
 
-date = " %A"
+date = " %A %d %B"
 date-alt = " %A %d %B %y"
 
 time = %R
@@ -335,10 +335,10 @@ menu-0-2 = "déconnexion"
 menu-0-2-exec = menu-open-3
 
 menu-1-0 = "rédemarrage "
-menu-1-0-exec = sudo reboot
+menu-1-0-exec = systemctl reboot
 
 menu-2-0 = "éteindre "
-menu-2-0-exec = sudo poweroff
+menu-2-0-exec = systemctl poweroff
 
 menu-3-0 = "déconnexion "
 menu-3-0-exec = bspc quit

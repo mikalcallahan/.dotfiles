@@ -16,7 +16,8 @@ URxvt*scrollBar: false
 URxvt*scrollBar_right: false
 URxvt*internalBorder: 40
 URxvt*externalBorder: 20
-URxvt.font: xft:SF Mono:size=09
+URxvt.font: xft:SF Mono:size=09,xft:Font Awesome 5 Pro Regular:size=12
+|URxvt.font: xft:Font Awesome 5 Pro Regular:size=11
 URxvt*letterSpace: -1
 URxvt.underlineURLs: true
 !URxvt.perl-ext-common:  ...,clipboard,... !!! OLD COPY PASTE ?
@@ -26,3 +27,4 @@ URxvt.perl-ext-common: default
 URxvt.clipboard.autocopy: true
 URxvt.keysym.Shift-Control-V: eval:paste_clipboard
 URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+

@@ -4,7 +4,7 @@
 
 # terminal emulator
 ctrl + Return
-	urxvt
+	kitty
 
 # program launcher
 ctrl + space
