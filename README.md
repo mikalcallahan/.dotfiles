@@ -1,11 +1,21 @@
 # DOTFILES
 
 ### Includes:
-- homebrew
-- iterm
+
+- bspwm
+- dunst
+- fonts
+- kitty
 - nvim
-- skhd
+- polybar
+- rofi
+- sxkhd
+- ~~skhd~~
 - tmux
-- ubersicht
+- wallpapers
 - zsh
-#### updated: 14 Août 2018
+- ~~homebrew~~
+- ~~iterm~~
+- ~~chumkwm~~
+- ~~ubersicht~~
+#### updated: 06 July 20
