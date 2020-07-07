@@ -14,7 +14,7 @@ ctrl + space
 ctrl + Escape
 	pkill -USR1 -x sxhkd
 
-# make bspmwm reload cong files
+# make bspmwm reload conf files
 ctrl + shift + Escape
   killall vanela; bspwmrc
 
@@ -31,6 +31,10 @@ XF86AudioMute
 # media controls mapped to keyboard
 XF86AudioPlay{Play,Pause,Prev,Next}
   playerctl {play,pause,prev,next}
+
+# screen shot with print key
+Print
+  scrot ~/Images/screenshots/%Y-%m-%d-%T-screenshot.png -t 20 -e 'dunstify "Screenshot Sauvegardé \n $f"'
 
 #
 # bspwm hotkeys

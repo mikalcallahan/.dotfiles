@@ -6,14 +6,29 @@ xrdb -merge ~/.Xresources
 # key bindings
 sxhkd -c ~/.dotfiles/sxkhd/sxhkdrc &
 
-# redshift
-redshift &
-
 # wallpaper & colors
 wal -R &
 
+# redshift
+redshift &
+
+# compton
+compton &
+
+#dock
+plank &
+
 # notifications
 dunst &
+
+# mpd
+mpd &
+
+# gnome-screensaver
+gnome-screensaver &
+
+# ckb
+ckb-next -b &
 
 # panel
 ~/.config/polybar/polybar.sh &
@@ -57,3 +72,6 @@ bspc config paddingless_monocle false
 
 bspc config click_to_focus true
 bspc config focus_follows_pointer true
+
+bspc rule -a Plank layer=above manage=off border=off
+bspc rule -a Polybar manage=off border=off

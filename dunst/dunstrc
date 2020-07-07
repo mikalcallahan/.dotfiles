@@ -96,7 +96,7 @@
 
     ### Text ###
 
-    font = San Francisco Text 10
+    font = San Francisco Text 11
 
     # The spacing between lines.  If the height is smaller than the
     # font height, it will get raised to the font height.
@@ -145,7 +145,7 @@
     # Show age of message if message is older than show_age_threshold
     # seconds.
     # Set to -1 to disable.
-    show_age_threshold = 60
+    show_age_threshold = -1
 
     # Split notifications into multiple lines if they don't fit into
     # geometry.
@@ -159,7 +159,7 @@
     ignore_newline = no
 
     # Stack together notifications with the same content
-    stack_duplicates = false
+    stack_duplicates = true
 
     # Hide the count of stacked notifications with the same content
     hide_duplicate_count = false
@@ -207,7 +207,7 @@
     # Print a notification on startup.
     # This is mainly for error detection, since dbus (re-)starts dunst
     # automatically after a crash.
-    startup_notification = false
+    startup_notification = true
 
     # Manage dunst's desire for talking
     # Can be one of the following values:
@@ -283,28 +283,20 @@
     context = ctrl+shift+period
 
 [urgency_low]
-    # IMPORTANT: colors have to be defined in quotation marks.
-    # Otherwise the "#" and following would be interpreted as a comment.
     background = "#0B0C07"
     foreground = "#e8e4e1"
     timeout = 5
-    # Icon for notifications with low urgency, uncomment to enable
-    #icon = /usr/share/icons/Adwaita/16x16/devices/
 
 [urgency_normal]
     background = "#0B0C07"
     foreground = "#e8e4e1"
     timeout = 5
-    # Icon for notifications with normal urgency, uncomment to enable
-    #icon = /usr/share/icons/Adwaita/16x16/devices/
 
-[urgency_critical:w]
+[urgency_critical]
     background = "#0B0C07"
     foreground = "#e8e4e1"
-    frame_color = "#828583"
-    timeout = 15
-    # Icon for notifications with critical urgency, uncomment to enable
-    #icon = /usr/share/icons/Adwaita/16x16/devices
+    frame_color = "#000000"
+    timeout = 0
 
 # Every section that isn't one of the above is interpreted as a rules to
 # override settings for certain messages.

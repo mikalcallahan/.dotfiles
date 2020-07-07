@@ -1,0 +1,15 @@
+set imap_user = "mikal.callahan"
+set from = "mikal.callahan@icloud.com"
+set smtp_url = "smtp://mikal.callahan@smtp.mail.me.com:587/"
+set imap_pass= "lzhy-ejzo-lhxp-ykec"
+
+set folder = "imaps://mikal.callahan@imap.mail.me.com/"
+set spoolfile = "imaps://mikal.callahan@imap.mail.me.com/INBOX"
+set postponed = "+Drafts"
+set record = "+Sent Messages"
+
+set imap_pipeline_depth=0
+
+set header_cache = "~/.config/mutt/cache/headers"
+set message_cachedir = "~/.config/mutt/cache/bodies"
+set certificate_file = "~/.config/mutt/certificates"
