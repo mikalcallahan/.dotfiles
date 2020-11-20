@@ -1,0 +1,22 @@
+## Directory for storing downloaded lyrics. It defaults to ~/.lyrics since other
+## MPD clients (eg. ncmpc) also use that location.
+##
+#
+#lyrics_directory = ~/.lyrics
+#
+##### connection settings #####
+#
+mpd_host = localhost
+#
+mpd_port = 6600
+#
+mpd_connection_timeout = 5
+#
+## Needed for tag editor and file operations to work.
+##
+mpd_music_dir = ~/Music
+#
+#mpd_crossfade_time = 5
+#
+
+# Notification on song change
