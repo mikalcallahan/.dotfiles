@@ -1,52 +1,42 @@
-export PATH="${PATH}:${HOME}/.local/bin/"
+# Enable colors and change prompt:
 (cat ~/.cache/wal/sequences &) # wal colorscheme
+autoload -U colors && colors
+PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
 
-#export JAVA_HOME=/usr/lib/jvm/java-8-openjdk
-#export PATH=${PATH}:${JAVA_HOME}bin
-#export ANDROID_HOME="/home/mikal/.androidstudio/sdk/"
-#export PATH="${PATH}:${ANDROID_HOME}tools/:${ANDROID_HOME}platform-tools/"
-
-# Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
 unsetopt beep
 bindkey -v
-# End of lines configured by zsh-newuser-install
-# The following lines were added by compinstall
-zstyle :compinstall filename '/home/mikal/.zshrc'
 
-autoload -Uz compinit
-compinit
-# End of lines added by compinstall
-#
+# localbin
+export PATH="${PATH}:${HOME}/.local/bin/"
+
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+  autoload -Uz compinit
+    compinit
+fi
+
+# case insensitive path-completion 
+zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 
 
 # fzf x ripgrep
-# --files: List files that would be searched but do not search
-# --no-ignore: Do not respect .gitignore, etc...
-# --hidden: Search hidden files and folders
-# --follow: Follow symlinks
-# --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
-
-# Source NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# Source Prezto.
-if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-fi
-
-alias gotop="gotop-cjbassi"
-
-conscient
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 ###-tns-completion-start-###
-if [ -f /home/mikal/.tnsrc ]; then 
-    source /home/mikal/.tnsrc 
-fi
+#if [ -f /home/mikal/.tnsrc ]; then 
+#    source /home/mikal/.tnsrc 
+#fi
 ###-tns-completion-end-###
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export NVM_DIR=~/.nvm
+PATH="~/.nvm/versions/node/v12.18.4/bin:$PATH"
+alias alias nvminit='. "$(brew --prefix nvm)/nvm.sh"'
+#source $(brew --prefix nvm)/nvm.sh
+export PATH="/usr/local/sbin:$PATH"
+
+alias mongodb-restart="brew services restart mongodb-community"
+alias mongodb-stop="brew services stop mongodb-community"
+
