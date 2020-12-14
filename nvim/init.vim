@@ -4,25 +4,26 @@
 
 " VIM Plugins
 call plug#begin('~/.vim/plugged')
-Plug 'neoclide/coc.nvim', {'branch': 'release'}       " Coq
+Plug 'neoclide/coc.nvim', {'branch': 'release'}       " Coc
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }   " Fzf
 Plug 'junegunn/fzf.vim'                               " Fzf vim
 Plug 'junegunn/goyo.vim'                              " Goyo - Distraction free writing
 Plug 'dylanaraps/fff.vim'                             " FFF File browser
 Plug 'itchyny/lightline.vim'                          " Lightline statusbar
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }    " Markdown Preview
 Plug 'scrooloose/nerdtree'                            " Nerdtree file explorer
 Plug 'Xuyuanp/nerdtree-git-plugin'                    " Nerdtree git plugin
 Plug 'ryanoasis/vim-devicons'                         " Nerdtree icons
 Plug 'junegunn/seoul256.vim'                          " Seoul256 colorscheme
+Plug 'iloginow/vim-stylus'                            " Better Stylus support
 Plug 'sheerun/vim-polyglot'                           " General synxtax for multiple languages
-Plug 'dylanaraps/wal.vim'                             " Wal colorscheme for vim
+Plug '~/Dév/desktop/wal.vim'                " Forked wal.vim for COC support
 call plug#end()
 
 "" General
 set number                    " display line numbers
 set linebreak                 " Break lines at word
 set showbreak=+++             " Wrap-broken line prefix
-set textwidth=100             " Line wrap at 100 columns
 set showmatch                 " Highlight matching brackets
 set visualbell                " Because we don't need audio
 set mouse=a                   " Mouse mode
@@ -48,17 +49,39 @@ filetype plugin on            " Enable filetype
 
 " Set colors
 let g:seoul256_background = 235
-colo wal
+colorscheme wal
 
 "" COC options
 set hidden
 set cmdheight=2
-set updatetime=300
+set updatetime=100
 set shortmess+=c
 set signcolumn=yes
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>" " tab completion autocomplete
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>" " tab reverse completion for autocomplete
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>" " tab enter for results
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
 
 "" Nerdtree options
 nnoremap <Tab> :NERDTree<CR>
@@ -72,15 +95,24 @@ let g:lightline = {
       \ 'colorscheme': 'wal',
       \	'active': {
       \	  'right': [ [ 'percent' ],
-      \		     [ 'filetype' ] ]
+      \		     [ 'cocstatus', 'currentfunction', 'filetype' ] ]
       \	},
+      \ 'component_function': {
+      \   'cocstatus': 'coc#status',
+      \   'currentfunction': 'CocCurrentFunction'
+      \ },
       \ }
+
 let s:palette = g:lightline#colorscheme#{g:lightline.colorscheme}#palette   " hide lightline middle bar
 let s:palette.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]        " hide black bar
 
+"" FZF Options
+" Use fzf with ripgrep
 
-" FZF x Ripgrep
 command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+
+" Map esc to clear search heightlight
+:nnoremap <silent><esc> :noh<CR>
 
 " Search Files with Ctrl-P
 nnoremap <C-p> :Files<Cr>
@@ -89,6 +121,10 @@ let g:fzf_action = {
   \ 'ctrl-s': 'split',
   \ 'ctrl-v': 'vsplit'
   \}
+
+" Search inside files with Ctrl-F
+nnoremap <C-f> :Rg<CR>
+command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
 
 " FZF ignore node_modules
 "let $FZF_DEFAULT_COMMAND = 'ag -g ""'
@@ -101,3 +137,9 @@ let g:fff#split = "200vnew"
 
 " Open split on the left side (NERDtree style).
 let g:fff#split_direction = "nosplitbelow nosplitright"
+
+"" Cursor Settings kitty
+let &t_SI.="\e[5 q" "SI = INSERT mode
+let &t_SR.="\e[4 q" "SR = REPLACE mode
+let &t_EI.="\e[1 q" "EI = NORMAL mode (ELSE)
+

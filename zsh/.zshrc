@@ -34,8 +34,15 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.g
 export NVM_DIR=~/.nvm
 PATH="~/.nvm/versions/node/v12.18.4/bin:$PATH"
 alias alias nvminit='. "$(brew --prefix nvm)/nvm.sh"'
-#source $(brew --prefix nvm)/nvm.sh
+# source $(brew --prefix nvm)/nvm.sh
 export PATH="/usr/local/sbin:$PATH"
+
+# Run 'fff' with 'f' or whatever you decide to name the function.
+# CD on exit
+f() {
+    fff "$@"
+    cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
+}
 
 alias mongodb-restart="brew services restart mongodb-community"
 alias mongodb-stop="brew services stop mongodb-community"
