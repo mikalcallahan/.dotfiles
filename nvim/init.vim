@@ -2,6 +2,12 @@
 "  Author: Mikal Callahan
 "  
 
+" Install vim-plug if not found
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
 " VIM Plugins
 call plug#begin('~/.vim/plugged')
 Plug 'neoclide/coc.nvim', {'branch': 'release'}       " Coc
@@ -17,7 +23,7 @@ Plug 'ryanoasis/vim-devicons'                         " Nerdtree icons
 Plug 'junegunn/seoul256.vim'                          " Seoul256 colorscheme
 Plug 'iloginow/vim-stylus'                            " Better Stylus support
 Plug 'sheerun/vim-polyglot'                           " General synxtax for multiple languages
-Plug '~/Dév/desktop/wal.vim'                " Forked wal.vim for COC support
+Plug '~/dév/desktop/wal.vim'                " Forked wal.vim for COC support
 call plug#end()
 
 "" General
@@ -26,9 +32,8 @@ set linebreak                 " Break lines at word
 set showbreak=+++             " Wrap-broken line prefix
 set showmatch                 " Highlight matching brackets
 set visualbell                " Because we don't need audio
-set mouse=a                   " Mouse mode
+set mouse-=a                   " Mouse mode
 set clipboard^=unnamedplus    " System clipboard
-
 set hlsearch                  " Highlights all search results
 set smartcase                 " Smart-case search
 set ignorecase                " Ignore case-sensitivity
