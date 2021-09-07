@@ -1,6 +1,6 @@
 # Enable colors and change prompt:
-(cat ~/.cache/wal/sequences &) # wal colorscheme
-autoload -U colors && colors
+#(cat ~/.cache/wal/sequences &) # wal colorscheme
+#autoload -U colors && colors
 PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
 
 HISTFILE=~/.histfile
@@ -44,6 +44,18 @@ f() {
     cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
 }
 
-alias mongodb-restart="brew services restart mongodb-community"
-alias mongodb-stop="brew services stop mongodb-community"
+~/dev/desktop/pyQuote/pyQuote.py
+
+export ANDROID_SDK=$HOME/Library/Android/sdk
+export PATH=$ANDROID_SDK/emulator:$ANDROID_SDK/tools:$PATH
+export ANDROID_HOME="/Users/mikal/Library/Android/sdk"
+
+alias mongodb-restart='brew services restart mongodb-community'
+alias mongodb-stop='brew services stop mongodb-community'
+alias flac-to-alac='for name in *.flac; do ffmpeg -nostdin -i "$name" -c:a alac -c:v copy "${name%.*}.m4a"; done'
+alias gst='git status'
+
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+export NNN_COLORS="2136"                           # use a different color for each context
 

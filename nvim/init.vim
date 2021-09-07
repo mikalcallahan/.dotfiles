@@ -14,10 +14,11 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }    " Ma
 Plug 'scrooloose/nerdtree'                            " Nerdtree file explorer
 Plug 'Xuyuanp/nerdtree-git-plugin'                    " Nerdtree git plugin
 Plug 'ryanoasis/vim-devicons'                         " Nerdtree icons
+Plug 'derekwyatt/vim-scala'                           " Scala syntax
 Plug 'junegunn/seoul256.vim'                          " Seoul256 colorscheme
 Plug 'iloginow/vim-stylus'                            " Better Stylus support
 Plug 'sheerun/vim-polyglot'                           " General synxtax for multiple languages
-Plug '~/Dév/desktop/wal.vim'                " Forked wal.vim for COC support
+Plug 'dylanaraps/wal.vim'                             " wal colors
 call plug#end()
 
 "" General
@@ -60,14 +61,56 @@ set signcolumn=yes
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>" " tab completion autocomplete
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>" " tab reverse completion for autocomplete
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>" " tab enter for results
+
+" Use <C-k> to trigger completion.
+inoremap <silent><expr> <C-k> coc#refresh()
+
 " GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
+" nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Coc-explorer
+nmap <space>e :CocCommand explorer<CR>
+
+" Coc-git
+" navigate chunks of current buffer
+nmap [g <Plug>(coc-git-prevchunk)
+nmap ]g <Plug>(coc-git-nextchunk)
+
+" navigate conflicts of current buffer
+nmap [c <Plug>(coc-git-prevconflict)
+nmap ]c <Plug>(coc-git-nextconflict)
+
+" show chunk diff at current position
+nmap gp <Plug>(coc-git-chunkinfo)
+
+" stage chunk
+nmap <silent>gs :CocCommand git.chunkStage<CR>
+" nmap gs <Plug>(coc-git-chunkstage) " - doesn't work for some reason
+
+" show commit contains current position
+nmap gc <Plug>(coc-git-commit)
+
+" create text object for git chunks
+omap ig <Plug>(coc-git-chunk-inner)
+xmap ig <Plug>(coc-git-chunk-inner)
+omap ag <Plug>(coc-git-chunk-outer)
+xmap ag <Plug>(coc-git-chunk-outer)
+
+
+" :Prettier
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+" Use `:Format` to format current buffer
+command! -nargs=0 Format :call CocAction('format')
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -78,6 +121,9 @@ function! s:show_documentation()
     execute '!' . &keywordprg . " " . expand('<cword>')
   endif
 endfunction
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
 
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
@@ -111,7 +157,7 @@ let s:palette.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]        " hi
 
 command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
 
-" Map esc to clear search heightlight
+" Map esc to clear search highlight
 :nnoremap <silent><esc> :noh<CR>
 
 " Search Files with Ctrl-P
@@ -142,4 +188,7 @@ let g:fff#split_direction = "nosplitbelow nosplitright"
 let &t_SI.="\e[5 q" "SI = INSERT mode
 let &t_SR.="\e[4 q" "SR = REPLACE mode
 let &t_EI.="\e[1 q" "EI = NORMAL mode (ELSE)
+
+" Scala
+au BufRead,BufNewFile *.sbt set filetype=scala
 
