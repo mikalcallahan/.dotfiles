@@ -1,5 +1,6 @@
 # Enable colors and change prompt:
-#(cat ~/.cache/wal/sequences &) # wal colorscheme
+(cat ~/.cache/wal/sequences &) # wal colorscheme
+
 #autoload -U colors && colors
 PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
 
@@ -59,3 +60,8 @@ alias gst='git status'
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 export NNN_COLORS="2136"                           # use a different color for each context
 
+# pyenv
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+alias python=/usr/local/bin/python3
