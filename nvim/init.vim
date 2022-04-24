@@ -10,14 +10,14 @@ Plug 'junegunn/fzf.vim'                               " Fzf vim
 Plug 'junegunn/goyo.vim'                              " Goyo - Distraction free writing
 Plug 'dylanaraps/fff.vim'                             " FFF File browser
 Plug 'itchyny/lightline.vim'                          " Lightline statusbar
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }    " Markdown Preview
+" Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }    " Markdown Preview
 Plug 'scrooloose/nerdtree'                            " Nerdtree file explorer
 Plug 'Xuyuanp/nerdtree-git-plugin'                    " Nerdtree git plugin
 Plug 'ryanoasis/vim-devicons'                         " Nerdtree icons
-Plug 'derekwyatt/vim-scala'                           " Scala syntax
+" Plug 'derekwyatt/vim-scala'                           " Scala syntax
 Plug 'junegunn/seoul256.vim'                          " Seoul256 colorscheme
-Plug 'iloginow/vim-stylus'                            " Better Stylus support
-Plug 'sheerun/vim-polyglot'                           " General synxtax for multiple languages
+" Plug 'iloginow/vim-stylus'                            " Better Stylus support
+" Plug 'sheerun/vim-polyglot'                           " General synxtax for multiple languages
 Plug 'dylanaraps/wal.vim'                             " wal colors
 call plug#end()
 
@@ -52,6 +52,8 @@ filetype plugin on            " Enable filetype
 let g:seoul256_background = 235
 colorscheme wal
 
+"hi PmenuSbar ctermfg=black ctermbg=6
+
 "" COC options
 set hidden
 set cmdheight=2
@@ -63,7 +65,17 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>" " tab reverse compl
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>" " tab enter for results
 
 " Use <C-k> to trigger completion.
-inoremap <silent><expr> <C-k> coc#refresh()
+" inoremap <silent><expr> <C-k> coc#refresh()
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+hi CocFloating ctermfg=black ctermbg=white
+hi Pmenu ctermfg=black ctermbg=6
+hi FloatBorder ctermfg=white ctermbg=white
 
 " GoTo code navigation.
 " nmap <silent> gd <Plug>(coc-definition)
@@ -111,16 +123,28 @@ nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
+"
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
 
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
+  if CocAction('hasProvider', 'hover')
     call CocActionAsync('doHover')
   else
-    execute '!' . &keywordprg . " " . expand('<cword>')
+    call feedkeys('K', 'in')
   endif
 endfunction
+
+" Remap keys for applying codeAction to the current buffer.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Run the Code Lens action on the current line.
+nmap <leader>cl  <Plug>(coc-codelens-action)
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
@@ -128,6 +152,8 @@ nmap <leader>rn <Plug>(coc-rename)
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
+" Coc markdown preview
+command! -nargs=0 PreviewMarkdown :call CocActionAsync('runCommand', 'markdown-preview-enhanced.openPreview')
 
 "" Nerdtree options
 nnoremap <Tab> :NERDTree<CR>
@@ -176,7 +202,7 @@ command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-hea
 "let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 
 " Open fff on press of 'f'
-nnoremap f :F<CR>
+nnoremap fff :F<CR>
 
 " Vertical split (NERDtree style).
 let g:fff#split = "200vnew"
