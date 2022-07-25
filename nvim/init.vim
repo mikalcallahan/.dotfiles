@@ -52,8 +52,6 @@ filetype plugin on            " Enable filetype
 let g:seoul256_background = 235
 colorscheme wal
 
-"hi PmenuSbar ctermfg=black ctermbg=6
-
 "" COC options
 set hidden
 set cmdheight=2
@@ -73,9 +71,7 @@ else
   inoremap <silent><expr> <c-@> coc#refresh()
 endif
 
-hi CocFloating ctermfg=black ctermbg=white
-hi Pmenu ctermfg=black ctermbg=6
-hi FloatBorder ctermfg=white ctermbg=white
+hi link CocFloating Normal
 
 " GoTo code navigation.
 " nmap <silent> gd <Plug>(coc-definition)
@@ -155,6 +151,9 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 " Coc markdown preview
 command! -nargs=0 PreviewMarkdown :call CocActionAsync('runCommand', 'markdown-preview-enhanced.openPreview')
 
+" Coc file explorer
+nnoremap <Tab> <Cmd>CocCommand explorer<CR>
+
 "" Nerdtree options
 nnoremap <Tab> :NERDTree<CR>
 let NERDTreeShowHidden = 1    " show hidden files in nerdtree
@@ -197,6 +196,12 @@ let g:fzf_action = {
 " Search inside files with Ctrl-F
 nnoremap <C-f> :Rg<CR>
 command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
+
+" Navigate panes with hjkl
+nmap <silent> <c-k> :wincmd k<CR>
+nmap <silent> <c-j> :wincmd j<CR>
+nmap <silent> <c-h> :wincmd h<CR>
+nmap <silent> <c-l> :wincmd l<CR>
 
 " FZF ignore node_modules
 "let $FZF_DEFAULT_COMMAND = 'ag -g ""'
