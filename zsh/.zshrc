@@ -45,7 +45,7 @@ f() {
     cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
 }
 
-~/dev/desktop/pyQuote/pyQuote.py
+# ~/dev/desktop/pyQuote/pyQuote.py
 
 export ANDROID_SDK=$HOME/Library/Android/sdk
 export PATH=$ANDROID_SDK/emulator:$ANDROID_SDK/tools:$PATH
@@ -65,3 +65,7 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 alias python=/usr/local/bin/python3
+
+
+# Load Angular CLI autocompletion.
+# source <(ng completion script)
