@@ -45,7 +45,8 @@ f() {
     cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
 }
 
-~/dev/desktop/pyQuote/pyQuote.py
+# ~/dev/desktop/pyQuote/pyQuote.py
+~/dev/desktop/quotescript/.build/release/quotescript
 
 export ANDROID_SDK=$HOME/Library/Android/sdk
 export PATH=$ANDROID_SDK/emulator:$ANDROID_SDK/tools:$PATH
