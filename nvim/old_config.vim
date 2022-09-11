@@ -3,23 +3,9 @@
 "  
 
 " VIM Plugins
-call plug#begin('~/.vim/plugged')
-Plug 'neoclide/coc.nvim', {'branch': 'release'}       " Coc
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }   " Fzf
-Plug 'junegunn/fzf.vim'                               " Fzf vim
-Plug 'junegunn/goyo.vim'                              " Goyo - Distraction free writing
-Plug 'dylanaraps/fff.vim'                             " FFF File browser
-Plug 'itchyny/lightline.vim'                          " Lightline statusbar
-" Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }    " Markdown Preview
-Plug 'scrooloose/nerdtree'                            " Nerdtree file explorer
-Plug 'Xuyuanp/nerdtree-git-plugin'                    " Nerdtree git plugin
-Plug 'ryanoasis/vim-devicons'                         " Nerdtree icons
-" Plug 'derekwyatt/vim-scala'                           " Scala syntax
-Plug 'junegunn/seoul256.vim'                          " Seoul256 colorscheme
-" Plug 'iloginow/vim-stylus'                            " Better Stylus support
-" Plug 'sheerun/vim-polyglot'                           " General synxtax for multiple languages
-Plug 'dylanaraps/wal.vim'                             " wal colors
-call plug#end()
+"call plug#begin('~/.vim/plugged')
+
+"call plug#end()
 
 "" General
 set number                    " display line numbers
