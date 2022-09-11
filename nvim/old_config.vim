@@ -3,23 +3,9 @@
 "  
 
 " VIM Plugins
-call plug#begin('~/.vim/plugged')
-Plug 'neoclide/coc.nvim', {'branch': 'release'}       " Coc
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }   " Fzf
-Plug 'junegunn/fzf.vim'                               " Fzf vim
-Plug 'junegunn/goyo.vim'                              " Goyo - Distraction free writing
-Plug 'dylanaraps/fff.vim'                             " FFF File browser
-Plug 'itchyny/lightline.vim'                          " Lightline statusbar
-" Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }    " Markdown Preview
-Plug 'scrooloose/nerdtree'                            " Nerdtree file explorer
-Plug 'Xuyuanp/nerdtree-git-plugin'                    " Nerdtree git plugin
-Plug 'ryanoasis/vim-devicons'                         " Nerdtree icons
-" Plug 'derekwyatt/vim-scala'                           " Scala syntax
-Plug 'junegunn/seoul256.vim'                          " Seoul256 colorscheme
-" Plug 'iloginow/vim-stylus'                            " Better Stylus support
-" Plug 'sheerun/vim-polyglot'                           " General synxtax for multiple languages
-Plug 'dylanaraps/wal.vim'                             " wal colors
-call plug#end()
+"call plug#begin('~/.vim/plugged')
+
+"call plug#end()
 
 "" General
 set number                    " display line numbers
@@ -37,6 +23,7 @@ set incsearch                 " Searches for strings incrementally
 
 set autoindent                " Set auto indent
 set autoread                  " Detect file changes outside of vim
+au CursorHold * checktime     " auto reload file when changes detected
 set expandtab                 " Use spaces instead of tabs
 set shiftwidth=2              " Number of auto-indent spaces
 set smartindent               " Enable smart indent
@@ -58,12 +45,45 @@ set cmdheight=2
 set updatetime=100
 set shortmess+=c
 set signcolumn=yes
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>" " tab completion autocomplete
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>" " tab reverse completion for autocomplete
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>" " tab enter for results
+"inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>" " tab completion autocomplete
+"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>" " tab reverse completion for autocomplete
+"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>" " tab enter for results
 
 " Use <C-k> to trigger completion.
 " inoremap <silent><expr> <C-k> coc#refresh()
+" Use <c-space> to trigger completion.
+"if has('nvim')
+"  inoremap <silent><expr> <c-space> coc#refresh()
+"else
+"  inoremap <silent><expr> <c-@> coc#refresh()
+" endif
+
+" inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+
+" inoremap <silent><expr> <TAB>
+"      \ coc#pum#visible() ? coc#pum#next(1):
+"      \ CheckBackspace() ? "\<Tab>" :
+"      \ coc#refresh()
+
+" NOTE: Had trouble with default CheckBackspace implementation when tabbing in
+" INSERT mode
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1):"\<Tab>"
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice.
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
 " Use <c-space> to trigger completion.
 if has('nvim')
   inoremap <silent><expr> <c-space> coc#refresh()
@@ -72,6 +92,8 @@ else
 endif
 
 hi link CocFloating Normal
+hi CocSearch ctermfg=12 guifg=#18A3FF
+hi CocMenuSel ctermbg=11 guibg=#13354A
 
 " GoTo code navigation.
 " nmap <silent> gd <Plug>(coc-definition)
@@ -152,10 +174,10 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 command! -nargs=0 PreviewMarkdown :call CocActionAsync('runCommand', 'markdown-preview-enhanced.openPreview')
 
 " Coc file explorer
-nnoremap <Tab> <Cmd>CocCommand explorer<CR>
+" nnoremap <Tab> <Cmd>CocCommand explorer<CR>
 
 "" Nerdtree options
-nnoremap <Tab> :NERDTree<CR>
+" nnoremap <Tab> :NERDTree<CR>
 let NERDTreeShowHidden = 1    " show hidden files in nerdtree
 
 "" Lightline options
