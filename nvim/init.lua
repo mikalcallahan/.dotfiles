@@ -1,3 +1,2 @@
-require("plugins")
-
-vim.cmd('source ~/.dotfiles/nvim/old_config.vim')
+-- bootstrap lazy.nvim, LazyVim and your plugins
+require("config.lazy")
