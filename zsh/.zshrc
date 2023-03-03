@@ -17,11 +17,11 @@ bindkey -v
 export PATH="${PATH}:${HOME}/.local/bin/"
 
 ### Commented out for starship
-#if type brew &>/dev/null; then
-#  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-#  autoload -Uz compinit
-#    compinit
-#fi
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+  autoload -Uz compinit
+    compinit
+fi
 
 ### Commented out for starship
 # case insensitive path-completion 
