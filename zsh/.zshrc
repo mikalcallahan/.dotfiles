@@ -1,31 +1,35 @@
-# Enable colors and change prompt:
-(cat ~/.cache/wal/sequences &) # wal colorscheme
-
-#autoload -U colors && colors
-# PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
-
-# Initiate startship
-eval "$(starship init zsh)"
-
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
 unsetopt beep
 bindkey -v
 
-# localbin
-export PATH="${PATH}:${HOME}/.local/bin/"
+# autoload -U colors && colors
+# PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
 
-### Commented out for starship
+# localbin, android, path, etc
+export PATH="${PATH}:${HOME}/.local/bin/"
+export ANDROID_SDK=$HOME/Library/Android/sdk
+export PATH=$ANDROID_SDK/emulator:$ANDROID_SDK/tools:$PATH
+export ANDROID_HOME="/Users/mikal/Library/Android/sdk"
+
+# case insensitive path-completion 
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
   autoload -Uz compinit
     compinit
 fi
 
-### Commented out for starship
-# case insensitive path-completion 
 # zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 
+
+# brew function for sketchybar
+function brew() {
+  command brew "$@" 
+
+  if [[ $* =~ "upgrade" ]] || [[ $* =~ "update" ]] || [[ $* =~ "outdated" ]]; then
+    sketchybar --trigger brew_update
+  fi
+}
 
 # fzf x ripgrep
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
@@ -56,12 +60,7 @@ f() {
 # ~/dev/desktop/pyQuote/pyQuote.py
 # ~/dev/desktop/quotescript/.build/release/quotescript
 # scala ~/dev/desktop/scala-test/hella-world/src/main/scala/Main.scala
-node ~/dev/desktop/scala-test/hella-world/target/scala-3.2.0/hella-world-opt/main.js
-
-export ANDROID_SDK=$HOME/Library/Android/sdk
-export PATH=$ANDROID_SDK/emulator:$ANDROID_SDK/tools:$PATH
-export ANDROID_HOME="/Users/mikal/Library/Android/sdk"
-
+alias quotescript="node ~/Developer/desktop/scala-test/hella-world/target/scala-3.2.0/hella-world-opt/main.js"
 alias mongodb-restart='brew services restart mongodb-community'
 alias mongodb-stop='brew services stop mongodb-community'
 alias flac-to-alac='for name in *.flac; do ffmpeg -nostdin -i "$name" -c:a alac -c:v copy "${name%.*}.m4a"; done'
@@ -78,7 +77,12 @@ if command -v pyenv 1>/dev/null 2>&1; then
 fi
 alias python=/usr/local/bin/python3
 
+# source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
+quotescript
 # Load Angular CLI autocompletion.
 # source <(ng completion script)
 
+# Initiate startship
+eval "$(starship init zsh)"
+export PATH="/usr/local/opt/openjdk@17/bin:$PATH"
