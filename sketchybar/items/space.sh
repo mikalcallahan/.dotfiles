@@ -17,7 +17,7 @@ do
                               icon.padding_left=22                          \
                               icon.padding_right=22                         \
                               label.padding_right=33                        \
-                              icon.highlight_color=$WHITE               \
+                              icon.highlight_color=$CGREEN               \
                               background.padding_left=-8                    \
                               background.padding_right=-8                   \
                               background.color=0xff$CBACK                   \
@@ -39,4 +39,4 @@ sketchybar   --add item       separator left                          \
                               background.padding_right=15             \
                               label.drawing=off                       \
                               associated_display=active               \
-                              icon.color=0xff$CFORE
+                              icon.color=$CWHITE

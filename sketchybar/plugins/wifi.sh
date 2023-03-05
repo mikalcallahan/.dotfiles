@@ -11,9 +11,9 @@ if [ "$SSID" = "" ]; then
   sketchybar --set $NAME label="Disconnected" icon=睊
 else
   if [[ $VPN_STATUS  =~ "CONNECTED" ]]; then
-    sketchybar --set $NAME label="$SSID" icon= icon.color=$WHITE
+    sketchybar --set $NAME label="$SSID" icon=  icon.color=$CGREEN
     # sketchybar --set $NAME label="$SSID (${CURR_TX}Mbps)" icon=直
   else
-    sketchybar --set $NAME label="$SSID" icon= icon.color=$ORANGE
+    sketchybar --set $NAME label="$SSID" icon=  icon.color=$CMAGENTA
   fi
 fi

@@ -5,4 +5,5 @@
 # https://felixkratz.github.io/SketchyBar/config/events#events-and-scripting
 
 # sketchybar --set $NAME label="$(date '+%a %d. %b %H:%M')"
-sketchybar --set $NAME icon="$(LANG=fr_CA date '+%a %d. %b')" label="$(date '+%H:%M')"
+# sketchybar --set $NAME icon="$(LANG=fr_CA date '+%a %d. %b')" label="$(date '+%H:%M')"
+sketchybar --set $NAME icon="$(date '+%a %d. %b')" label="$(date '+%H:%M')"

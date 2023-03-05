@@ -17,7 +17,7 @@ sketchybar --add       event        window_focus                  \
                                     label.drawing=off             \
                                     icon.width=30                 \
                                     icon=$YABAI_GRID              \
-                                    icon.color=$ORANGE            \
+                                    icon.color=$CGREEN            \
                                     updates=on                    \
                                     associated_display=active     \
            --subscribe system.yabai window_focus                  \
@@ -29,7 +29,7 @@ sketchybar --add       event        window_focus                  \
                                     icon.drawing=off              \
                                     background.padding_left=0     \
                                     background.padding_right=10   \
-                                    label.color=$WHITE            \
+                                    label.color=$CWHITE            \
                                     label.font="$FONT:White:13.0" \
                                     associated_display=active     \
            --subscribe front_app    front_app_switched
