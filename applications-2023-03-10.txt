@@ -1,0 +1,63 @@
+AdGuard for Safari.app
+Alacritty.app
+Android Studio.app
+Arc.app
+AudioBookBinder.app
+balenaEtcher.app
+Bitwarden.app
+Blender.app
+Brave Browser.app
+Canon Utilities
+DevDocs.app
+Developer.app
+Discord.app
+djay Pro AI.app
+Docker.app
+DuckDuckGo.app
+Figma.app
+Firefox Developer Edition.app
+FreeTube.app
+GarageBand.app
+GIMP.app
+HP Easy Scan.app
+HP Smart.app
+iMovie.app
+IntelliJ IDEA CE.app
+iTerm.app
+IVPN.app
+Keynote.app
+kitty.app
+Logi Bolt.app
+Logic Pro X.app
+Logi Options.app
+logioptionsplus.app
+LuLu.app
+Notion.app
+Numbers.app
+Orion.app
+Pages.app
+Pocket.app
+port.app
+Postman.app
+Raivo OTP.app
+Safari.app -> ../System/Cryptexes/App/System/Applications/Safari.app
+Safari Technology Preview.app
+Save to Pocket.app
+Serato DJ Pro.app
+SF Symbols.app
+Signal.app
+Slack.app
+Spotify.app
+Status.app
+Telegram.app
+The Unarchiver.app
+Tomito.app
+Transmission.app
+TurboTax Deluxe 2019.app
+Twitter.app
+Utilities
+Vimari.app
+VLC.app
+VSCodium.app
+Wappalyzer.app
+Xcode.app
