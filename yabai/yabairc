@@ -1,0 +1,78 @@
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+sudo yabai --load-sa
+
+# launchctl unload -F /System/Library/LaunchAgents/com.apple.WindowManager.plist
+
+## colors
+source ~/.cache/wal/colors.sh # pywal scheme
+
+# yabai template colours
+CBACK=$(echo $background | sed 's/#//')
+CFORE=$(echo $foreground | sed 's/#//')
+CACTV=$(echo $color5 | sed 's/#//')
+CNORM=$(echo $color1 | sed 's/#//')
+CINSE=$(echo $foreground | sed 's/#//')
+CINVISIBLE=0x00555555
+
+## Sketchybar support
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
+yabai -m signal --add event=window_created action="sketchybar --trigger windows_on_spaces"
+yabai -m signal --add event=window_destroyed action="sketchybar --trigger windows_on_spaces"
+
+## global settings
+yabai -m config                                 \
+    external_bar                 all:0:0        \
+    mouse_follows_focus          on             \
+    focus_follows_mouse          autoraise      \
+    window_origin_display        default        \
+    window_placement             second_child   \
+    window_topmost               off            \
+    window_shadow                on             \
+    window_animation_duration    0.0            \
+    window_opacity_duration      0.0            \
+    active_window_opacity        1.0            \
+    normal_window_opacity        0.90           \
+    window_opacity               off            \
+    insert_feedback_color        0xffd75f5f     \
+    active_window_border_color   0xff$CFORE     \
+    normal_window_border_color   $CINVISIBLE    \
+    window_border_width          4              \
+    window_border_radius         12             \
+    window_border_blur           off            \
+    window_border_hidpi          on             \
+    window_border                on             \
+    split_ratio                  0.50           \
+    split_type                   auto           \
+    auto_balance                 off            \
+    top_padding                  55             \
+    bottom_padding               20             \
+    left_padding                 12             \
+    right_padding                12             \
+    window_gap                   06             \
+    layout                       stack          \
+    mouse_modifier               fn             \
+    mouse_action1                move           \
+    mouse_action2                resize         \
+    mouse_drop_action            swap
+
+## Exceptions
+yabai -m rule --add app="Finder" manage=off
+yabai -m rule --add app="Plans" manage=off 
+yabai -m rule --add app="Messages" manage=off 
+yabai -m rule --add label="Réglages système" app="^Réglages système" title=".*" manage=off
+yabai -m rule --add app='^Calendrier' manage=off
+yabai -m rule --add app="^Aperçu" manage=off
+yabai -m rule --add app="^Balados" manage=off
+yabai -m rule --add app="^News" manage=off
+yabai -m rule --add app="^Signal" manage=off
+yabai -m rule --add app="^Bitwarden" manage=off
+yabai -m rule --add app="^Musique" manage=off
+yabai -m rule --add app="^App Store" manage=off
+yabai -m rule --add app="^Discord" manage=off
+yabai -m rule --add app="^Mail" manage=off
+yabai -m rule --add label="Safari" app="^Safari$" title="^(General|(Tab|Password|Website|Extension)s|AutoFill|Se(arch|curity)|Privacy|Advance)$" manage=off
+yabai -m rule --add label="Orion" app="^Orion$" title="^(General|(Tab|Password|Website|Extension)s|AutoFill|Se(arch|curity)|Privacy|Advance|Popular Extensions$)" manage=off
+
+
+echo "yabai configuration loaded.."
