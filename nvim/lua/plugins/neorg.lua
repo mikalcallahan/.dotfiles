@@ -5,8 +5,9 @@ return {
     opts = {
       load = {
         ["core.defaults"] = {}, -- Loads default behaviour
-        ["core.norg.concealer"] = {}, -- Adds pretty icons to your documents
-        ["core.norg.dirman"] = { -- Manages Neorg workspaces
+        ["core.concealer"] = {}, -- Adds pretty icons to your documents
+        ["core.export"] = {}, -- Adds pretty icons to your documents
+        ["core.dirman"] = { -- Manages Neorg workspaces
           config = {
             default_workspace = "home",
             workspaces = {
