@@ -2,6 +2,7 @@ return {
   {
     "nvim-neorg/neorg",
     build = ":Neorg sync-parsers",
+    event = "VeryLazy",
     opts = {
       load = {
         ["core.defaults"] = {}, -- Loads default behaviour

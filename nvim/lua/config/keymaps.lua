@@ -13,3 +13,5 @@ local function map(mode, lhs, rhs, opts)
 end
 
 map("n", "<leader>ft", "<cmd>ToggleTerm<cr>", { desc = "Terminal (cwd)" })
+map("n", "<leader>fp", "<cmd>Telescope project<cr>", { desc = "Find project" })
+map("n", "<leader>O", "<cmd>Neorg<cr>", { desc = "Neorg" })

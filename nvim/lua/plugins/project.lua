@@ -1,5 +1,6 @@
 return {
   "ahmedkhalf/project.nvim",
+  event = "VeryLazy",
   opts = {
     sync_root_with_cwd = true,
     respect_buf_cwd = true,
