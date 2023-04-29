@@ -12,6 +12,8 @@ local function map(mode, lhs, rhs, opts)
   end
 end
 
-map("n", "<leader>ft", "<cmd>ToggleTerm<cr>", { desc = "Terminal (cwd)" })
-map("n", "<leader>fp", "<cmd>Telescope project<cr>", { desc = "Find project" })
+map("n", "<leader>ft", "<cmd>ToggleTerm <cr>", { desc = "Terminal" })
+map("n", "<leader>fT", "<cmd>terminal <cr>", { desc = "Terminal window" })
+map("n", "<leader>fst", "<cmd>2 ToggleTerm <cr>", { desc = "Split Terminal" })
+map("n", "<leader>fp", "<cmd>Telescope projects <cr>", { desc = "Find project" })
 map("n", "<leader>O", "<cmd>Neorg<cr>", { desc = "Neorg" })
