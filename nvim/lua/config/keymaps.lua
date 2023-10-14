@@ -12,11 +12,15 @@ local function map(mode, lhs, rhs, opts)
   end
 end
 
+-- terminal
 map("n", "<leader>ft", "<cmd>ToggleTerm <cr>", { desc = "Terminal" })
-map("n", "<leader>fT", "<cmd>terminal <cr>", { desc = "Terminal window" })
-map("n", "<leader>fst", "<cmd>2 ToggleTerm <cr>", { desc = "Split Terminal" })
-map("n", "<leader>fp", "<cmd>Telescope projects <cr>", { desc = "Find project" })
-map("n", "<leader>C", "<cmd> e $MYVIMRC <cr>", { desc = "Open Config" })
+
+-- new {file, terminal}
+map("n", "<leader>nf", "<cmd>ene | startinsert <cr>", { desc = "New File " })
+map("n", "<leader>nt", "<cmd>terminal <cr>", { desc = "Terminal Buffer" })
+
+-- config
+map("n", "<leader>C", "<cmd>e $MYVIMRC <cr>", { desc = "Open Config" })
+
+-- ui
 map("n", "<leader>ub", "<cmd>Gitsigns toggle_current_line_blame <cr>", { desc = "Toggle current line blame" })
-map("n", "<leader>Owh", "<cmd>Neorg workspace home <cr>", { desc = "Switch Neorg workspace to Home " })
-map("n", "<leader>Ows", "<cmd>Neorg workspace spendline <cr>", { desc = "Switch Neorg workspace to Spendline" })
