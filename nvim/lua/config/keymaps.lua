@@ -12,8 +12,9 @@ local function map(mode, lhs, rhs, opts)
   end
 end
 
--- terminal
+-- f{ind,ile}
 map("n", "<leader>ft", "<cmd>ToggleTerm <cr>", { desc = "Terminal" })
+map("n", "<leader>fB", "<cmd>Neotree dir=~/ <cr>", { desc = "File Browser" })
 
 -- new {file, terminal}
 map("n", "<leader>nf", "<cmd>ene | startinsert <cr>", { desc = "New File " })
