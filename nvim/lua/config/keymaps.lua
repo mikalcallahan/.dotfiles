@@ -21,7 +21,7 @@ map("n", "<leader>nf", "<cmd>ene | startinsert <cr>", { desc = "New File " })
 map("n", "<leader>nt", "<cmd>terminal <cr>", { desc = "Terminal Buffer" })
 
 -- config
-map("n", "<leader>C", "<cmd>e $MYVIMRC <cr>", { desc = "Open Config" })
+map("n", "<leader>C", "<cmd>lua require('lazyvim.util').telescope.config_files()() <cr>", { desc = "Open Config" })
 
 -- ui
 map("n", "<leader>ub", "<cmd>Gitsigns toggle_current_line_blame <cr>", { desc = "Toggle current line blame" })
