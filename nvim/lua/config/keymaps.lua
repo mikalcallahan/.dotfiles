@@ -15,6 +15,12 @@ end
 -- f{ind,ile}
 map("n", "<leader>ft", "<cmd>ToggleTerm <cr>", { desc = "Terminal" })
 map("n", "<leader>fB", "<cmd>Neotree dir=~/ <cr>", { desc = "File Browser" })
+map(
+  "n",
+  "<leader>fa",
+  "<cmd>:Telescope find_files find_command=rg,--ignore,--hidden,--files <cr>",
+  { desc = "Find all files" }
+)
 
 -- new {file, terminal}
 map("n", "<leader>nf", "<cmd>ene | startinsert <cr>", { desc = "New File " })
