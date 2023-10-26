@@ -26,6 +26,10 @@ map(
 map("n", "<leader>nf", "<cmd>ene | startinsert <cr>", { desc = "New File " })
 map("n", "<leader>nt", "<cmd>terminal <cr>", { desc = "Terminal Buffer" })
 
+-- org mode
+map("n", "<leader>oo", "<cmd>Neorg <cr>", { desc = "Org Options" })
+map("n", "<leader>onj", "<cmd>Neorg journal <cr>", { desc = "New Journal" })
+
 -- config
 map("n", "<leader>C", "<cmd>lua require('lazyvim.util').telescope.config_files()() <cr>", { desc = "Open Config" })
 
