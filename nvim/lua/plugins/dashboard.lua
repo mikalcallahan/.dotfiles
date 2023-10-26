@@ -39,6 +39,7 @@ return {
         -- enabling this messes up the actual laststatus setting after loading a file
         statusline = false,
       },
+
       config = {
         header = vim.split(logo, "\n"),
         -- stylua: ignore
@@ -47,6 +48,7 @@ return {
           { action = "ene | startinsert",                                        desc = " New file",        icon = " ", key = "n" },
           { action = "Telescope oldfiles",                                       desc = " Recent files",    icon = " ", key = "r" },
           { action = "Telescope live_grep",                                      desc = " Find text",       icon = " ", key = "g" },
+          { action = "Telescope projects",                                       desc = " Projects",        icon = " ", key = "p" },
           { action = [[lua require("lazyvim.util").telescope.config_files()()]], desc = " Config",          icon = " ", key = "c" },
           { action = 'lua require("persistence").load()',                        desc = " Restore Session", icon = " ", key = "s" },
           { action = "LazyExtras",                                               desc = " Lazy Extras",     icon = " ", key = "x" },
