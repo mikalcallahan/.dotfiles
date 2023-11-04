@@ -12,7 +12,7 @@ return {
         ["core.dirman"] = { -- Manages Neorg workspaces
           config = {
             workspaces = {
-              notes = "~/dev/concertocard/notes",
+              notes = "~/Documents/org/",
             },
             default_workspace = "notes",
           },
