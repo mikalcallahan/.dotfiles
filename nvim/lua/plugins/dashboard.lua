@@ -2,6 +2,17 @@ return {
   "nvimdev/dashboard-nvim",
   event = "VimEnter",
   opts = function()
+    local quotes = {
+      [[
+      "Whatever the present moment contains, accept it as if you had chosen it"
+      - Eckhart Tolle
+    ]],
+      [[
+      "The shadow is the greatest teacher for how to come to the light."
+      - Ram Dass
+    ]],
+    }
+
     local logo = [[
       ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
       ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⡀⠀⠀⠈⠛⠁⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀
@@ -17,11 +28,11 @@ return {
       ⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀⠀⠙⠿⣿⣿⣿⣿⣿⡿⠋⠀⠀
       ⠀⠀⠀⠀⠀⠀⠈⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠀⠀⠀⠀⠀
 
-      "Whatever the present moment contains, accept it as if you had chosen it"
-      - Eckhart Tolle
     ]]
 
-    logo = string.rep("\n", 8) .. logo .. "\n\n"
+    math.randomseed(os.time())
+
+    logo = string.rep("\n", 8) .. logo .. quotes[math.random(1, #quotes)] .. "\n\n"
 
     local opts = {
       theme = "doom",
