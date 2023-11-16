@@ -1,12 +1,24 @@
 return {
   "folke/noice.nvim",
-  opts = function(_, opts)
-    table.insert(opts.routes, {
-      filter = {
-        event = "notify",
-        find = "No information available",
+  opts = {
+    routes = {
+      {
+        filter = {
+          event = "notify",
+          find = "No information available",
+        },
+        opts = { skip = true },
       },
-      opts = { skip = true },
-    })
-  end,
+    },
+    lsp = {
+      override = {
+        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+        ["vim.lsp.util.stylize_markdown"] = true,
+        ["cmp.entry.get_documentation"] = true,
+      },
+    },
+    presets = {
+      lsp_doc_border = true,
+    },
+  },
 }
