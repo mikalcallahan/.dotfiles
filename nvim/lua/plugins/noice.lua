@@ -2,6 +2,7 @@ return {
   "folke/noice.nvim",
   opts = {
     routes = {
+      -- fix "No information available" popup when 2 lspservers are attached to the same typescript session
       {
         filter = {
           event = "notify",
