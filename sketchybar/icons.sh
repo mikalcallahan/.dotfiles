@@ -1,18 +1,21 @@
 #!/usr/bin/env sh
 
 # General Icons
-APPLE=􀣺
-PREFERENCES=􀺽
-ACTIVITY=􀒓
-BELL=􀋚
+APPLE=
+APPLE_LOGO=
+PREFERENCES=
+ACTIVITY=
+BELL=
 BELL_DOT=􀝗
-CHECKMARK=􀆅
-LOADING=􀖇
-LOCK=􀒳
+CHECKMARK=
+LOADING=
+LOCK=
+
+# Battery Icons
+CHARGING=󰂄
 
 # Brew Icons
-PACKAGE=􀐛                       \
-
+PACKAGE=
 
 # Git Icons
 GIT_ISSUE=􀍷
@@ -34,4 +37,3 @@ YABAI_FULLSCREEN_ZOOM=􀏜
 YABAI_PARENT_ZOOM=􀥃
 YABAI_FLOAT=􀢌
 YABAI_GRID=􀧍
-

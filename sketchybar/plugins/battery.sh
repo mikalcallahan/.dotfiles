@@ -5,30 +5,58 @@ CHARGING=$(pmset -g batt | grep 'AC Power')
 LABEL=""
 
 if [ $PERCENTAGE = "" ]; then
-  exit 0
+	exit 0
 fi
 
 case ${PERCENTAGE} in
-  9[0-9]|100) LABEL="${PERCENTAGE}%" ICON="􀛨" 
-  # 9[0-9]|100) LABEL="${PERCENTAGE}%" ICON="" 
-  ;;
-  [6-8][0-9]) LABEL="${PERCENTAGE}%" ICON="􀺸" 
-  #[6-8][0-9]) LABEL="${PERCENTAGE}%" ICON="" 
-  ;;
-  #[3-5][0-9]) LABEL="${PERCENTAGE}%" ICON="" 
-  [3-5][0-9]) LABEL="${PERCENTAGE}%" ICON="􀺶" 
-  ;;
-  # [1-2][0-9]) LABEL="${PERCENTAGE}%" ICON="" 
-  [1-2][0-9]) LABEL="${PERCENTAGE}%" ICON="􀛩" 
-  ;;
-  *) LABEL="${PERCENTAGE}%" ICON="􀛪" 
-  #*) LABEL="${PERCENTAGE}%" ICON="" 
+9[0-9] | 100)
+	LABEL="${PERCENTAGE}%" ICON=""
+
+	if [[ $CHARGING != "" ]]; then
+		LABEL="${PERCENTAGE}%" ICON="󰂋"
+	fi
+
+	# 9[0-9]|100) LABEL="${PERCENTAGE}%" ICON=""
+	;;
+[6-8][0-9])
+	LABEL="${PERCENTAGE}%" ICON=""
+
+	if [[ $CHARGING != "" ]]; then
+		LABEL="${PERCENTAGE}%" ICON="󰂉"
+	fi
+
+	#[6-8][0-9]) LABEL="${PERCENTAGE}%" ICON=""
+	;;
+#[3-5][0-9]) LABEL="${PERCENTAGE}%" ICON=""
+[3-5][0-9])
+	LABEL="${PERCENTAGE}%" ICON=""
+
+	if [[ $CHARGING != "" ]]; then
+		LABEL="${PERCENTAGE}%" ICON="󰂇"
+	fi
+
+	;;
+# [1-2][0-9]) LABEL="${PERCENTAGE}%" ICON=""
+[1-2][0-9])
+	LABEL="${PERCENTAGE}%" ICON=""
+
+	if [[ $CHARGING != "" ]]; then
+		LABEL="${PERCENTAGE}%" ICON="󰂆"
+	fi
+	;;
+*)
+	LABEL="${PERCENTAGE}%" ICON=""
+	if [[ $CHARGING != "" ]]; then
+		LABEL="${PERCENTAGE}%" ICON="󰂆"
+	fi
+	;;
+	#*) LABEL="${PERCENTAGE}%" ICON=""
 esac
 
-if [[ $CHARGING != "" ]]; then
-  ICON="􀢋"
-  LABEL="${PERCENTAGE}%"
-fi
+# if [[ $CHARGING != "" ]]; then
+# 	ICON=""
+# 	LABEL="${PERCENTAGE}%"
+# fi
 
 # The item invoking this script (name $NAME) will get its icon and label
 # updated with the current battery status
