@@ -59,13 +59,13 @@ source "$ITEM_DIR/apple.sh"
 # https://felixkratz.github.io/SketchyBar/config/components#space----associate-mission-control-spaces-with-an-item
 # to indicate active and available mission control spaces
 
-# source "$ITEM_DIR/space.sh"
+source "$ITEM_DIR/space.sh"
 
 ##### Adding Left Items #####
 # We add some regular items to the left side of the bar
 # only the properties deviating from the current defaults need to be set
 
-# source "$ITEM_DIR/front_app.sh"
+source "$ITEM_DIR/front_app.sh"
 
 ##### Adding Right Items #####
 # In the same way as the left items we can add items to the right side.

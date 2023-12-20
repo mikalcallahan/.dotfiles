@@ -13,7 +13,7 @@ sketchybar --add event window_focus \
 	--add event windows_on_spaces \
 	--add item system.yabai left \
 	--set system.yabai script="$PLUGIN_DIR/yabai.sh" \
-	icon.font="$FONT:Bold:16.0" \
+	icon.font="$FONT:Regular:15.0" \
 	label.drawing=off \
 	icon.width=30 \
 	icon=$YABAI_GRID \

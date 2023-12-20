@@ -17,11 +17,12 @@ do
                               icon.padding_left=22                          \
                               icon.padding_right=22                         \
                               label.padding_right=33                        \
-                              icon.highlight_color=$CGREEN               \
+                              icon.highlight_color=$CBLUE               \
                               background.padding_left=-8                    \
                               background.padding_right=-8                   \
                               background.color=0xff$CBACK                   \
                               background.drawing=on                         \
+                              icon.font="$FONT:Semibold:14.0" \
                               label.font="$FONT:Regular:16.0"               \
                               label.background.height=26                    \
                               label.background.drawing=on                   \
