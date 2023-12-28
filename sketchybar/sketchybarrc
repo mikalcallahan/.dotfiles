@@ -8,6 +8,7 @@ source "$HOME/.config/sketchybar/icons.sh" # Loads all defined icons
 
 ITEM_DIR="$HOME/.config/sketchybar/items" # Directory where the items are configured
 PLUGIN_DIR="$HOME/.config/sketchybar/plugins" # Directory where all the plugin scripts are stored
+SCRIPTS_DIR="$HOME/.config/sketchybar/scripts/" # Directory where all external scripts are stored
 
 FONT="Liga SFMono Nerd Font" # Needs to have Regular, Bold, Semibold, Heavy and Black variants
 PADDINGS=3 # All paddings use this value (icon, label, background)
@@ -77,6 +78,7 @@ source "$ITEM_DIR/battery.sh"
 source "$ITEM_DIR/sound.sh"
 source "$ITEM_DIR/wifi.sh"
 source "$ITEM_DIR/teams.sh"
+source "$ITEM_DIR/emails.sh"
 source "$ITEM_DIR/brew.sh"
 # source "$ITEM_DIR/sound.sh"
 
