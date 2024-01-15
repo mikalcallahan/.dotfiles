@@ -1,16 +1,22 @@
 #!/usr/bin/env sh
 
 # General Icons
-APPLE=
+# APPLE=
+# APPLE=
+APPLE=󰥳
 APPLE_LOGO=
 PREFERENCES=
-ACTIVITY=
+ACTIVITY=
+# ACTIVITY=
+# ACTIVITY=􀒓
 BELL=
 BELL_DOT=􀝗
 CHECKMARK=
 EMAIL=󰇮
 LOADING=
 LOCK=
+SHUTDOWN=
+RESTART=󰜉
 
 # Battery Icons
 BATTERY_4=""
