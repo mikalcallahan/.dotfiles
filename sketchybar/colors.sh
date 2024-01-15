@@ -54,7 +54,8 @@ export TRANSPARENT=0x00000000
 # General bar colors
 # export BAR_COLOR=0xcc24273a
 export BAR_COLOR=0xff$CBACK
-export ICON_COLOR=0xff$CACTV # Color of all icons
+# export ICON_COLOR=0xff$CACTV # Color of all icons
+export ICON_COLOR=$CGREEN # Color of all icons
 export LABEL_COLOR=$WHITE # Color of all labels
 # export BACKGROUND_1=0xff3c3e4f
 export BACKGROUND_1=0xff$CBACK_OFFSET

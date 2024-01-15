@@ -17,7 +17,8 @@ do
                               icon.padding_left=22                          \
                               icon.padding_right=22                         \
                               label.padding_right=33                        \
-                              icon.highlight_color=$CBLUE               \
+                              icon.highlight_color=$CGREEN               \
+                              icon.color=$CWHITE               \
                               background.padding_left=-8                    \
                               background.padding_right=-8                   \
                               background.color=0xff$CBACK                   \

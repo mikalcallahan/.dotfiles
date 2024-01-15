@@ -30,6 +30,6 @@ sketchybar --add event window_focus \
 	background.padding_left=0 \
 	background.padding_right=10 \
 	label.color=$CWHITE \
-	label.font="$FONT:White:13.0" \
+	label.font="$FONT:Semibold:12.0" \
 	associated_display=active \
 	--subscribe front_app front_app_switched
