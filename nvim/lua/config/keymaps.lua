@@ -28,10 +28,17 @@ map("n", "<leader>nt", "<cmd>terminal <cr>", { desc = "Terminal Buffer" })
 
 -- org mode
 map("n", "<leader>oo", "<cmd>Neorg <cr>", { desc = "Org Options" })
+-- map(
+--   "n",
+--   "<leader>od",
+--   "<cmd>terminal open 'https://github.com/nvim-neorg/norg-specs/blob/main/1.0-specification.norg' && <cr>",
+--   { desc = "Open docs" }
+-- )
 map("n", "<leader>onj", "<cmd>Neorg journal <cr>", { desc = "New Journal" })
 
 -- config
 map("n", "<leader>C", "<cmd>lua require('lazyvim.util').telescope.config_files()() <cr>", { desc = "Open Config" })
 
 -- ui
+map("n", "E", "<cmd>lua vim.diagnostic.open_float()<CR>", { desc = "Show line diagnostics" })
 map("n", "<leader>ub", "<cmd>Gitsigns toggle_current_line_blame <cr>", { desc = "Toggle current line blame" })
