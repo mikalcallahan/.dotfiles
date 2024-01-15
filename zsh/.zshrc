@@ -41,9 +41,9 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.g
 #fi
 ###-tns-completion-end-###
 
-#export NVM_DIR=~/.nvm
+export NVM_DIR=~/.nvm
 # #PATH="~/.nvm/versions/node/v12.18.4/bin:$PATH"
-# alias alias nvminit='. "$(brew --prefix nvm)/nvm.sh"'
+alias alias nvminit='. "$(brew --prefix nvm)/nvm.sh"'
 # # source $(brew --prefix nvm)/nvm.sh
 # export PATH="/usr/local/sbin:$PATH"
 
@@ -59,8 +59,8 @@ f() {
 
 # ~/dev/desktop/pyQuote/pyQuote.py
 # ~/dev/desktop/quotescript/.build/release/quotescript
-# scala ~/dev/desktop/scala-test/hella-world/src/main/scala/Main.scala
-alias quotescript="node ~/Developer/desktop/scala-test/hella-world/target/scala-3.2.0/hella-world-opt/main.js"
+scala-cli ~/dev/desktop/scalaquote/Main.scala
+# alias quotescript="node ~/Developer/desktop/scala-test/hella-world/target/scala-3.2.0/hella-world-opt/main.js"
 alias mongodb-restart='brew services restart mongodb-community'
 alias mongodb-stop='brew services stop mongodb-community'
 alias flac-to-alac='for name in *.flac; do ffmpeg -nostdin -i "$name" -c:a alac -c:v copy "${name%.*}.m4a"; done'
@@ -79,7 +79,7 @@ alias python=/usr/local/bin/python3
 
 # source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-quotescript
+# quotescript
 # Load Angular CLI autocompletion.
 # source <(ng completion script)
 
