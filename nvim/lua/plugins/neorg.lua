@@ -13,6 +13,7 @@ return {
           config = {
             workspaces = {
               notes = "~/Documents/org/",
+              concerto = "~/dev/concertocard/notes/",
             },
             default_workspace = "notes",
           },
