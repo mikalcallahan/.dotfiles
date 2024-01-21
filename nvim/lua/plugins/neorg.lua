@@ -13,6 +13,7 @@ return {
           config = {
             workspaces = {
               notes = "~/Documents/org/",
+              mazefaze = "~/Developer/web/MazeFaze/notes",
               concerto = "~/dev/concertocard/notes/",
             },
             default_workspace = "notes",
