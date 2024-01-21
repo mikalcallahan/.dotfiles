@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+source "$HOME/.config/sketchybar/colors.sh"
+
 # Some events send additional information specific to the event in the $INFO
 # variable. E.g. the front_app_switched event sends the name of the newly
 # focused application in the $INFO variable:
@@ -17,7 +19,7 @@ sketchybar --add event window_focus \
 	label.drawing=off \
 	icon.width=30 \
 	icon=$YABAI_GRID \
-	icon.color=$CGREEN \
+	icon.color=$ICON_COLOR \
 	updates=on \
 	associated_display=active \
 	--subscribe system.yabai window_focus \

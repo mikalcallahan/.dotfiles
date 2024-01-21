@@ -10,7 +10,7 @@ window_state() {
   args=()
   if [[ $CURRENT -gt 0 ]]; then
     LAST=$(yabai -m query --windows --window stack.last | jq '.["stack-index"]')
-    args+=(--set $NAME icon=$YABAI_STACK icon.color=$CGREEN label.drawing=on label=$(printf "[%s/%s]" "$CURRENT" "$LAST"))
+    args+=(--set $NAME icon=$YABAI_STACK icon.color=$ICON_COLOR label.drawing=on label=$(printf "[%s/%s]" "$CURRENT" "$LAST"))
     yabai -m config active_window_border_color $WHITE > /dev/null 2>&1 &
 
   else 
@@ -18,19 +18,19 @@ window_state() {
     case "$(echo "$WINDOW" | jq '.["is-floating"]')" in
       "false")
         if [ "$(echo "$WINDOW" | jq '.["has-fullscreen-zoom"]')" = "true" ]; then
-          args+=(--set $NAME icon=$YABAI_FULLSCREEN_ZOOM icon.color=$GREEN)
-          yabai -m config active_window_border_color $GREEN > /dev/null 2>&1 &
+          args+=(--set $NAME icon=$YABAI_FULLSCREEN_ZOOM icon.color=$ICON_COLOR_ALERT)
+          yabai -m config active_window_border_color $ICON_COLOR_ALERT > /dev/null 2>&1 &
         elif [ "$(echo "$WINDOW" | jq '.["has-parent-zoom"]')" = "true" ]; then
-          args+=(--set $NAME icon=$YABAI_PARENT_ZOOM icon.color=$BLUE)
-          yabai -m config active_window_border_color $BLUE > /dev/null 2>&1 &
+          args+=(--set $NAME icon=$YABAI_PARENT_ZOOM icon.color=$LABEL_COLOR)
+          yabai -m config active_window_border_color $LABEL_COLOR > /dev/null 2>&1 &
         else
-          args+=(--set $NAME icon=$YABAI_GRID icon.color=$CGREEN)
-          yabai -m config active_window_border_color $WHITE > /dev/null 2>&1 &
+          args+=(--set $NAME icon=$YABAI_GRID icon.color=$ICON_COLOR)
+          yabai -m config active_window_border_color $ICON_COLOR > /dev/null 2>&1 &
         fi
         ;;
       "true")
-        args+=(--set $NAME icon=$YABAI_FLOAT icon.color=$CYELLOW)
-        yabai -m config active_window_border_color $CYELLOW > /dev/null 2>&1 &
+        args+=(--set $NAME icon=$YABAI_FLOAT icon.color=$ICON_COLOR_WARNING)
+        yabai -m config active_window_border_color $ICON_COLOR_WARNING > /dev/null 2>&1 &
         ;;
     esac
   fi

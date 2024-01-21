@@ -9,18 +9,18 @@ COLOR=$RED
 
 case "$COUNT" in
 [3-5][0-9])
-	sketchybar --set $NAME label=$COUNT icon.color=$ORANGE icon=$PACKAGE
+	sketchybar --set $NAME label=$LABEL icon.color=$ORANGE icon=$PACKAGE
 	;;
 [1-2][0-9])
-	sketchybar --set $NAME label=$COUNT icon.color=$CBLUE icon=$PACKAGE
+	sketchybar --set $NAME label=$LABEL icon.color=$ICON_COLOR_ALERT icon=$PACKAGE
 	;;
 [1-9])
-	sketchybar --set $NAME label=$COUNT icon.color=$CBLUE icon=$PACKAGE
+	sketchybar --set $NAME label=$LABEL icon.color=$ICON_COLOR_WARNING icon=$PACKAGE
 	;;
 0)
 	COLOR=$RED
 	COUNT=
-	sketchybar --set $NAME label= icon.color=$ICON_COLOR icon=$PACKAGE
+	sketchybar --set $NAME label=$LABEL icon.color=$ICON_COLOR icon=$PACKAGE
 	;;
 esac
 
