@@ -20,24 +20,32 @@ yabai -m signal --add event=window_focused action="sketchybar --trigger window_f
 yabai -m signal --add event=window_created action="sketchybar --trigger windows_on_spaces"
 yabai -m signal --add event=window_destroyed action="sketchybar --trigger windows_on_spaces"
 
+# mission-control desktop labels
+yabai -m space 1 --label code
+yabai -m space 2 --label web
+yabai -m space 3 --label notes
+yabai -m space 4 --label media
+yabai -m space 5 --label social
+yabai -m space 6 --label games
+
+yabai -m config --space notes top_padding 90 bottom_padding 80 left_padding 100 right_padding 100
+yabai -m config --space media top_padding 90 bottom_padding 80 left_padding 100 right_padding 100
+yabai -m config --space social top_padding 140 bottom_padding 100 left_padding 140 right_padding 140
+
 ## App rules
-yabai -m rule --add app="Finder" manage=off
-yabai -m rule --add app="Plans" manage=off 
-yabai -m rule --add app="Messages" manage=off 
-yabai -m rule --add label="Réglages système" app="^Réglages système" title=".*" manage=off
-yabai -m rule --add app='^Calendrier' manage=off
-yabai -m rule --add app="^Aperçu" manage=off
-yabai -m rule --add app="^Balados" manage=off
-yabai -m rule --add app="^News" manage=off
-yabai -m rule --add app="^Signal" manage=off
-yabai -m rule --add app="^Bitwarden" manage=off
-yabai -m rule --add app="^Musique" manage=off
-yabai -m rule --add app="^App Store" manage=off
-yabai -m rule --add app="^Discord" manage=off
-yabai -m rule --add app="^Coinbase" manage=off
-yabai -m rule --add app="^Mail" manage=off
+yabai -m rule --add app="Finder$" manage=off
+yabai -m rule --add app="Maps$" manage=off 
+yabai -m rule --add app="Reminders$" manage=off 
+yabai -m rule --add app="^News$" manage=off
+yabai -m rule --add app="^Bitwarden$" manage=off
+yabai -m rule --add app="^Coinbase$" manage=off
+yabai -m rule --add app="^Mail$" manage=off
+yabai -m rule --add app="^(iTerm2|VSCodium)$" space=code 
+yabai -m rule --add app="^Music$" space=media 
+yabao -m rule --add app-"^Notes$" space=notes
+yabai -m rule --add app="^(Discord|Messages|Signal)$" space=social
+yabai -m rule --add app="^(LuLu|Calculator|Calendar|Preview|Software Update|Dictionary|VLC|Photo Booth|Archive Utility|Python|App Store|Steam|Activity Monitor|Screen Sharing)$" manage=off
 yabai -m rule --add label="Safari" app="^Safari$" title="^(General|(Tab|Password|Website|Extension)s|AutoFill|Se(arch|curity)|Privacy|Advance)$" manage=off
-yabai -m rule --add label="Orion" app="^Orion$" title="^(General|(Tab|Password|Website|Extension)s|AutoFill|Se(arch|curity)|Privacy|Advance|Popular Extensions$)" manage=off
 
 ## global settings
 yabai -m config                                 \
