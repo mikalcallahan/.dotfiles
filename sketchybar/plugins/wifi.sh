@@ -5,19 +5,24 @@ source "$HOME/.config/sketchybar/colors.sh"
 CURRENT_WIFI="$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I)"
 SSID="$(echo "$CURRENT_WIFI" | grep -o "SSID: .*" | sed 's/^SSID: //')"
 CURR_TX="$(echo "$CURRENT_WIFI" | grep -o "lastTxRate: .*" | sed 's/^lastTxRate: //')"
-VPN_STATUS="$(echo 'ivpn status | grep "\bCONNECTED\b"')"
+#VPN_STATUS="$(echo 'ivpn status | grep "\bCONNECTED\b"')"
+VPN_STATUS=$(ivpn status)
+VPN_CONNECTED=$(echo $VPN_STATUS | grep '\bCONNECTED\b')
+VPN_PAUSED=$(echo $VPN_STATUS | grep '\bPAUSED\b')
+# VPN_CONNECTED="$(ivpn status | grep "\bCONNECTED\b")"
+# VPN_PAUSED="$(ivpn status | grep "\bPAUSED\b")"
 # IS_VPN=$("scutil --nwi | grep -m1 'utun' | awk '{ print $1 }'")
 # VPN_STATUE=false
 
 if [ "$SSID" = "" ]; then
 	sketchybar --set $NAME label="Disconnected" icon=睊
 else
-	if [[ $VPN_STATUS =~ "CONNECTED" ]]; then
-		# if [[ $IS_VPN != "" ]]; then
-		sketchybar --set $NAME label="$SSID" icon= icon.color=$CGREEN
-		# sketchybar --set $NAME label="$SSID (${CURR_TX}Mbps)" icon=直
+	if [[ $VPN_CONNECTED =~ "CONNECTED" ]]; then
+		sketchybar --set $NAME label="$SSID" icon= icon.color=$ICON_COLOR
+	elif [[ $VPN_PAUSED =~ "PAUSED" ]]; then
+		sketchybar --set $NAME label="$SSID" icon= icon.color=$ICON_COLOR_WARNING
 	else
-		sketchybar --set $NAME label=$SSID icon= icon.color=$CBLUE
+		sketchybar --set $NAME label="$SSID" icon= icon.color=$ICON_COLOR_ALERT
 	fi
 fi
 
