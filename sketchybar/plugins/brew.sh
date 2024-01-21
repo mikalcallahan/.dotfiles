@@ -6,6 +6,7 @@ source "$HOME/.config/sketchybar/icons.sh"
 COUNT=$(brew outdated | wc -l | tr -d ' ')
 
 COLOR=$RED
+LABEL=""
 
 case "$COUNT" in
 [3-5][0-9])
