@@ -11,7 +11,14 @@ if [ $PERCENTAGE = "" ]; then
 fi
 
 case ${PERCENTAGE} in
-9[0-9] | 100)
+100)
+	LABEL="${PERCENTAGE}%" ICON="$BATTERY_FULL"
+
+	if [[ $CHARGING != "" ]]; then
+		LABEL="${PERCENTAGE}%" ICON="$BATTERY_FULL_CHARGING"
+	fi
+	;;
+9[0-9])
 	LABEL="${PERCENTAGE}%" ICON="$BATTERY_4"
 
 	if [[ $CHARGING != "" ]]; then
