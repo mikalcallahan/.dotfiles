@@ -4,7 +4,8 @@
 # the space invoking this script (with name: $NAME) is currently selected:
 # https://felixkratz.github.io/SketchyBar/config/components#space----associate-mission-control-spaces-with-an-item
 
-SPACE_ICONS=("1" "2" "3" "4" "5" "6" "7" "8")
+#SPACE_ICONS=("1" "2" "3" "4" "5" "6" "7" "8")
+SPACE_ICONS=("" "󰖟" "󰎞" "󰌳" "󱥁" "")
 SPACE_CLICK_SCRIPT="yabai -m space --focus \$SID 2>/dev/null"
 
 sid=0
