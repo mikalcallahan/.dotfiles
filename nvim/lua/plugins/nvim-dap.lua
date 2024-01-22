@@ -24,21 +24,21 @@ return {
         reAttach = true,
         url = "http://localhost:4200",
         webRoot = "${workspaceFolder}",
-        firefoxExecutable = "/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox -start-debugger-server",
-        --   pathMappings = {
-        --     {
-        --       url = "webpack:///projects/client-ui",
-        --       path = "${workspaceFolder}/projects/client-ui",
-        --     },
-        --     {
-        --       url = "webpack:///projects/client-ui",
-        --       path = "${workspaceFolder}/projects/client-ui",
-        --     },
-        --     {
-        --       url = "webpack:///projects/concerto-cards",
-        --       path = "${workspaceFolder}/projects/concerto-cards",
-        --     },
-        --   },
+        -- firefoxExecutable = "/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox -start-debugger-server",
+        pathMappings = {
+          {
+            url = "webpack:///projects/client-ui",
+            path = "${workspaceFolder}/projects/client-ui",
+          },
+          {
+            url = "webpack:///projects/client-ui",
+            path = "${workspaceFolder}/projects/client-ui",
+          },
+          {
+            url = "webpack:///projects/concerto-cards",
+            path = "${workspaceFolder}/projects/concerto-cards",
+          },
+        },
       },
     }
   end,
