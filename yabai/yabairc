@@ -34,17 +34,12 @@ yabai -m config --space social top_padding 140 bottom_padding 100 left_padding 1
 
 ## App rules
 yabai -m rule --add app="Finder$" manage=off
-yabai -m rule --add app="Maps$" manage=off 
-yabai -m rule --add app="Reminders$" manage=off 
-yabai -m rule --add app="^News$" manage=off
-yabai -m rule --add app="^Bitwarden$" manage=off
-yabai -m rule --add app="^Coinbase$" manage=off
-yabai -m rule --add app="^Mail$" manage=off
 yabai -m rule --add app="^(iTerm2|VSCodium)$" space=code 
-yabai -m rule --add app="^Music$" space=media 
-yabao -m rule --add app-"^Notes$" space=notes
+yabai -m rule --add app="^(Safari|Firefox Developer Edition|Firefox|Brave Browser)$" space=web
+yabai -m rule --add app="^(Maps|Music|News)$" space=media 
+yabai -m rule --add app="^(Notes|Reminders)$" space=notes
 yabai -m rule --add app="^(Discord|Messages|Signal)$" space=social
-yabai -m rule --add app="^(LuLu|Calculator|Calendar|Preview|Software Update|Dictionary|VLC|Photo Booth|Archive Utility|Python|App Store|Steam|Activity Monitor|Screen Sharing)$" manage=off
+yabai -m rule --add app="^(Activity Monitor|App Store|Archive Utility|Bitwarden|Calculator|Calendar|Coinbase|Dictionary|LuLu|Mail|Photo Booth|Preview|Python|Screen Sharing|Software Update|Steam|VLC)$" manage=off
 yabai -m rule --add label="Safari" app="^Safari$" title="^(General|(Tab|Password|Website|Extension)s|AutoFill|Se(arch|curity)|Privacy|Advance)$" manage=off
 
 ## global settings
