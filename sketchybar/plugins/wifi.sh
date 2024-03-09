@@ -2,11 +2,12 @@
 
 source "$HOME/.config/sketchybar/colors.sh"
 
-CURRENT_WIFI="$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I)"
-SSID="$(echo "$CURRENT_WIFI" | grep -o "SSID: .*" | sed 's/^SSID: //')"
-CURR_TX="$(echo "$CURRENT_WIFI" | grep -o "lastTxRate: .*" | sed 's/^lastTxRate: //')"
+# CURRENT_WIFI="$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I)"
+CURRENT_WIFI="$(networksetup -getairportnetwork en0)"
+SSID="$(echo "$CURRENT_WIFI" | grep -o ": .*" | sed 's/^: //')"
+# CURR_TX="$(echo "$CURRENT_WIFI" | grep -o "lastTxRate: .*" | sed 's/^lastTxRate: //')"
 #VPN_STATUS="$(echo 'ivpn status | grep "\bCONNECTED\b"')"
-VPN_STATUS=$(ivpn status)
+VPN_STATUS=$(/usr/local/bin/ivpn status)
 VPN_CONNECTED=$(echo $VPN_STATUS | grep '\bCONNECTED\b')
 VPN_PAUSED=$(echo $VPN_STATUS | grep '\bPAUSED\b')
 # VPN_CONNECTED="$(ivpn status | grep "\bCONNECTED\b")"
