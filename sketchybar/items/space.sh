@@ -4,7 +4,8 @@
 # the space invoking this script (with name: $NAME) is currently selected:
 # https://felixkratz.github.io/SketchyBar/config/components#space----associate-mission-control-spaces-with-an-item
 
-SPACE_ICONS=("1" "2" "3" "4" "5" "6" "7" "8")
+#SPACE_ICONS=("1" "2" "3" "4" "5" "6" "7" "8")
+SPACE_ICONS=("" "󰖟" "󰎞" "󰌳" "󱥁" "")
 SPACE_CLICK_SCRIPT="yabai -m space --focus \$SID 2>/dev/null"
 
 sid=0
@@ -17,11 +18,13 @@ do
                               icon.padding_left=22                          \
                               icon.padding_right=22                         \
                               label.padding_right=33                        \
-                              icon.highlight_color=$CGREEN               \
+                              icon.highlight_color=$ICON_COLOR               \
+                              icon.color=$LABEL_COLOR               \
                               background.padding_left=-8                    \
                               background.padding_right=-8                   \
                               background.color=0xff$CBACK                   \
                               background.drawing=on                         \
+                              icon.font="$FONT:Semibold:14.0" \
                               label.font="$FONT:Regular:16.0"               \
                               label.background.height=26                    \
                               label.background.drawing=on                   \
@@ -39,4 +42,4 @@ sketchybar   --add item       separator left                          \
                               background.padding_right=15             \
                               label.drawing=off                       \
                               associated_display=active               \
-                              icon.color=$CWHITE
+                              icon.color=$LABEL_COLOR

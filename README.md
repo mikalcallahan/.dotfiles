@@ -1,11 +1,10 @@
 # DOTFILES
 
-### Includes:
+### Includes
+
 - homebrew
-- iterm
 - nvim
 - skhd
 - tmux
-- ubersicht
+- yabai
 - zsh
-#### updated: 03 decembre 2019

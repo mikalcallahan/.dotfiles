@@ -12,11 +12,37 @@ local function map(mode, lhs, rhs, opts)
   end
 end
 
+-- CodeSnap
+map("x", "<leader>cs", ":CodeSnapSave<cr>", { desc = "CodeSnap save to ~/Desktop", silent = true })
+map("x", "<leader>cS", ":CodeSnapSave<cr>", { desc = "CodeSnap to clipboard", silent = true })
+
+-- f{ind,ile}
 map("n", "<leader>ft", "<cmd>ToggleTerm <cr>", { desc = "Terminal" })
-map("n", "<leader>fT", "<cmd>terminal <cr>", { desc = "Terminal window" })
-map("n", "<leader>fst", "<cmd>2 ToggleTerm <cr>", { desc = "Split Terminal" })
-map("n", "<leader>fp", "<cmd>Telescope projects <cr>", { desc = "Find project" })
-map("n", "<leader>C", "<cmd> e $MYVIMRC <cr>", { desc = "Open Config" })
+map("n", "<leader>fB", "<cmd>Neotree dir=~/ <cr>", { desc = "File Browser" })
+map(
+  "n",
+  "<leader>fa",
+  "<cmd>:Telescope find_files find_command=rg,--ignore,--hidden,--files <cr>",
+  { desc = "Find all files" }
+)
+
+-- new {file, terminal}
+map("n", "<leader>nf", "<cmd>ene | startinsert <cr>", { desc = "New File " })
+map("n", "<leader>nt", "<cmd>terminal <cr>", { desc = "Terminal Buffer" })
+
+-- org mode
+map("n", "<leader>oo", "<cmd>Neorg <cr>", { desc = "Org Options" })
+-- map(
+--   "n",
+--   "<leader>od",
+--   "<cmd>terminal open 'https://github.com/nvim-neorg/norg-specs/blob/main/1.0-specification.norg' && <cr>",
+--   { desc = "Open docs" }
+-- )
+map("n", "<leader>onj", "<cmd>Neorg journal <cr>", { desc = "New Journal" })
+
+-- config
+map("n", "<leader>C", "<cmd>lua require('lazyvim.util').telescope.config_files()() <cr>", { desc = "Open Config" })
+
+-- ui
+map("n", "E", "<cmd>lua vim.diagnostic.open_float()<CR>", { desc = "Show line diagnostics" })
 map("n", "<leader>ub", "<cmd>Gitsigns toggle_current_line_blame <cr>", { desc = "Toggle current line blame" })
-map("n", "<leader>Owh", "<cmd>Neorg workspace home <cr>", { desc = "Switch Neorg workspace to Home " })
-map("n", "<leader>Ows", "<cmd>Neorg workspace spendline <cr>", { desc = "Switch Neorg workspace to Spendline" })

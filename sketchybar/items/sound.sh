@@ -22,7 +22,7 @@
 # esac
 # fi
 
-sketchybar --add item  sound right                   \
-           --set  background.padding_right=10         \
-	               script="$PLUGIN_DIR/sound.sh"       \
-           --subscribe volume volume_change
+sketchybar --add item sound right \
+	--set sound script="$PLUGIN_DIR/sound.sh" \
+	background.padding_right=10 \
+	--subscribe sound volume_change

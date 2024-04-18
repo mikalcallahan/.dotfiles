@@ -1,24 +1,24 @@
 return {
-  {
-    "nvim-neorg/neorg",
-    build = ":Neorg sync-parsers",
-    event = "VeryLazy",
-    opts = {
+  "nvim-neorg/neorg",
+  dependencies = { "nvim-lua/plenary.nvim", "luarocks.nvim" },
+  config = function()
+    require("neorg").setup({
       load = {
         ["core.defaults"] = {}, -- Loads default behaviour
         ["core.concealer"] = {}, -- Adds pretty icons to your documents
-        ["core.export"] = {}, -- Adds pretty icons to your documents
+        -- ["core.completion"] = {}, -- Adds completion
+        -- ["core.ui.calendar"] = {}, -- Adds completion
         ["core.dirman"] = { -- Manages Neorg workspaces
           config = {
-            default_workspace = "home",
             workspaces = {
-              home = "~/Documents/notes",
-              spendline = "~/Developer/spendline/notes",
+              notes = "~/Documents/org/",
+              mazefaze = "~/Developer/web/MazeFaze/notes",
+              concerto = "~/dev/concertocard/notes/",
             },
+            default_workspace = "notes",
           },
         },
       },
-    },
-    dependencies = { { "nvim-lua/plenary.nvim" } },
-  },
+    })
+  end,
 }
