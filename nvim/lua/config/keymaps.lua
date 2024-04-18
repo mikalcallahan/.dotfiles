@@ -12,6 +12,10 @@ local function map(mode, lhs, rhs, opts)
   end
 end
 
+-- CodeSnap
+map("x", "<leader>cs", ":CodeSnapSave<cr>", { desc = "CodeSnap save to ~/Desktop", silent = true })
+map("x", "<leader>cS", ":CodeSnapSave<cr>", { desc = "CodeSnap to clipboard", silent = true })
+
 -- f{ind,ile}
 map("n", "<leader>ft", "<cmd>ToggleTerm <cr>", { desc = "Terminal" })
 map("n", "<leader>fB", "<cmd>Neotree dir=~/ <cr>", { desc = "File Browser" })
