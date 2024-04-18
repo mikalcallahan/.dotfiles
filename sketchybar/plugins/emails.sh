@@ -7,11 +7,11 @@ ICON="$EMAIL"
 EMAILS="$(osascript $HOME/.config/sketchybar/scripts/emails.applescript)"
 if [[ $EMAILS == "" ]]; then
 	ICON=
-	COLOR="$CMAGENTA"
+	COLOR="$ICON_COLOR"
 elif [[ "$EMAILS" -gt 10 && "$EMAILS" -le 25 ]]; then
-	COLOR="$CMAGENTA"
+	COLOR="$ICON_COLOR_WARNING"
 elif [[ "$EMAILS" -gt 25 ]]; then
-	COLOR="$CBLUE"
+	COLOR="$ICON_COLOR_ALERT"
 else
 	COLOR="$ICON_COLOR"
 fi
