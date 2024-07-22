@@ -1,7 +1,7 @@
 sketchybar --add item teams right \
 	--set teams \
-	update_freq=60 \
+	update_freq=15 \
 	script="$PLUGIN_DIR/teams.sh" \
-	background.padding_left=10 \
+	background.padding_right=1 \
 	icon.font.size=18 \
 	--subscribe teams system_woke
