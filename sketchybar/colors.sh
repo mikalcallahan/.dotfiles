@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-source ~/.cache/wal/colors.sh # pywal scheme
+source ~/.dotfiles/colors/nord/nord.sh # pywal scheme
 
 COLOR0=$(echo $color0 | sed 's/#//')
 COLOR1=$(echo $color1 | sed 's/#//')
