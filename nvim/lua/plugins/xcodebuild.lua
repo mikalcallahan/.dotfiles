@@ -1,9 +1,5 @@
 return {
   "wojciech-kulik/xcodebuild.nvim",
-  dependencies = {
-    "nvim-telescope/telescope.nvim",
-    "MunifTanjim/nui.nvim",
-  },
   event = "BufReadPre",
   config = function()
     require("xcodebuild").setup({
