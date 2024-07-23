@@ -31,7 +31,6 @@ map("n", "<leader>nf", "<cmd>ene | startinsert <cr>", { desc = "New File " })
 map("n", "<leader>nt", "<cmd>terminal <cr>", { desc = "Terminal Buffer" })
 
 -- org mode
-map("n", "<leader>oo", "<cmd>Neorg <cr>", { desc = "Org Options" })
 -- map(
 --   "n",
 --   "<leader>od",
