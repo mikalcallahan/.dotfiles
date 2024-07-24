@@ -1,6 +1,8 @@
 return {
   "folke/which-key.nvim",
   opts = {
+    delay = 0,
+    preset = "helix",
     spec = {
       {
         mode = { "n" },
