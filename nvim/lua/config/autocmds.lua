@@ -11,3 +11,13 @@ vim.api.nvim_create_autocmd("TermOpen", {
   group = augroup("*"),
   command = "setlocal nonumber norelativenumber",
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "swift" }, -- List of filetypes
+  callback = function()
+    vim.opt_local.expandtab = true -- Set expandtab option
+    vim.opt_local.shiftwidth = 2 -- Set shiftwidth to 2
+    vim.opt_local.tabstop = 2 -- Set tabstop to 2
+    vim.opt_local.softtabstop = 2 -- Set softtabstop to 2
+  end,
+})

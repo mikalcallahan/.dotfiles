@@ -36,9 +36,10 @@ yabai -m config --space social top_padding 140 bottom_padding 100 left_padding 1
 yabai -m rule --add app="Finder$" manage=off
 yabai -m rule --add app="^(iTerm2|VSCodium)$" space=code 
 yabai -m rule --add app="^(Safari|Firefox Developer Edition|Firefox|Brave Browser)$" space=web
-yabai -m rule --add app="^(Maps|Music|News|X)$" space=media 
-yabai -m rule --add app="^(Notes|Reminders)$" space=notes
-yabai -m rule --add app="^(Discord|Messages|Signal|Slack)$" space=social
+yabai -m rule --add app="^(Maps|Music|News)$" space=media 
+yabai -m rule --add app="^(Notes|Reminders|ChatGPT)$" space=notes
+yabai -m rule --add app="^(Discord|Messages|Signal|Slack|X)$" space=social
+yabai -m rule --add app="^Simulator" manage=on
 yabai -m rule --add app="^(Activity Monitor|App Store|Archive Utility|Bitwarden|Calculator|Calendar|Coinbase|Dictionary|LuLu|Mail|Photo Booth|Preview|Python|Screen Sharing|Software Update|Steam|VLC)$" manage=off
 yabai -m rule --add label="Safari" app="^Safari$" title="^(General|(Tab|Password|Website|Extension)s|AutoFill|Se(arch|curity)|Privacy|Advance)$" manage=off
 
