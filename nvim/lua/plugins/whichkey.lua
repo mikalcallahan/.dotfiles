@@ -1,7 +1,7 @@
 return {
   "folke/which-key.nvim",
   opts = {
-    delay = 0,
+    delay = 1,
     preset = "helix",
     spec = {
       {
@@ -9,14 +9,43 @@ return {
         { "<leader>n", group = "+new", icon = { icon = "󰝒", hl = "false" } },
         { "<leader>o", group = "+org", icon = { icon = "󱅄", hl = "false" } },
         { "<leader>on", group = "+new", icon = { icon = "󰷥", hl = "false" } },
-        { "<leader>oo", desc = "Org Options", icon = { icon = "", hl = "false" } },
+        { "<leader>oo", desc = "Org Options", "", icon = { icon = "", hl = "false" } },
+      },
+      {
+        mode = { "n", "v" },
+        { "<leader>X", group = "+xcodebuild", icon = { icon = "󰝒", hl = "false" } },
+        { "<leader>Xs", "<cmd>XcodebuildPicker<cr>", desc = "build picker", icon = { icon = "󱅄", hl = "false" } },
+        { "<leader>Xb", "<cmd>XcodebuildBuild<cr>", desc = "build project", icon = { icon = "󱅄", hl = "false" } },
+        {
+          "<leader>Xr",
+          "<cmd>XcodebuildBuildRun<cr>",
+          desc = "build & run project",
+          icon = { icon = "󱅄", hl = "false" },
+        },
+        {
+          "<leader>Xa",
+          "<cmd>XcodebuildCodeActions<cr>",
+          desc = "code actions",
+          icon = { icon = "󱅄", hl = "false" },
+        },
+        { "<leader>Xl", "<cmd>XcodebuildToggleLogs<cr>", desc = "toggle logs", icon = { icon = "󱅄", hl = "false" } },
+        { "<leader>XS", "<cmd>XcodebuildSetup<cr>", desc = "setup project", icon = { icon = "󱅄", hl = "false" } },
+        {
+          "<leader>Xd",
+          "<cmd>XcodebuildSelectDevice<cr>",
+          desc = "select device",
+          icon = { icon = "󱅄", hl = "false" },
+        },
+        {
+          "<leader>Xq",
+          "<cmd>Telescope quickfix<cr>",
+          desc = "telescope quickfix",
+          icon = { icon = "󱅄", hl = "false" },
+        },
       },
     },
   },
   -- opts = function(_, opts)
-  --   opts.spec["<leader>n"] = { name = "+new" }
-  --   opts.spec["<leader>o"] = { name = "+org" }
-  --   opts.spec["<leader>on"] = { name = "+new" }
   --   opts.spec["<leader>a"] = {
   --     name = "ChatGPT",
   --     c = { "<cmd>ChatGPT<CR>", "ChatGPT" },
