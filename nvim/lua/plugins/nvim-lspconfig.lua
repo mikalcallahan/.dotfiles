@@ -8,14 +8,71 @@ return {
     inlay_hints = { enabled = false },
 
     servers = {
-      -- pyright will be automatically installed with mason and loaded with lspconfig
       sourcekit = {
         cmd = { "xcrun", "sourcekit-lsp" },
         filetypes = { "swift" },
-        root_dir = function(filename, _)
+        root_dir = function(filename)
           return require("lspconfig.util").root_pattern("Package.swift", ".git")(filename)
         end,
       },
+      analog = {
+        cmd = { "analog-language-server", "--stdio" },
+        filetypes = { "analog" },
+        root_dir = function(filename)
+          return require("lspconfig.util").root_pattern("angular.json", "nx.json")(filename)
+        end,
+      },
+      angularls = {
+        filetypes = { "analog", "typescript" },
+      },
+      stylelint_lsp = {
+        cmd = { "stylelint-lsp" },
+        filetypes = { "css", "scss" },
+      },
+      volar = {
+        cmd = { "volar-server", "--stdio" },
+        filetypes = { "analog", "typescript", "javascript", "html", "json" },
+        root_dir = function(filename)
+          return require("lspconfig.util").root_pattern("angular.json", "nx.json")(filename)
+        end,
+      },
+    },
+    setup = {
+      analog = function(_, opts)
+        local lspconfig = require("lspconfig")
+        local configs = require("lspconfig.configs")
+        local util = require("lspconfig.util")
+
+        local function get_tsdk_path()
+          local root_dir = util.root_pattern("angular.json", "nx.json")(vim.fn.getcwd())
+          if root_dir then
+            return root_dir .. "/node_modules/typescript/lib"
+          else
+            return vim.fn.expand(
+              "~/.local/share/nvim/mason/packages/vtsls/node_modules/@vtsls/language-server/node_modules/typescript/lib"
+            )
+          end
+        end
+
+        if not configs.analog then
+          configs.analog = {
+            default_config = {
+              cmd = { "analog-language-server", "--stdio" },
+              init_options = {
+                typescript = {
+                  tsdk = get_tsdk_path(),
+                },
+              },
+              name = "analog",
+              filetypes = { "analog" },
+              root_dir = function(filename)
+                return require("lspconfig.util").root_pattern("angular.json", "nx.json")(filename)
+              end,
+            },
+          }
+        end
+        lspconfig.analog.setup(opts)
+      end,
     },
   },
 }

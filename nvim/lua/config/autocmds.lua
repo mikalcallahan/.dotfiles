@@ -21,3 +21,10 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.softtabstop = 2 -- Set softtabstop to 2
   end,
 })
+
+vim.cmd([[
+  augroup FileTypeAnalog
+    autocmd!
+    autocmd BufRead,BufNewFile *.analog set filetype=analog
+  augroup END
+]])
