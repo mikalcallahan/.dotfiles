@@ -44,7 +44,7 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.g
 
 export NVM_DIR=~/.nvm
 # #PATH="~/.nvm/versions/node/v12.18.4/bin:$PATH"
-alias alias nvminit='. "$(brew --prefix nvm)/nvm.sh"'
+# alias alias nvminit='. "$(brew --prefix nvm)/nvm.sh"'
 # # source $(brew --prefix nvm)/nvm.sh
 # export PATH="/usr/local/sbin:$PATH"
 
@@ -58,16 +58,15 @@ f() {
     cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
 }
 
-# ~/dev/desktop/pyQuote/pyQuote.py
-# ~/dev/desktop/quotescript/.build/release/quotescript
-scala-cli ~/dev/desktop/scalaquote/Main.scala
-# alias quotescript="node ~/Developer/desktop/scala-test/hella-world/target/scala-3.2.0/hella-world-opt/main.js"
+alias effectquote="node ~/Developer/desktop/effectquote/dist/index.js"
 alias mongodb-restart='brew services restart mongodb-community'
 alias mongodb-stop='brew services stop mongodb-community'
 alias flac-to-alac='for name in *.flac; do ffmpeg -nostdin -i "$name" -c:a alac -c:v copy "${name%.*}.m4a"; done'
 alias gst='git status'
 alias cat='bat'
-alias ls='exa'
+alias ls='eza'
+
+effectquote
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 export NNN_COLORS="2136"                           # use a different color for each context
@@ -77,12 +76,6 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 alias python=/usr/local/bin/python3
-
-# source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-# quotescript
-# Load Angular CLI autocompletion.
-# source <(ng completion script)
 
 # Initiate startship
 eval "$(starship init zsh)"
