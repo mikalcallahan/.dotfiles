@@ -25,7 +25,10 @@ return {
       angularls = {
         filetypes = { "analog", "typescript" },
       },
-
+      stylelint_lsp = {
+        cmd = { "stylelint-lsp" },
+        filetypes = { "css", "scss" },
+      },
       volar = {
         cmd = { "volar-server", "--stdio" },
         filetypes = { "analog", "typescript", "javascript", "html", "json" },
