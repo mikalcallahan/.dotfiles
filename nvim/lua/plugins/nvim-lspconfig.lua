@@ -45,7 +45,6 @@ return {
 
         local function get_tsdk_path()
           local root_dir = util.root_pattern("angular.json", "nx.json")(vim.fn.getcwd())
-          print("tsdk - ", root_dir) -- Logging the root_dir for debugging
           if root_dir then
             return root_dir .. "/node_modules/typescript/lib"
           else
