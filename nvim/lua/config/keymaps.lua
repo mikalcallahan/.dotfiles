@@ -45,3 +45,7 @@ map("n", "<leader>C", LazyVim.pick.config_files(), { desc = "Open Config" })
 -- ui
 map("n", "E", "<cmd>lua vim.diagnostic.open_float()<CR>", { desc = "Show line diagnostics" })
 map("n", "<leader>ub", "<cmd>Gitsigns toggle_current_line_blame <cr>", { desc = "Toggle current line blame" })
+
+-- Visual mode scroll mappings
+map("x", "<C-u>", "<C-u>zz", { desc = "Scroll up in visual mode", silent = true })
+map("x", "<C-d>", "<C-d>zz", { desc = "Scroll down in visual mode", silent = true })
