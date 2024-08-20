@@ -22,19 +22,9 @@ return {
           return require("lspconfig.util").root_pattern("angular.json", "nx.json")(filename)
         end,
       },
-      angularls = {
-        filetypes = { "analog", "typescript" },
-      },
       stylelint_lsp = {
         cmd = { "stylelint-lsp" },
         filetypes = { "css", "scss" },
-      },
-      volar = {
-        cmd = { "volar-server", "--stdio" },
-        filetypes = { "analog", "typescript", "javascript", "html", "json" },
-        root_dir = function(filename)
-          return require("lspconfig.util").root_pattern("angular.json", "nx.json")(filename)
-        end,
       },
     },
     setup = {
