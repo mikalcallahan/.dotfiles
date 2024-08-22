@@ -40,6 +40,32 @@ return {
           },
         },
       },
+      {
+        name = "Launch NestJS (Debug Mode)",
+        type = "pwa-node",
+        request = "launch",
+        -- cwd = vim.fn.getcwd(),
+        cwd = "${workspaceFolder}/magi",
+        runtimeExecutable = "npm", -- Specify npm as the runtime executable
+        args = { "run", "start:debug" }, -- Pass the run command and script name as arguments
+        sourceMaps = true,
+        protocol = "inspector",
+        console = "integratedTerminal",
+        outFiles = { "${workspaceFolder}/magi/dist/**/*.js" },
+        skipFiles = {
+          "${workspaceFolder}/magi/node_modules/**/*.js",
+          "<node_internals>/**",
+        },
+      },
+      {
+        -- For this to work you need to make sure the node process is started with the `--inspect` flag.
+        name = "Attach to NestJS process",
+        type = "node2",
+        request = "attach",
+        processId = require("dap.utils").pick_process,
+        protocol = "inspector",
+        console = "integratedTerminal",
+      },
     }
   end,
 }
