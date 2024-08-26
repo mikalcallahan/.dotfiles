@@ -5,6 +5,9 @@ return {
   opts = {
     -- add any opts here
     provider = "openai",
+    openai = {
+      model = "chatgpt-4o-latest",
+    },
   },
   dependencies = {
     "nvim-tree/nvim-web-devicons",

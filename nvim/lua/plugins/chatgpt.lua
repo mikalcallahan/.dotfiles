@@ -7,7 +7,7 @@ return {
     require("chatgpt").setup({
       api_key_cmd = "gpg --decrypt " .. home .. "/.config/.apikey.txt.gpg",
       openai_params = {
-        model = "gpt-4o-2024-08-06",
+        model = "chatgpt-4o-latest",
         temperature = 1,
         top_p = 1,
       },
