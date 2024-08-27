@@ -59,6 +59,7 @@ alias flac-to-alac='for name in *.flac; do ffmpeg -nostdin -i "$name" -c:a alac 
 alias gst='git status'
 alias cat='bat'
 alias ls='eza'
+alias resource="source ~/.zshrc"
 
 # Source iTerm2 Shell Integration if it exists
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
@@ -73,6 +74,6 @@ alias python=/usr/local/bin/python3
 eval "$(starship init zsh)"
 
 # Load Angular CLI autocompletion.
-source <(ng completion script)
+# source <(ng completion script)
 
 effectquote
