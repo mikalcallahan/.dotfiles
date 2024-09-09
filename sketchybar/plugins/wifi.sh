@@ -17,6 +17,8 @@ VPN_PAUSED=$(echo $VPN_STATUS | grep '\bPAUSED\b')
 
 if [ "$SSID" = "" ]; then
 	sketchybar --set $NAME label="Disconnected" icon=睊
+elif [ "$VPN_STATUS" = "" ]; then
+	sketchybar --set $NAME label="$SSID" icon= icon.color=$ICON_COLOR
 else
 	if [[ $VPN_CONNECTED =~ "CONNECTED" ]]; then
 		sketchybar --set $NAME label="$SSID" icon= icon.color=$ICON_COLOR

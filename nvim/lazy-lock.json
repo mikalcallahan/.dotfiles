@@ -1,11 +1,8 @@
 {
-  "ChatGPT.nvim": { "branch": "main", "commit": "4d9d297c2409c8ebc715da7f1d7705a221564555" },
   "LazyVim": { "branch": "main", "commit": "12818a6cb499456f4903c5d8e68af43753ebc869" },
   "SchemaStore.nvim": { "branch": "main", "commit": "28a6a50e5b7b963dc6a5d2defc40e158231a67ed" },
   "avante.nvim": { "branch": "main", "commit": "7532e590d28c6fffe88aa17ba6689c4ec8fec8ba" },
   "catppuccin": { "branch": "main", "commit": "4fd72a9ab64b393c2c22b168508fd244877fec96" },
-  "clangd_extensions.nvim": { "branch": "main", "commit": "385a44f133f4145e3a3da1a2a557225dccc3e1f8" },
-  "cmake-tools.nvim": { "branch": "master", "commit": "4be3c229fe932043fd83ad52fdf0ba9af7297789" },
   "cmp-buffer": { "branch": "main", "commit": "3022dbc9166796b644a841a02de8dd1cc1d311fa" },
   "cmp-nvim-lsp": { "branch": "main", "commit": "39e2eda76828d88b773cc27a3f61d2ad782c922d" },
   "cmp-path": { "branch": "main", "commit": "91ff86cd9c29299a64f968ebb45846c485725f23" },
