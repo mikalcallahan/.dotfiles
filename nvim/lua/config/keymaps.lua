@@ -17,7 +17,7 @@ map("x", "<leader>cs", ":CodeSnapSave<cr>", { desc = "CodeSnap save to ~/Desktop
 map("x", "<leader>cS", ":CodeSnapSave<cr>", { desc = "CodeSnap to clipboard", silent = true })
 
 -- f{ind,ile}
-map("n", "<leader>ft", "<cmd>1 ToggleTerm <cr>", { desc = "Terminal" })
+map("n", "<leader>fT", "<cmd>ToggleTerm <cr>", { desc = "Terminal" })
 map("n", "<leader>ft1", "<cmd>1 ToggleTerm <cr>", { desc = "Terminal" })
 map("n", "<leader>ft2", "<cmd>2 ToggleTerm <cr>", { desc = "Terminal" })
 map("n", "<leader>fB", "<cmd>Neotree dir=~/ <cr>", { desc = "File Browser" })

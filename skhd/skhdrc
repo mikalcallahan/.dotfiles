@@ -17,7 +17,7 @@ cmd - return : /Applications/iTerm.app/Contents/MacOS/iTerm2
 #cmd + shift - return : ~/Scripts/qtb.sh
 
 # Restart Yabai
-ctrl + alt - r : launchctl kickstart -k "gui/${UID}/homebrew.mxcl.yabai"
+ctrl + alt - r : yabai --restart-service
 
 # focus window
 # alt - h : yabai -m window --focus west

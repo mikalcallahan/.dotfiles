@@ -13,6 +13,7 @@ return {
     "nvim-tree/nvim-web-devicons",
     "stevearc/dressing.nvim",
     "nvim-lua/plenary.nvim",
+    "HakonHarnes/img-clip.nvim",
     {
       "grapp-dev/nui-components.nvim",
       dependencies = {

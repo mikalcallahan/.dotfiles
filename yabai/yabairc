@@ -31,6 +31,7 @@ yabai -m space 6 --label games
 yabai -m config --space notes top_padding 90 bottom_padding 80 left_padding 100 right_padding 100
 yabai -m config --space media top_padding 90 bottom_padding 80 left_padding 100 right_padding 100
 yabai -m config --space social top_padding 140 bottom_padding 100 left_padding 140 right_padding 140
+yabai -m config --space games manage=off
 
 ## App rules
 yabai -m rule --add app="Finder$" manage=off
@@ -42,6 +43,7 @@ yabai -m rule --add app="^(Discord|Messages|Signal|Slack|X)$" space=social
 yabai -m rule --add app="^Simulator" manage=on
 yabai -m rule --add app="^(Activity Monitor|App Store|Archive Utility|Bitwarden|Calculator|Calendar|Coinbase|Dictionary|LuLu|Mail|Photo Booth|Preview|Python|Screen Sharing|Software Update|Steam|VLC)$" manage=off
 yabai -m rule --add label="Safari" app="^Safari$" title="^(General|(Tab|Password|Website|Extension)s|AutoFill|Se(arch|curity)|Privacy|Advance)$" manage=off
+yabai -m rule --add app="wine64-preloader" manage=off
 
 ## global settings
 yabai -m config                                 \
@@ -68,10 +70,10 @@ yabai -m config                                 \
     split_ratio                  0.50           \
     split_type                   auto           \
     auto_balance                 off            \
-    top_padding                  20             \
-    bottom_padding               15             \
-    left_padding                 10             \
-    right_padding                10             \
+    top_padding                  10             \
+    bottom_padding               05             \
+    left_padding                 05             \
+    right_padding                05             \
     window_gap                   06             \
     layout                       stack          \
     mouse_modifier               fn             \
