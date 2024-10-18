@@ -48,6 +48,7 @@ return {
         { "<leader>a", group = "+ai", icon = { icon = "ﮧ", hl = "false" } },
         { "<leader>ac", "<cmd>ChatGPT<cr>", desc = "chat", icon = { icon = "", hl = "false" } },
         { "<leader>at", "<cmd>ChatGPTRun translate<cr>", desc = "translate", icon = { icon = "", hl = "false" } },
+        { "<leader>ag", "<cmd>ChatGPTActAs<cr>", desc = "chatgpt act as", icon = { icon = "󱉕", hl = "false" } },
         {
           "<leader>ao",
           "<cmd>ChatGPTRun optimize_code<cr>",
