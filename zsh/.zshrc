@@ -2,7 +2,12 @@
 HISTFILE=~/.histfile
 HISTSIZE=5000
 SAVEHIST=5000
-setopt share_history
+# setopt share_history
+setopt INC_APPEND_HISTORY  # Append history as commands are entered
+setopt HIST_IGNORE_ALL_DUPS  # Ignore duplicate commands in history
+setopt HIST_REDUCE_BLANKS  # Remove superfluous blanks from history
+setopt EXTENDED_HISTORY  # Save timestamped history
+
 
 # Zsh Options and Keybindings
 unsetopt beep
@@ -10,7 +15,9 @@ bindkey -v
 
 # Path and Environment Variables
 function add_to_path() {
-  [[ ":$PATH:" != *":$1:"* ]] && export PATH="$1:$PATH"
+  for dir in "$@"; do
+    [[ ":$PATH:" != *":$dir:"* ]] && PATH="$dir:$PATH"
+  done
 }
 
 add_to_path "$HOME/.local/bin"
@@ -20,15 +27,24 @@ add_to_path "$ANDROID_HOME/tools"
 add_to_path "/usr/local/opt/openjdk@17/bin"
 
 # Case Insensitive Path-Completion
-if type brew &>/dev/null; then
-  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-  autoload -Uz compinit
-  if [[ ! -f ~/.zcompdump || ~/.zcompdump -ot $(brew --prefix)/share/zsh-completions ]]; then
-    compinit
-  fi
-fi
+# if type brew &>/dev/null; then
+#   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+#   autoload -Uz compinit
+#   if [[ ! -f ~/.zcompdump || ~/.zcompdump -ot $(brew --prefix)/share/zsh-completions ]]; then
+#     compinit
+#   fi
+# fi
 
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+autoload -Uz compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # case insensitive completion
+zstyle ':completion:*' menu select  # enable menu selection
+bindkey '^[[Z' reverse-menu-complete  # Bind Shift-Tab to reverse completion
+zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
+compinit
+
+
+# autoload -Uz compinit
+# compinit
 
 # brew function for sketchybar
 function brew() {
@@ -45,7 +61,7 @@ if command -v fd &>/dev/null; then
 else
   export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
 fi
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
 export NVM_DIR=~/.nvm
 
@@ -71,7 +87,10 @@ fi
 alias python=/usr/local/bin/python3
 
 # Initiate startship
-eval "$(starship init zsh)"
+if command -v starship &>/dev/null; then
+  eval "$(starship init zsh)"
+fi
+
 
 # Load Angular CLI autocompletion.
 # source <(ng completion script)
