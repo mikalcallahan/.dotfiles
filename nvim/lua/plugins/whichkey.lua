@@ -7,9 +7,32 @@ return {
       {
         mode = { "n" },
         { "<leader>n", group = "+new", icon = { icon = "󰝒", hl = "false" } },
-        { "<leader>o", group = "+org", icon = { icon = "󱅄", hl = "false" } },
-        { "<leader>on", group = "+new", icon = { icon = "󰷥", hl = "false" } },
-        -- { "<leader>oo", desc = "Org Options", "<cmd>", icon = { icon = "", hl = "false" } },
+        { "<leader>o", group = "+obsidian", icon = { icon = "􀓕", hl = "false" } },
+        { "<leader>ol", group = "+links", icon = { icon = "􀉣", hl = "false" } },
+        {
+          "<leader>oo",
+          "<cmd>ObsidianQuickSwitch<cr>",
+          desc = "switch files",
+          icon = { icon = "􀱢", hl = "false" },
+        },
+        {
+          "<leader>os",
+          "<cmd>ObsidianSearch<cr>",
+          desc = "grep file contents",
+          icon = { icon = "􀕹", hl = "false" },
+        },
+        {
+          "<leader>od",
+          "<cmd>ObsidianDailies<cr>",
+          desc = "open dailies",
+          icon = { icon = "􀩳", hl = "false" },
+        },
+        {
+          "<leader>oll",
+          "<cmd>ObsidianBacklinks<cr>",
+          desc = "list backlinks",
+          icon = { icon = "􀉣", hl = "false" },
+        },
       },
       {
         mode = { "n", "v" },
