@@ -30,7 +30,7 @@ yabai -m space 6 --label games
 
 yabai -m config --space notes top_padding 90 bottom_padding 80 left_padding 100 right_padding 100
 yabai -m config --space media top_padding 90 bottom_padding 80 left_padding 100 right_padding 100
-yabai -m config --space social top_padding 140 bottom_padding 100 left_padding 140 right_padding 140
+yabai -m config --space social top_padding 90 bottom_padding 80 left_padding 100 right_padding 100
 yabai -m config --space games manage=off
 
 ## App rules
