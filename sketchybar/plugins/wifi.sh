@@ -11,7 +11,6 @@ else
   CURRENT_WIFI="$(networksetup -getairportnetwork en0)"
   # CURR_TX="$(echo "$CURRENT_WIFI" | grep -o "lastTxRate: .*" | sed 's/^lastTxRate: //')"
   SSID="$(echo "$CURRENT_WIFI" | grep -o ": .*" | sed 's/^: //')"
-  SSID="FAIL"
 fi
 
 VPN_STATUS=$(/usr/local/bin/ivpn status)
