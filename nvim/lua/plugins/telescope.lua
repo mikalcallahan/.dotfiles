@@ -6,7 +6,7 @@ return {
 
       layout_strategy = "bottom_pane",
       layout_config = {
-        height = 25,
+        height = 24,
       },
 
       border = true,
