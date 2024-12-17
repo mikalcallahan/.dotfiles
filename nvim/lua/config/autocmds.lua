@@ -12,6 +12,24 @@ vim.api.nvim_create_autocmd("TermOpen", {
   command = "setlocal nonumber norelativenumber",
 })
 
+local nativeTermGroup = vim.api.nvim_create_augroup("TerminalSettings", { clear = true })
+
+vim.api.nvim_create_autocmd({ "TermOpen", "TermEnter", "BufEnter" }, {
+  group = nativeTermGroup,
+  pattern = "term://*",
+  callback = function()
+    vim.wo.relativenumber = false
+    vim.wo.number = false
+    vim.o.signcolumn = "no"
+    vim.cmd([[startinsert]])
+    if vim.bo.filetype ~= "snacks_terminal" then
+      vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<cr>", { desc = "Go to Left Window" })
+      vim.keymap.set("t", "<C-k>", "<cmd>wincmd k<cr>", { desc = "Go to Above Window" })
+      vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>", { desc = "Enter Normal Mode" })
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "swift" }, -- List of filetypes
   callback = function()
