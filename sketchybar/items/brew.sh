@@ -6,5 +6,5 @@
 sketchybar --add event brew_update \
 	--add item brew right \
 	--set brew script="$PLUGIN_DIR/brew.sh" \
-	background.padding_right=8 \
+	background.padding_right=6 \
 	--subscribe brew brew_update

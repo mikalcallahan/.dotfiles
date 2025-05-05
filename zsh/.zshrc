@@ -68,7 +68,7 @@ export NVM_DIR=~/.nvm
 # fnm
 eval "$(fnm env --use-on-cd)"
 
-alias effectquote="node ~/Developer/desktop/effectquote/dist/index.js"
+alias effectquote="node ~/dev/desktop/effectquote/dist/index.js"
 alias mongodb-restart='brew services restart mongodb-community'
 alias mongodb-stop='brew services stop mongodb-community'
 alias flac-to-alac='for name in *.flac; do ffmpeg -nostdin -i "$name" -c:a alac -c:v copy "${name%.*}.m4a"; done'

@@ -5,7 +5,8 @@
 # https://felixkratz.github.io/SketchyBar/config/components#space----associate-mission-control-spaces-with-an-item
 
 #SPACE_ICONS=("1" "2" "3" "4" "5" "6" "7" "8")
-SPACE_ICONS=("" "󰖟" "󰎞" "󰌳" "󱥁" "")
+# SPACE_ICONS=("" "󰖟" "󰎞" "󰌳" "󱥁" "")
+SPACE_ICONS=("" "󰖟" "󰎞" "󱥁" "󰌳" "􀥝")
 SPACE_CLICK_SCRIPT="yabai -m space --focus \$SID 2>/dev/null"
 
 sid=0
@@ -38,7 +39,7 @@ done
 sketchybar   --add item       separator left                          \
              --set separator  icon=                                  \
                               icon.font="$FONT:16.0"                  \
-                              background.padding_left=26              \
+                              background.padding_left=25              \
                               background.padding_right=15             \
                               label.drawing=off                       \
                               associated_display=active               \
