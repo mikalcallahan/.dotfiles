@@ -1,0 +1,29 @@
+# Theme/UI
+font-family = "MonaspiceAr Nerd Font Mono"
+mouse-hide-while-typing=true
+theme = catppuccin-macchiato
+title = " "
+window-padding-x=20
+window-padding-y=20
+
+# Shell Integration
+shell-integration = zsh
+
+# Cursor style
+cursor-style-blink = true
+
+# Clipboard settings
+clipboard-read = allow
+clipboard-write = allow
+copy-on-select = true
+
+# macos options
+# macos-option-as-alt = true
+macos-titlebar-proxy-icon = hidden
+macos-non-native-fullscreen = visible-menu
+
+
+# Keys
+keybind = super+u=text:\x15
+keybind = super+d=text:\x04
+keybind = ctrl+enter=text:\x0d
