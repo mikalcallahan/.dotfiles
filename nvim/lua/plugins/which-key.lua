@@ -43,13 +43,13 @@ return {
         },
         {
           "<leader>oww",
-          "<cmd>Obsidian workspaces work<cr>",
+          "<cmd>Obsidian workspace work<cr>",
           desc = "obsidian workspaces: work",
           icon = { icon = "􀤧", hl = "false" },
         },
         {
           "<leader>owp",
-          "<cmd>Obsidian workspaces personal<cr>",
+          "<cmd>Obsidian workspace personal<cr>",
           desc = "obsidian workspaces: personal",
           icon = { icon = "􀤧", hl = "false" },
         },
