@@ -76,6 +76,7 @@ alias gst='git status'
 alias cat='bat'
 alias ls='eza'
 alias resource="source ~/.zshrc"
+alias ICLOUD_DRIVE='~/Library/Mobile\ Documents/com~apple~CloudDocs/'
 
 # Source iTerm2 Shell Integration if it exists
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
