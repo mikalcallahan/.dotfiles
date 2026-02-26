@@ -28,9 +28,9 @@ yabai -m space 4 --label media
 yabai -m space 5 --label social
 yabai -m space 6 --label games
 
-yabai -m config --space notes top_padding 90 bottom_padding 80 left_padding 100 right_padding 100
+# yabai -m config --space notes top_padding 90 bottom_padding 80 left_padding 100 right_padding 100
 yabai -m config --space media top_padding 90 bottom_padding 80 left_padding 100 right_padding 100
-yabai -m config --space social top_padding 90 bottom_padding 80 left_padding 100 right_padding 100
+yabai -m config --space social top_padding 90 bottom_padding 80 left_padding 100 right_padding 140
 yabai -m config --space games manage=off
 
 ## App rules
@@ -40,14 +40,15 @@ yabai -m rule --add app="^(Safari|Firefox Developer Edition|Firefox|Brave Browse
 yabai -m rule --add app="^(Maps|Music|News)$" space=media 
 yabai -m rule --add app="^(Notes|Reminders|ChatGPT)$" space=notes
 yabai -m rule --add app="^(Discord|Messages|Signal|Slack|X)$" space=social
-yabai -m rule --add app="^Simulator" manage=on
+yabai -m rule --add app="^(Simulator|Xcode)" manage=on
 yabai -m rule --add app="^(Activity Monitor|App Store|Archive Utility|Bitwarden|Calculator|Calendar|Coinbase|Dictionary|LuLu|Mail|Photo Booth|Preview|Python|Screen Sharing|Software Update|Steam|VLC)$" manage=off
 yabai -m rule --add label="Safari" app="^Safari$" title="^(General|(Tab|Password|Website|Extension)s|AutoFill|Se(arch|curity)|Privacy|Advance)$" manage=off
 yabai -m rule --add app="wine64-preloader" manage=off
 
+# external_bar                 all:30:0       \
+
 ## global settings
 yabai -m config                                 \
-    external_bar                 all:30:0        \
     mouse_follows_focus          on             \
     focus_follows_mouse          autoraise      \
     window_origin_display        default        \
@@ -70,15 +71,28 @@ yabai -m config                                 \
     split_ratio                  0.50           \
     split_type                   auto           \
     auto_balance                 off            \
-    top_padding                  10             \
-    bottom_padding               05             \
-    left_padding                 05             \
-    right_padding                05             \
     window_gap                   06             \
     layout                       stack          \
     mouse_modifier               fn             \
     mouse_action1                move           \
     mouse_action2                resize         \
     mouse_drop_action            swap
+
+# num_displays=$(yabai -m query --displays | jq length)
+#
+# if [ "$num_displays" -gt 1 ]; then
+#     # External monitor is connected
+#     yabai -m config top_padding 90
+#     yabai -m config bottom_padding 80
+#     yabai -m config left_padding 100
+#     yabai -m config right_padding 100
+# else
+#     # Only the built-in display is active
+#     yabai -m config top_padding 10
+#     yabai -m config bottom_padding 5
+#     yabai -m config left_padding 5
+#     yabai -m config right_padding 5
+# fi
+#
 
 echo "yabai configuration loaded.."

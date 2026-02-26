@@ -10,7 +10,7 @@
 # .load "partial_skhdrc"
 
 # open terminal, blazingly fast compared to iTerm/Hyper
-cmd - return : /Applications/iTerm.app/Contents/MacOS/iTerm2
+# cmd - return : /Applications/iTerm.app/Contents/MacOS/iTerm2
 # cmd - return : /Applications/kitty.app/Contents/MacOS/kitty --single-instance -d ~
 
 # open qutebrowser
@@ -124,13 +124,14 @@ alt - y : yabai -m space --mirror y-axis
 alt - x : yabai -m space --mirror x-axis
 
 # toggle desktop offset
-alt - a : yabai -m space --toggle padding && yabai -m space --toggle gap
+alt - a : yabai -m space --toggle padding && yabai -m space --toggle gap && yabai -m 
 
 # toggle window parent zoom
 alt - d : yabai -m window --toggle zoom-parent
 
 # toggle window fullscreen zoom
 alt - f : yabai -m window --toggle zoom-fullscreen
+# alt - f : yabai -m window --toggle windowed-fullscreen
 
 # toggle window native fullscreen
 shift + alt - f : yabai -m window --toggle native-fullscreen

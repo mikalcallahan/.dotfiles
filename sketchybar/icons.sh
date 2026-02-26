@@ -1,9 +1,9 @@
 #!/usr/bin/env sh
 
 # General Icons
-# APPLE=
 # APPLE=
-APPLE=󰥳
+APPLE=􀣺
+# APPLE=󰥳
 APPLE_LOGO=
 PREFERENCES=
 #PREFERENCES=􀺽
