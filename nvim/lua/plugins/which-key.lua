@@ -7,6 +7,7 @@ return {
       {
         mode = { "n" },
         -- { "<leader>n", group = "+new", icon = { icon = "󰝒", hl = "false" } },
+        { "<leader>gr", "<cmd>CodeDiff<cr>", desc = "Code Diff" },
         { "<leader>o", group = "+obsidian", icon = { icon = "󰈙", hl = "false" } },
         { "<leader>ol", group = "+links", icon = { icon = "", hl = "false" } },
         { "<leader>ow", group = "+workspaces", icon = { icon = "󰷉", hl = "false" } },
