@@ -9,6 +9,13 @@ return {
     picker = {
       git_ignored = true, -- Show Git-ignored files
       respect_gitignore = false, -- Don't let Git hide files
+      win = {
+        input = {
+          keys = {
+            ["<c-y>"] = { "preview_scroll_up", mode = { "i", "n" } },
+          },
+        },
+      },
     },
     terminal = {
       win = {
