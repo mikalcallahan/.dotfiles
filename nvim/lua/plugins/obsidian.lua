@@ -20,6 +20,9 @@ return {
         path = "~/Documents/notes",
       },
     },
+    note_id_func = function(id)
+      return id
+    end,
     daily_notes = {
       folder = "dailies",
     },
