@@ -29,5 +29,8 @@ return {
         width = 0.9,
       },
     },
+    scratch = {
+      ft = "markdown",
+    },
   },
 }
