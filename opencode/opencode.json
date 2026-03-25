@@ -1,9 +1,5 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "theme": "system",
-  "keybinds": {
-    "input_newline": "ctrl+n,shift+return,ctrl+return"
-  },
   "provider": {
     "openai": {
       "models": {
@@ -30,6 +26,17 @@
           }
         },
         "gpt-5.3-codex": {
+          "options": {
+            "store": false,
+            "reasoningEffort": "high",
+            "textVerbosity": "medium",
+            "reasoningSummary": "auto",
+            "include": [
+              "reasoning.encrypted_content"
+            ]
+          }
+        },
+        "gpt-5.4": {
           "options": {
             "store": false,
             "reasoningEffort": "high",
