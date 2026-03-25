@@ -1,0 +1,79 @@
+# History Configuration
+HISTFILE=~/.histfile
+HISTSIZE=50000
+SAVEHIST=50000
+# setopt share_history
+setopt INC_APPEND_HISTORY  # Append history as commands are entered
+setopt HIST_IGNORE_ALL_DUPS  # Ignore duplicate commands in history
+setopt HIST_REDUCE_BLANKS  # Remove superfluous blanks from history
+setopt EXTENDED_HISTORY  # Save timestamped history
+
+
+# Zsh Options and Keybindings
+unsetopt beep
+bindkey -v
+
+export EDITOR="nvim"
+export VISUAL="nvim"
+
+function add_to_path() {
+  for dir in "$@"; do
+    # Only add if it's not already in PATH
+    if [[ ":$PATH:" != *":$dir:"* ]]; then
+      PATH="$dir:$PATH"
+    fi
+  done
+}
+
+add_to_path "/opt/homebrew/bin/"
+
+autoload -Uz compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # case insensitive completion
+zstyle ':completion:*' menu select  # enable menu selection
+bindkey '^[[Z' reverse-menu-complete  # Bind Shift-Tab to reverse completion
+zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
+compinit
+
+
+# brew function for sketchybar
+# function brew() {
+#   command brew "$@" 
+#
+#   if [[ $* =~ "upgrade" ]] || [[ $* =~ "update" ]] || [[ $* =~ "outdated" ]]; then
+#     sketchybar --trigger brew_update
+#   fi
+# }
+
+# fzf with ripgrep or fd
+if command -v fd &>/dev/null; then
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+else
+  export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
+fi
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+
+# fnm
+eval "$(fnm env --use-on-cd --version-file-strategy=recursive --corepack-enabled --resolve-engines)"
+
+# Source iTerm2 Shell Integration if it exists
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# Pyenv Initialization
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+alias python=/usr/local/bin/python3
+
+# Initiate startship
+if command -v starship &>/dev/null; then
+  eval "$(starship init zsh)"
+fi
+
+# Load all .zsh related files
+for file in ~/.config/zsh/*.zsh; do
+  [ -f "$file" ] && source "$file"
+done
+
+for file in "$HOME"/.config/scripts/*.sh; do
+  [ -f "$file" ] && . "$file"
+done
