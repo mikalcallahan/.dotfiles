@@ -11,8 +11,6 @@ return {
   --   "BufReadPre path/to/my-vault/*.md",
   --   "BufNewFile path/to/my-vault/*.md",
   -- },
-  ---@module 'obsidian'
-  ---@type obsidian.config
   opts = {
     workspaces = {
       {
