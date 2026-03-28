@@ -23,3 +23,25 @@ vim.api.nvim_create_autocmd("FileType", {
     end
   end,
 })
+
+if vim.env.TMUX then
+  local lazygit_tmux_nav = vim.api.nvim_create_augroup("lazygit_tmux_nav", { clear = true })
+
+  vim.api.nvim_create_autocmd("TermOpen", {
+    group = lazygit_tmux_nav,
+    pattern = "term://*lazygit*",
+    callback = function(event)
+      local function tmux_select(direction)
+        return function()
+          vim.fn.jobstart({ "tmux", "select-pane", direction }, { detach = true })
+        end
+      end
+
+      local opts = { buffer = event.buf, silent = true }
+      vim.keymap.set("t", "<C-h>", tmux_select("-L"), opts)
+      vim.keymap.set("t", "<C-j>", tmux_select("-D"), opts)
+      vim.keymap.set("t", "<C-k>", tmux_select("-U"), opts)
+      vim.keymap.set("t", "<C-l>", tmux_select("-R"), opts)
+    end,
+  })
+end
