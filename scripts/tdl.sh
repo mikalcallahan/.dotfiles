@@ -22,8 +22,7 @@ tdl() {
   tmux rename-window -t "$editor_pane" "$(basename "$current_dir")"
 
   # Run nvim in the left pane
-  # tmux send-keys -t "$editor_pane" "$EDITOR ." C-m
-  tmux send-keys -t "$editor_pane" "$EDITOR" C-m
+  tmux send-keys -t "$editor_pane" "$EDITOR ." C-m
 
   # Split window vertically - top 85%, bottom 15% (target editor pane explicitly)
   tmux split-window -v -p 15 -t "$editor_pane" -c "$current_dir"
