@@ -23,7 +23,7 @@ map("n", "<leader>C", LazyVim.pick.config_files(), { desc = "Open Config" })
 map(
   "n",
   "<leader>fa",
-  "<cmd>:Telescope find_files find_command=rg,--ignore,--hidden,--files <cr>",
+  LazyVim.pick("files", { hidden = true, ignored = true, root = false }),
   { desc = "Find all files" }
 )
 
