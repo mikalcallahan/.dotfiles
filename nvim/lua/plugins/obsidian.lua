@@ -22,7 +22,7 @@ return {
       return id
     end,
     daily_notes = {
-      folder = "dailies",
+      folder = "Dailies",
     },
     legacy_commands = false,
     ui = {
