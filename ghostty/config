@@ -2,6 +2,8 @@
 font-family = "MonaspiceAr Nerd Font Mono"
 mouse-hide-while-typing=true
 theme = catppuccin-macchiato
+# theme = kanagawa-wave
+# theme = Rose Pine Moon
 title = " "
 window-padding-x=20
 window-padding-y=20
@@ -20,7 +22,10 @@ copy-on-select = true
 # macos options
 # macos-option-as-alt = true
 macos-titlebar-proxy-icon = hidden
-macos-non-native-fullscreen = visible-menu
+# macos-non-native-fullscreen = visible-menu
+macos-non-native-fullscreen = true
+macos-titlebar-style = hidden
+macos-auto-secure-input = true
 
 
 # Keys

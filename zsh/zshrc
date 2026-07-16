@@ -26,6 +26,7 @@ function add_to_path() {
 }
 
 add_to_path "/opt/homebrew/bin/"
+add_to_path "/opt/homebrew/opt/openjdk@21/bin"
 
 autoload -Uz compinit
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' # case insensitive completion
