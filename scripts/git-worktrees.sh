@@ -1,3 +1,57 @@
+_git_worktrees_choose() {
+  local prompt="$1"
+  shift
+
+  if command -v gum >/dev/null 2>&1; then
+    gum choose --header "$prompt" "$@"
+    return
+  fi
+
+  local i=1 choice option
+  printf '%s\n' "$prompt" >&2
+  for option in "$@"; do
+    printf '  %d) %s\n' "$i" "$option" >&2
+    i=$((i + 1))
+  done
+
+  while true; do
+    printf 'Choose [1-%d]: ' "$#" >&2
+    read -r choice || return 1
+
+    if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= $# )); then
+      i=1
+      for option in "$@"; do
+        if (( i == choice )); then
+          printf '%s\n' "$option"
+          return 0
+        fi
+        i=$((i + 1))
+      done
+    fi
+  done
+}
+
+_git_worktrees_path_in_list() {
+  local target_path="$1"
+  git worktree list --porcelain | awk -v target="$target_path" '
+    index($0, "worktree ")==1 && substr($0, 10)==target {found=1; exit}
+    END{exit !found}
+  '
+}
+
+_git_worktrees_next_path() {
+  local base_path="$1"
+  local candidate="$base_path"
+  local i=2
+
+  while [[ -e "$candidate" ]] || _git_worktrees_path_in_list "$candidate"; do
+    candidate="${base_path}--$i"
+    i=$((i + 1))
+  done
+
+  printf '%s\n' "$candidate"
+}
+
 # Create a new worktree + branch (works from any subdir of the repo).
 ga() {
   if [[ -z "$1" ]]; then
@@ -12,6 +66,11 @@ ga() {
   local branch="$1"
   local start="${2:-HEAD}"
   local here_flag="$3"
+
+  if [[ "$start" == "--here" ]]; then
+    here_flag="--here"
+    start="HEAD"
+  fi
 
   # Repo root no matter where you are
   local top
@@ -36,31 +95,81 @@ ga() {
   local safe_branch="${branch//\//-}"
   local worktree_path="$worktrees_dir/${repo_name}--${safe_branch}"
 
-  # If branch already has a worktree, jump to it
-  local existing
+  # If branch already has a worktree, decide whether to reuse it or create a replacement.
+  local existing choice force_checkout
   existing="$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
-    $1=="worktree"{p=$2}
-    $1=="branch" && $2==b{print p}
-  ' | head -n1)"
+    index($0, "worktree ")==1{p=substr($0, 10)}
+    index($0, "branch ")==1 && substr($0, 8)==b{print p; exit}
+  ')"
 
   if [[ -n "$existing" ]]; then
     echo "Worktree for '$branch' already exists at: $existing"
-    cd "$existing" || return 1
-    return 0
+    choice="$(_git_worktrees_choose "How would you like to continue?" \
+      "Use existing worktree" \
+      "Delete existing worktree and create a new one" \
+      "Ignore existing worktree and create another")" || return 1
+
+    case "$choice" in
+      "Use existing worktree")
+        cd "$existing" || return 1
+        return 0
+        ;;
+      "Delete existing worktree and create a new one")
+        git worktree remove "$existing" --force || return 1
+        ;;
+      "Ignore existing worktree and create another")
+        worktree_path="$(_git_worktrees_next_path "$worktree_path")"
+        force_checkout=1
+        ;;
+    esac
   fi
 
-  # If dir exists, avoid clobbering
-  if [[ -e "$worktree_path" ]]; then
-    local i=2
-    while [[ -e "${worktree_path}--$i" ]]; do i=$((i + 1)); done
-    worktree_path="${worktree_path}--$i"
+  # If the branch-derived path is already occupied, decide how to handle it.
+  if _git_worktrees_path_in_list "$worktree_path"; then
+    echo "A worktree already exists at the branch-derived path: $worktree_path"
+    choice="$(_git_worktrees_choose "How would you like to continue?" \
+      "Use existing worktree" \
+      "Delete existing worktree and create a new one" \
+      "Ignore existing worktree and create another")" || return 1
+
+    case "$choice" in
+      "Use existing worktree")
+        cd "$worktree_path" || return 1
+        return 0
+        ;;
+      "Delete existing worktree and create a new one")
+        git worktree remove "$worktree_path" --force || return 1
+        ;;
+      "Ignore existing worktree and create another")
+        worktree_path="$(_git_worktrees_next_path "$worktree_path")"
+        ;;
+    esac
+  elif [[ -e "$worktree_path" ]]; then
+    echo "Target path already exists and is not a registered worktree: $worktree_path"
+    choice="$(_git_worktrees_choose "How would you like to continue?" \
+      "Ignore existing path and create another" \
+      "Cancel")" || return 1
+
+    case "$choice" in
+      "Ignore existing path and create another")
+        worktree_path="$(_git_worktrees_next_path "$worktree_path")"
+        ;;
+      "Cancel")
+        return 1
+        ;;
+    esac
   fi
 
-  # Create worktree + branch
-  if [[ "$start" == "--here" ]]; then
-    start="HEAD"
+  # Create a worktree from an existing local branch when possible; otherwise create the branch.
+  if git show-ref --verify --quiet "refs/heads/$branch"; then
+    if [[ "$force_checkout" == "1" ]]; then
+      git worktree add --force "$worktree_path" "$branch" || return 1
+    else
+      git worktree add "$worktree_path" "$branch" || return 1
+    fi
+  else
+    git worktree add -b "$branch" "$worktree_path" "$start" || return 1
   fi
-  git worktree add -b "$branch" "$worktree_path" "$start" || return 1
 
   # Optional: trust via mise if you use it
   # mise trust "$worktree_path" 2>/dev/null || true
