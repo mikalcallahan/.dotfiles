@@ -1,0 +1,19 @@
+#!/bin/sh
+
+if [ -z "${TMUX_PANE:-}" ] || ! command -v tmux >/dev/null 2>&1; then
+  exit 0
+fi
+
+case "${1:-}" in
+  clear)
+    tmux set-option -p -t "$TMUX_PANE" @ai_unread 0
+    ;;
+  complete)
+    visible_clients=$(tmux list-clients -f "#{==:#{pane_id},$TMUX_PANE}" -F '#{client_name}')
+    if [ -n "$visible_clients" ]; then
+      tmux set-option -p -t "$TMUX_PANE" @ai_unread 0
+    else
+      tmux set-option -p -t "$TMUX_PANE" @ai_unread 1
+    fi
+    ;;
+esac

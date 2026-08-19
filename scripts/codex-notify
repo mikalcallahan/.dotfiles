@@ -1,0 +1,5 @@
+#!/bin/sh
+
+[ "$#" -gt 0 ] || exit 0
+
+"$HOME/.config/scripts/tmux-ai-status" complete
