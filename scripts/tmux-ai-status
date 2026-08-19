@@ -4,6 +4,34 @@ if [ -z "${TMUX_PANE:-}" ] || ! command -v tmux >/dev/null 2>&1; then
   exit 0
 fi
 
+terminal_is_frontmost() {
+  [ "$(uname -s)" = "Darwin" ] || return 1
+
+  frontmost_bundle=$(osascript -l JavaScript \
+    -e 'ObjC.import("AppKit"); $.NSWorkspace.sharedWorkspace.frontmostApplication.bundleIdentifier.js' \
+    2>/dev/null) || return 1
+  [ -n "$frontmost_bundle" ] || return 1
+
+  for client_pid in $(tmux list-clients -F '#{client_pid}'); do
+    client_environment=$(ps eww -p "$client_pid" -o command= 2>/dev/null)
+    case " $client_environment " in
+      *" __CFBundleIdentifier=$frontmost_bundle "*) return 0 ;;
+    esac
+  done
+  return 1
+}
+
+notify_completion() {
+  location=$(tmux display-message -p -t "$TMUX_PANE" '#{session_name}:#{window_index}.#{pane_index}')
+  agent=$(tmux display-message -p -t "$TMUX_PANE" '#{pane_current_command}')
+
+  osascript - "$agent finished in $location" <<'APPLESCRIPT' >/dev/null 2>&1
+on run argv
+  display notification (item 1 of argv) with title "AI query finished"
+end run
+APPLESCRIPT
+}
+
 case "${1:-}" in
   clear)
     tmux set-option -p -t "$TMUX_PANE" @ai_unread 0
@@ -15,5 +43,6 @@ case "${1:-}" in
     else
       tmux set-option -p -t "$TMUX_PANE" @ai_unread 1
     fi
+    terminal_is_frontmost || notify_completion
     ;;
 esac
