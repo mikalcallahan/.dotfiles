@@ -1,4 +1,6 @@
 keybinding:
+  files:
+    openStatusFilter: F
   commits:
     moveDownCommit: J
     moveUpCommit: K
