@@ -22,12 +22,21 @@ terminal_is_frontmost() {
 }
 
 notify_completion() {
-  location=$(tmux display-message -p -t "$TMUX_PANE" '#{session_name}:#{window_index}.#{pane_index}')
   agent=$(tmux display-message -p -t "$TMUX_PANE" '#{pane_current_command}')
+  directory=$(tmux display-message -p -t "$TMUX_PANE" '#{pane_current_path}')
+  case "$directory" in
+    "$HOME") directory="~" ;;
+    "$HOME"/*) directory="~${directory#"$HOME"}" ;;
+  esac
+  case "$agent" in
+    opencode) agent="OpenCode" ;;
+    codex) agent="Codex" ;;
+    claude) agent="Claude" ;;
+  esac
 
-  osascript - "$agent finished in $location" <<'APPLESCRIPT' >/dev/null 2>&1
+  osascript - "$agent finished · $directory" "${1:-Response completed}" <<'APPLESCRIPT' >/dev/null 2>&1
 on run argv
-  display notification (item 1 of argv) with title "AI query finished"
+  display notification (item 2 of argv) with title (item 1 of argv)
 end run
 APPLESCRIPT
 }
@@ -43,6 +52,6 @@ case "${1:-}" in
     else
       tmux set-option -p -t "$TMUX_PANE" @ai_unread 1
     fi
-    terminal_is_frontmost || notify_completion
+    terminal_is_frontmost || notify_completion "${2:-}"
     ;;
 esac

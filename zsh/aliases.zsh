@@ -48,3 +48,4 @@ alias tls="tmux list-sessions"
 alias flac-to-alac='for name in *.flac; do ffmpeg -nostdin -i "$name" -c:a alac -c:v copy "${name%.*}.m4a"; done'
 alias tdlo="tdl opencode"
 alias o="opencode"
+alias oh="$HOME/.config/scripts/opencode-history"

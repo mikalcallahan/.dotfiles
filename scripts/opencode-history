@@ -1,0 +1,99 @@
+#!/bin/sh
+
+if ! command -v opencode >/dev/null 2>&1 || ! command -v fzf >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1 || ! command -v sqlite3 >/dev/null 2>&1; then
+  printf 'opencode-history requires opencode, fzf, jq, and sqlite3.\n' >&2
+  exit 1
+fi
+
+database=$(opencode db path) || exit 1
+
+query_database() {
+  sqlite3 -readonly -json "$database" "$1"
+}
+
+escape_sql() {
+  printf '%s' "$1" | sed "s/'/''/g"
+}
+
+preview_session() {
+  session_id=$(escape_sql "$1")
+  query_database "
+    SELECT
+      COALESCE(json_extract(m.data, '$.role'), 'assistant') AS role,
+      json_extract(p.data, '$.text') AS text
+    FROM part p
+    JOIN message m ON m.id = p.message_id
+    WHERE p.session_id = '$session_id'
+      AND json_extract(p.data, '$.type') = 'text'
+    ORDER BY p.time_created
+  " | jq -r '.[] | select(.text != null and .text != "") | "\(.role | ascii_upcase)\n\(.text)\n"'
+}
+
+if [ "${1:-}" = "--preview" ]; then
+  [ -n "${2:-}" ] && preview_session "$2"
+  exit 0
+fi
+
+query=$*
+if [ -n "$query" ]; then
+  search=$(escape_sql "$query")
+  sql="
+    WITH matching_text AS (
+      SELECT
+        p.session_id,
+        json_extract(p.data, '$.text') AS text,
+        row_number() OVER (PARTITION BY p.session_id ORDER BY p.time_created DESC) AS rank
+      FROM part p
+      WHERE json_extract(p.data, '$.type') = 'text'
+        AND json_extract(p.data, '$.text') LIKE '%' || '$search' || '%'
+    )
+    SELECT
+      s.id,
+      datetime(s.time_updated / 1000, 'unixepoch', 'localtime') AS updated,
+      s.title,
+      s.directory,
+      replace(replace(substr(COALESCE(mt.text, ''), 1, 200), char(10), ' '), char(9), ' ') AS excerpt
+    FROM session s
+    LEFT JOIN matching_text mt ON mt.session_id = s.id AND mt.rank = 1
+    WHERE s.parent_id IS NULL
+      AND (s.title LIKE '%' || '$search' || '%' OR mt.text IS NOT NULL)
+    ORDER BY s.time_updated DESC
+  "
+  prompt="history ($query) > "
+else
+  sql="
+    SELECT
+      s.id,
+      datetime(s.time_updated / 1000, 'unixepoch', 'localtime') AS updated,
+      s.title,
+      s.directory,
+      '' AS excerpt
+    FROM session s
+    WHERE s.parent_id IS NULL
+    ORDER BY s.time_updated DESC
+  "
+  prompt="history > "
+fi
+
+sessions=$(query_database "$sql" | jq -r '.[] | [.id, .updated, .title, .directory, .excerpt] | @tsv')
+if [ -z "$sessions" ]; then
+  printf 'No OpenCode sessions matched: %s\n' "$query" >&2
+  exit 1
+fi
+
+selection=$(printf '%s\n' "$sessions" | fzf \
+  --delimiter='\t' \
+  --with-nth=2.. \
+  --layout=reverse \
+  --border \
+  --header='updated  title  directory  matching text' \
+  --prompt="$prompt" \
+  --preview="$0 --preview {1}" \
+  --preview-window='right,60%,wrap')
+[ -n "$selection" ] || exit 0
+
+session_id=${selection%%	*}
+directory=$(query_database "SELECT directory FROM session WHERE id = '$(escape_sql "$session_id")'" | jq -r '.[0].directory // empty')
+[ -n "$directory" ] && cd "$directory" || exit 1
+
+exec opencode --session "$session_id"
