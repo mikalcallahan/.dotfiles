@@ -1,0 +1,23 @@
+cmd + shift - up : yabai -m window --focus stack.prev
+cmd + shift - down : yabai -m window --focus stack.next
+
+# change layout of desktop
+ctrl + alt - a : yabai -m space --layout bsp
+ctrl + alt - d : yabai -m space --layout float
+ctrl + alt - s : yabai -m space --layout stack
+
+# Windows
+
+# ctrl + alt - p : yabai -m space --toggle padding && yabai -m space --toggle gap && yabai -m 
+ctrl + alt - p : \
+    SPACE=$(yabai -m query --spaces --space | jq '.index'); \
+    if [ "$(yabai -m config --space "$SPACE" top_padding)" -eq 0 ]; then \
+        yabai -m space --padding abs:10:10:10:10 && \
+    else \
+        yabai -m space --padding abs:0:0:0:0 && \
+    fi
+
+shift + alt - up : yabai -m window --grid 1:1:0:0:1:1 # make floating window fill screen
+
+# float / unfloat window and center on screen
+alt + shift - f : yabai -m window --toggle float --grid 4:4:1:1:2:2
