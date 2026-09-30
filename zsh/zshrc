@@ -17,12 +17,13 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 
 function add_to_path() {
+
+  local dir
   for dir in "$@"; do
-    # Only add if it's not already in PATH
-    if [[ ":$PATH:" != *":$dir:"* ]]; then
-      PATH="$dir:$PATH"
-    fi
+    dir="${dir%/}"
+    path=("$dir" ${path:#"$dir"})
   done
+  export PATH
 }
 
 add_to_path "/opt/homebrew/bin/"
