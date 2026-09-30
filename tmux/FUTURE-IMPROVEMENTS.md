@@ -1,16 +1,15 @@
 # Future Improvements
 
-## Interactive AI completion notifications
+## Agent notifications
 
-Replace the current `osascript` notification with a small local macOS helper app built using system-provided Apple tooling. No third-party dependency should be required.
+Implemented using the shared `scripts/agent-notify` interface and the macOS
+terminal-notifier backend: response previews, per-session replacement,
+click-to-pane navigation, and clearing when viewed. See
+[`scripts/NOTIFICATIONS.md`](../scripts/NOTIFICATIONS.md) for setup and behavior.
 
-The helper should:
+Possible follow-ups:
 
-- Use a custom AI application icon.
-- Show a truncated excerpt of the final assistant response in the notification body.
-- Preserve the originating tmux session, window, and pane in the notification metadata.
-- Focus the originating terminal application when the notification is clicked.
-- Switch tmux to the originating session, window, and pane.
-- Continue sending notifications only when none of the terminal applications attached to tmux are frontmost.
-
-Creating a dedicated app will likely require separate macOS notification permission.
+- Linux and Windows notification backends.
+- Native session navigation for Herdr and non-tmux terminal tabs.
+- Action buttons, snoozing, and agent-specific reply handling.
+- Optional phone escalation for agents waiting for input.

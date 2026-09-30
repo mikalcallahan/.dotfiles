@@ -1,0 +1,293 @@
+#!/usr/bin/env python3
+"""Shared agent events; macOS delivery and optional tmux navigation.
+
+Use --json with {event, agent, message, cwd, session_id} on stdin, or CLI flags.
+Platform delivery belongs in the backend; hooks never invoke it directly.
+"""
+
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import shlex
+import shutil
+import subprocess
+import sys
+import tempfile
+
+STATE_OVERRIDE = None
+
+
+def executable(name):
+    return shutil.which(name) or next(
+        (str(p / name) for p in (Path('/opt/homebrew/bin'), Path('/usr/local/bin'))
+         if os.access(p / name, os.X_OK)), None)
+
+
+def run(args):
+    try:
+        return subprocess.run(args, capture_output=True, text=True, timeout=10)
+    except (OSError, subprocess.TimeoutExpired):
+        return subprocess.CompletedProcess(args, 1, '', 'Command failed or timed out')
+
+
+def preview(text):
+    text = re.sub(r'```[\s\S]*?```', ' ', str(text or ''))
+    text = re.sub(r'\[([^\]]+)\]\([^)]*\)', r'\1', text)
+    text = re.sub(r'[`*_#>|~]+', '', text)
+    text = ' '.join(text.split())
+    return text if len(text) <= 240 else text[:239].rstrip() + '…'
+
+
+def state_directory():
+    path = STATE_OVERRIDE or Path(os.environ.get('XDG_STATE_HOME', Path.home() / '.local/state')) / 'agent-notify'
+    path.mkdir(parents=True, exist_ok=True, mode=0o700)
+    return path
+
+
+def save(path, record):
+    # Atomic replacement: callback readers never see a partially written record.
+    fd, temporary = tempfile.mkstemp(dir=path.parent)
+    try:
+        with os.fdopen(fd, 'w') as stream:
+            json.dump(record, stream)
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+
+
+def tmux(context, *args):
+    binary = executable('tmux')
+    if not binary or not context.get('socket'):
+        return subprocess.CompletedProcess(args, 1, '', '')
+    return run([binary, '-S', context['socket'], *args])
+
+
+def pane_info(context):
+    if not context.get('pane'):
+        return []
+    result = tmux(context, 'display-message', '-p', '-t', context['pane'],
+                  '#{server_pid}\t#{session_id}\t#{window_id}\t#{pane_current_command}\t#{pane_current_path}')
+    return result.stdout.rstrip('\n').split('\t', 4) if result.returncode == 0 else []
+
+
+def clients(context):
+    result = tmux(context, 'list-clients', '-F',
+                  '#{client_name}\t#{client_pid}\t#{client_flags}\t#{pane_id}\t#{client_activity}')
+    return [row.split('\t') for row in result.stdout.splitlines() if len(row.split('\t')) == 5]
+
+
+def client_bundle(pid):
+    # Read only the bundle identifier from the client's inherited environment.
+    output = run(['/bin/ps', 'eww', '-p', pid, '-o', 'command=']).stdout
+    match = re.search(r'(?:^|\s)__CFBundleIdentifier=([^\s]+)', output)
+    return match.group(1) if match else ''
+
+
+def frontmost_bundle():
+    if sys.platform != 'darwin':
+        return ''
+    return run(['/usr/bin/osascript', '-l', 'JavaScript', '-e',
+                'ObjC.import("AppKit"); $.NSWorkspace.sharedWorkspace.frontmostApplication.bundleIdentifier.js']).stdout.strip()
+
+
+def is_viewed(context):
+    if not context.get('pane'):
+        return False
+    frontmost = frontmost_bundle()
+    return bool(frontmost) and any(
+        row[3] == context.get('pane') and 'focused' in row[2].split(',')
+        and client_bundle(row[1]) == frontmost for row in clients(context)
+    )
+
+
+def make_context(args):
+    context = {
+        'pane': args.pane or os.environ.get('TMUX_PANE', ''),
+        'socket': args.socket or os.environ.get('TMUX', '').split(',')[0],
+        'bundle': os.environ.get('__CFBundleIdentifier', ''),
+        'agent': args.agent or 'Agent',
+        'cwd': args.cwd or os.getcwd(),
+        'session_id': args.session_id or '',
+    }
+    info = pane_info(context)
+    if len(info) == 5:
+        context.update(server_pid=info[0], session=info[1], window=info[2])
+        context['agent'] = args.agent or info[3]
+        context['cwd'] = args.cwd or info[4]
+        attached = clients(context)
+        attached.sort(key=lambda row: (row[3] == context['pane'], int(row[4] or 0)), reverse=True)
+        if attached:
+            context['client'] = attached[0][0]
+            context['bundle'] = client_bundle(attached[0][1]) or context['bundle']
+    else:
+        context['pane'] = ''
+        context['socket'] = ''
+    return context
+
+
+def group_id(context):
+    identity = [context.get(key, '') for key in ('socket', 'server_pid', 'pane', 'agent')]
+    identity.append(context['session_id'] or context['cwd'])
+    return 'agent-' + hashlib.sha256(json.dumps(identity).encode()).hexdigest()[:32]
+
+
+class MacOSBackend:
+    def __init__(self):
+        self.binary = executable('terminal-notifier')
+
+    def remove(self, group):
+        return bool(self.binary) and run([self.binary, '-remove', group]).returncode == 0
+
+    def send(self, record):
+        if not self.binary:
+            print('agent-notify: install terminal-notifier with Homebrew', file=sys.stderr)
+            return False
+        context = record['context']
+        agent = {'opencode': 'OpenCode', 'codex': 'Codex', 'claude': 'Claude'}.get(context['agent'], context['agent'])
+        label = {'complete': 'finished', 'attention': 'needs attention', 'error': 'encountered an error'}[record['event']]
+        cwd = context['cwd']
+        home = str(Path.home())
+        if cwd == home or cwd.startswith(home + os.sep):
+            cwd = '~' + cwd[len(home):]
+        callback = shlex.join([sys.executable, str(Path(__file__).resolve()), 'focus', record['group'],
+                               '--state-dir', str(state_directory())])
+        # NSUserDefaults parses leading punctuation as a property list.
+        def escape(value):
+            return '\\' + value if value and value[0] in '[({"\'' else value
+        result = run([self.binary, '-title', escape(f'{agent} {label}'),
+                      '-subtitle', escape(cwd), '-message', escape(record['message']),
+                      '-group', record['group'], '-execute', callback])
+        if result.returncode:
+            print(f'agent-notify: {result.stderr.strip() or "notification delivery failed"}', file=sys.stderr)
+        return result.returncode == 0
+
+
+def backend():
+    # Future Linux/Windows backends implement send(record) and remove(group).
+    return MacOSBackend() if sys.platform == 'darwin' else None
+
+
+def clear(context, delivery, viewed=False):
+    if viewed and not is_viewed(context):
+        return
+    if context.get('pane'):
+        tmux(context, 'set-option', '-p', '-t', context['pane'], '@ai_unread', '0')
+    for path in state_directory().glob('agent-*.json'):
+        try:
+            record = json.loads(path.read_text())
+            origin = record['context']
+            same_pane = context.get('pane') and all(
+                origin.get(key) == context.get(key) for key in ('socket', 'server_pid', 'pane'))
+            if same_pane or record['group'] == group_id(context):
+                if delivery and delivery.remove(record['group']):
+                    path.unlink(missing_ok=True)
+        except (OSError, ValueError, KeyError):
+            continue
+
+
+def focus(group, directory, delivery):
+    if not re.fullmatch(r'agent-[0-9a-f]{32}', group):
+        return
+    path = directory / (group + '.json')
+    if not path.exists():
+        return
+    context = json.loads(path.read_text())['context']
+    if context.get('pane'):
+        info = pane_info(context)
+        if len(info) != 5 or info[0] != context.get('server_pid'):
+            if delivery and delivery.remove(group):
+                path.unlink(missing_ok=True)
+            return  # Server/pane disappeared; never navigate to a reused pane ID.
+        attached = clients(context)
+        attached.sort(key=lambda row: (row[0] == context.get('client'), int(row[4] or 0)), reverse=True)
+        if not attached:
+            return
+        client = attached[0]
+        # Resolve current location because panes can move between sessions/windows.
+        tmux(context, 'switch-client', '-c', client[0], '-t', info[1])
+        tmux(context, 'select-window', '-t', info[1] + ':' + info[2])
+        zoomed = tmux(context, 'display-message', '-p', '-t', context['pane'], '#{window_zoomed_flag}')
+        if zoomed.stdout.strip() == '1':
+            tmux(context, 'resize-pane', '-Z', '-t', context['pane'])
+        tmux(context, 'select-pane', '-t', context['pane'])
+        context['bundle'] = client_bundle(client[1]) or context.get('bundle', '')
+    if sys.platform == 'darwin' and context.get('bundle'):
+        run(['/usr/bin/open', '-b', context['bundle']])
+    clear(context, delivery)
+
+
+def main():
+    global STATE_OVERRIDE
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('event', nargs='?', choices=['complete', 'attention', 'error', 'clear', 'viewed', 'focus', 'codex', 'claude'])
+    parser.add_argument('message', nargs='?', default='')
+    for name in ('agent', 'cwd', 'session-id', 'pane', 'socket', 'state-dir'):
+        parser.add_argument('--' + name)
+    parser.add_argument('--json', action='store_true')
+    args = parser.parse_args()
+    if args.state_dir:
+        STATE_OVERRIDE = Path(args.state_dir)
+    if args.json:
+        payload = json.load(sys.stdin)
+        for key in ('event', 'agent', 'message', 'cwd', 'session_id'):
+            if key in payload:
+                setattr(args, key, payload[key])
+    elif args.event == 'codex':
+        payload = json.loads(args.message)
+        if payload.get('type') != 'agent-turn-complete':
+            return
+        args.event, args.agent = 'complete', 'codex'
+        args.message = payload.get('last-assistant-message', '')
+        args.session_id = payload.get('thread-id', '')
+        args.cwd = payload.get('cwd')
+    elif args.event == 'claude':
+        payload = json.load(sys.stdin)
+        event = payload.get('hook_event_name')
+        args.event = {'Stop': 'complete', 'UserPromptSubmit': 'clear',
+                      'PermissionRequest': 'attention', 'Notification': 'attention'}.get(event)
+        if not args.event:
+            return
+        args.agent, args.session_id, args.cwd = 'claude', payload.get('session_id', ''), payload.get('cwd')
+        args.message = payload.get('last_assistant_message') or payload.get('message') or (
+            f'Permission required: {payload.get("tool_name", "tool")}' if event == 'PermissionRequest' else '')
+    if args.event not in ('complete', 'attention', 'error', 'clear', 'viewed', 'focus'):
+        parser.error('provide an event or --json with a valid event')
+    # Serialize sending/clearing so a focus hook cannot race a pending delivery.
+    with (state_directory() / '.lock').open('a') as lock:
+        if os.name == 'posix':
+            import fcntl
+            fcntl.flock(lock, fcntl.LOCK_EX)
+        return dispatch(args, backend())
+
+
+def dispatch(args, delivery):
+    if args.event == 'focus':
+        return focus(args.message, state_directory(), delivery)
+    context = make_context(args)
+    if args.event in ('clear', 'viewed'):
+        return clear(context, delivery, viewed=args.event == 'viewed')
+    if is_viewed(context):
+        return clear(context, delivery)
+    if context.get('pane'):
+        tmux(context, 'set-option', '-p', '-t', context['pane'], '@ai_unread',
+             '1' if args.event == 'complete' else '2')
+    if not delivery:
+        return
+    group = group_id(context)
+    record = {'group': group, 'event': args.event, 'context': context,
+              'message': preview(args.message) or ('Response completed' if args.event == 'complete' else 'Input required')}
+    path = state_directory() / (group + '.json')
+    save(path, record)
+    return 0 if delivery.send(record) else 1
+
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main() or 0)
+    except (OSError, ValueError) as error:
+        print(f'agent-notify: {error}', file=sys.stderr)
+        sys.exit(1)
