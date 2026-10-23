@@ -26,13 +26,21 @@ backend interface without changing agent hooks.
 tmux retains its existing red completion and yellow attention indicators. The
 legacy `tmux-ai-status` entry point delegates to `agent-notify`.
 
+OpenCode V2 discovers `opencode/plugins/tmux-ai-status/index.js` and its `tui.js`
+terminal component. Notification delivery runs in the terminal client so the
+helper receives that client's tmux pane/socket and desktop environment, even
+when OpenCode uses a shared server. Events are limited to the current session
+and open tabs; child-session attention is routed to its root. V2 execution,
+text, permission, and form events drive the notifications. Headless server
+sessions do not emit desktop notifications through this terminal plugin.
+
 ## Setup
 
 1. Install `terminal-notifier` and Python 3; both are available through Homebrew.
 2. Allow terminal-notifier notifications when macOS prompts. Choose Banners or
    Alerts in System Settings → Notifications → terminal-notifier.
 3. Load tmux hooks with `tmux source-file ~/.config/tmux/tmux.conf`.
-4. Restart OpenCode to load the updated plugin. Restart Claude Code to pick up its
+4. Run `/reload` in OpenCode to reload the plugin. Restart Claude Code to pick up its
    hooks in `~/.claude/settings.json`.
 
 Use `terminal-notifier -diagnose` to check permissions and delivery settings.
@@ -76,6 +84,43 @@ tmux context comes from `TMUX` / `TMUX_PANE`; focus hooks can supply `--socket` 
 The `codex` adapter accepts Codex's notification JSON argument, including
 `last-assistant-message` and `thread-id`. `scripts/codex-notify` invokes it, preserving
 the existing Codex Computer Use wrapper in `~/.codex/config.toml`.
+
+### Codex context and status
+
+- A turn ending is labeled **Codex response ready**. It does not imply that the
+  requested task succeeded or that no user input is needed; the response preview
+  supplies that context. The notify event does not provide task success status.
+- The subtitle uses the chat's current name and project directory when available.
+  Metadata is read from the matching thread in the local Codex state database in
+  read-only mode. This is optional, version-sensitive enrichment: if the database
+  is absent, busy, or incompatible, delivery falls back to the latest input message
+  or working directory. It never reads another thread's latest response.
+- Stored subagent/guardian results are suppressed. Desktop title-generation JSON
+  (exactly `title` and `description`) is suppressed only when a readable database
+  confirms the event's thread has no stored row. Real stored chats returning that
+  JSON and ordinary unknown-thread responses still notify.
+- The existing `PermissionRequest` command in `~/.codex/hooks.json` remains valid.
+  Its `attention "Permission required"` invocation now consumes the hook's stdin
+  JSON, using the Codex session, tool, and human-readable approval reason. Raw tool
+  inputs and shell commands are not included. This adapter never approves or denies
+  a request and produces no hook output.
+- Permission requests and responses share a group by Codex thread, even if their
+  inherited terminal context differs. Duplicate completion events for an already
+  delivered turn are suppressed; failed deliveries can retry. Older groups for the
+  same thread are removed when replaced.
+- Clicking a notification from Codex Desktop opens that exact chat via its Codex
+  URL. CLI notifications keep terminal/tmux navigation. Desktop source detection
+  also prevents inherited tmux variables from routing a desktop chat into a pane.
+- These are event notifications, not a live status monitor. No new lifecycle hooks
+  are installed, so resuming a Codex chat does not clear its previous alert until
+  another notification replaces it or it is opened. Script changes apply on the
+  next invocation without a restart or a change to the trusted hook definition.
+
+Markdown previews preserve identifiers such as `RESOURCE_NOT_FOUND`, tool names,
+and issue numbers, and omit rendering directives and table separator rows.
+
+Event contracts: [Codex notifications](https://learn.chatgpt.com/docs/config-file/config-advanced#notifications)
+and [PermissionRequest hooks](https://learn.chatgpt.com/docs/hooks#permissionrequest).
 
 The `claude` adapter reads hook JSON from stdin, including `last_assistant_message`
 for Stop events. Global hooks cover Stop, UserPromptSubmit, PermissionRequest,

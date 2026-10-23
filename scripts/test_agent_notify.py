@@ -2,11 +2,16 @@
 
 import importlib.machinery
 import importlib.util
+from contextlib import closing
 import io
 import json
+import os
 from pathlib import Path
 import shlex
+import shutil
+import sqlite3
 import subprocess
+import sys
 import tempfile
 import time
 import unittest
@@ -16,6 +21,7 @@ loader = importlib.machinery.SourceFileLoader('agent_notify', str(Path(__file__)
 spec = importlib.util.spec_from_loader(loader.name, loader)
 notify = importlib.util.module_from_spec(spec)
 loader.exec_module(notify)
+make_context = notify.make_context
 
 
 class NotificationsTest(unittest.TestCase):
@@ -30,6 +36,7 @@ class NotificationsTest(unittest.TestCase):
         self.delivery.remove.return_value = True
         self.patch('state_directory', return_value=self.directory)
         self.patch('make_context', return_value=self.context)
+        self.patch('codex_metadata', return_value=None)
         self.patch('backend', return_value=self.delivery)
         self.viewed = self.patch('is_viewed', return_value=False)
         self.tmux = self.patch('tmux', return_value=subprocess.CompletedProcess([], 0, '', ''))
@@ -127,6 +134,220 @@ class NotificationsTest(unittest.TestCase):
         callback = shlex.split(command[command.index('-execute') + 1])
         self.assertIn(record['group'], callback)
         self.assertNotIn(record['message'], callback)
+
+    def codex(self, message='Tests passed.', **fields):
+        notify.make_context.side_effect = make_context
+        self.invoke('codex', json.dumps({'type': 'agent-turn-complete', 'thread-id': 'thread',
+                                       'turn-id': 'turn', 'cwd': '/work/project',
+                                       'last-assistant-message': message, **fields}))
+
+    def test_internal_title_generation_does_not_notify(self):
+        notify.codex_metadata.return_value = {}
+        self.codex('{"title":"Fix notifications","description":"Improve status accuracy"}')
+        self.delivery.send.assert_not_called()
+        self.assertFalse(list(self.directory.glob('agent-*.json')))
+
+    def test_real_chat_json_is_not_suppressed(self):
+        notify.codex_metadata.return_value = {'name': 'Generate JSON', 'thread_source': 'user'}
+        self.codex('{"title":"Title","description":"Description"}')
+        self.delivery.send.assert_called_once()
+
+    def test_metadata_unavailable_does_not_suppress_json(self):
+        self.codex('{"title":"Title","description":"Description"}')
+        self.delivery.send.assert_called_once()
+
+    def test_internal_review_and_subagent_events_do_not_notify(self):
+        for metadata in ({'thread_source': 'guardian_review'},
+                         {'source': '{"subagent":{"other":"guardian"}}'},
+                         {'thread_source': 'subagent'}):
+            with self.subTest(metadata=metadata):
+                notify.codex_metadata.return_value = metadata
+                self.codex('Review complete.')
+        self.delivery.send.assert_not_called()
+
+    def test_real_reply_uses_chat_name_and_honest_status(self):
+        notify.codex_metadata.return_value = {'name': 'Fix notifications', 'title': 'Original prompt',
+                                             'originator': 'Codex Desktop', 'thread_source': 'user'}
+        self.codex('Which environment should I use?')
+        record = self.delivery.send.call_args.args[0]
+        self.assertEqual(record['context']['title'], 'Fix notifications')
+        self.assertEqual(record['message'], 'Which environment should I use?')
+        self.patch('executable', return_value='/fake/terminal-notifier')
+        run = self.patch('run', return_value=subprocess.CompletedProcess([], 0, '', ''))
+        notify.MacOSBackend().send(record)
+        command = run.call_args.args[0]
+        self.assertEqual(command[command.index('-title') + 1], 'Codex response ready')
+        self.assertEqual(command[command.index('-subtitle') + 1], 'Fix notifications · project')
+
+    def test_unknown_thread_still_notifies_with_request_context(self):
+        notify.codex_metadata.return_value = {}
+        self.codex(**{'input-messages': ['<environment_context>metadata</environment_context>', 'Fix the login flow']})
+        self.assertEqual(self.delivery.send.call_args.args[0]['context']['title'], 'Fix the login flow')
+
+    def test_codex_groups_match_across_permission_and_completion_environments(self):
+        first = {**self.context, 'agent': 'codex'}
+        second = {**first, 'socket': '', 'pane': '', 'server_pid': '', 'cwd': '/other'}
+        self.assertEqual(notify.group_id(first), notify.group_id(second))
+        self.assertNotEqual(notify.group_id(first), notify.group_id({**first, 'session_id': 'other'}))
+
+    def test_permission_hook_uses_session_and_reason_without_raw_command(self):
+        payload = {'hook_event_name': 'PermissionRequest', 'session_id': 'thread', 'turn_id': 'turn',
+                   'cwd': '/repo', 'tool_name': 'Bash',
+                   'tool_input': {'description': 'Fetch the latest remote branch',
+                                  'command': 'SECRET=do-not-display git fetch'}}
+        self.patch('legacy_permission_payload', return_value=payload)
+        notify.make_context.side_effect = make_context
+        self.invoke('attention', 'Permission required')
+        record = self.delivery.send.call_args.args[0]
+        self.assertEqual(record['status_label'], 'approval requested')
+        self.assertEqual(record['context']['agent'], 'codex')
+        self.assertEqual(record['context']['session_id'], 'thread')
+        self.assertEqual(record['context']['cwd'], '/repo')
+        self.assertEqual(record['message'], 'Bash: Fetch the latest remote branch')
+        self.assertNotIn('SECRET', json.dumps(record))
+        group = record['group']
+        self.codex('Branch fetched.')
+        self.assertEqual(self.delivery.send.call_args.args[0]['group'], group)
+        self.assertEqual(len(list(self.directory.glob('agent-*.json'))), 1)
+
+    def test_permission_without_reason_uses_tool_name(self):
+        self.patch('legacy_permission_payload', return_value={
+            'hook_event_name': 'PermissionRequest', 'session_id': 'thread', 'turn_id': 'turn',
+            'tool_name': 'apply_patch', 'tool_input': {'command': 'private file contents'}})
+        notify.make_context.side_effect = make_context
+        self.invoke('attention', 'Permission required')
+        self.assertEqual(self.delivery.send.call_args.args[0]['message'], 'Approval requested for apply_patch')
+
+    def test_duplicate_completion_is_suppressed_but_new_turn_is_not(self):
+        self.codex()
+        self.codex()
+        self.assertEqual(self.delivery.send.call_count, 1)
+        self.codex(**{'turn-id': 'next-turn'})
+        self.assertEqual(self.delivery.send.call_count, 2)
+
+    def test_failed_delivery_can_retry(self):
+        self.delivery.send.return_value = False
+        self.codex()
+        self.delivery.send.return_value = True
+        self.codex()
+        self.assertEqual(self.delivery.send.call_count, 2)
+
+    def test_replaces_legacy_group_for_same_chat_only(self):
+        old_group = 'agent-' + '0' * 32
+        other_group = 'agent-' + '1' * 32
+        for group, session in ((old_group, 'thread'), (other_group, 'other')):
+            notify.save(self.directory / (group + '.json'), {
+                'group': group, 'context': {**self.context, 'agent': 'codex', 'session_id': session}})
+        self.codex()
+        self.delivery.remove.assert_called_once_with(old_group)
+        self.assertFalse((self.directory / (old_group + '.json')).exists())
+        self.assertTrue((self.directory / (other_group + '.json')).exists())
+
+    def test_codex_completion_keeps_tmux_unread_marker(self):
+        notify.make_context.return_value = {**self.context, 'agent': 'codex'}
+        self.invoke('codex', json.dumps({'type': 'agent-turn-complete', 'thread-id': 'thread',
+                                       'turn-id': 'turn', 'last-assistant-message': 'Ready.'}))
+        unread_values = [call.args[-1] for call in self.tmux.call_args_list if '@ai_unread' in call.args]
+        self.assertEqual(unread_values, ['1'])
+
+    def test_missing_message_has_neutral_fallback(self):
+        self.codex(None)
+        self.assertEqual(self.delivery.send.call_args.args[0]['message'],
+                         'A response is ready. Open the chat for details.')
+
+    def test_desktop_click_opens_exact_chat(self):
+        notify.codex_metadata.return_value = {'originator': 'Codex Desktop'}
+        thread = '01a16901-8f6d-7683-80c2-b03c0651b04a'
+        self.codex(**{'thread-id': thread})
+        group = self.delivery.send.call_args.args[0]['group']
+        run = self.patch('run', return_value=subprocess.CompletedProcess([], 0, '', ''))
+        with patch('sys.platform', 'darwin'):
+            notify.focus(group, self.directory, self.delivery)
+        run.assert_called_once_with(['/usr/bin/open', 'codex://threads/' + thread])
+        self.delivery.remove.assert_called_once_with(group)
+
+    def test_failed_desktop_navigation_keeps_notification(self):
+        notify.codex_metadata.return_value = {'originator': 'Codex Desktop'}
+        self.codex(**{'thread-id': '01a16901-8f6d-7683-80c2-b03c0651b04a'})
+        group = self.delivery.send.call_args.args[0]['group']
+        self.patch('run', return_value=subprocess.CompletedProcess([], 1, '', 'failed'))
+        with patch('sys.platform', 'darwin'):
+            notify.focus(group, self.directory, self.delivery)
+        self.delivery.remove.assert_not_called()
+
+
+class CodexMetadataTest(unittest.TestCase):
+    def test_read_only_lookup_with_optional_columns_and_versioned_databases(self):
+        with tempfile.TemporaryDirectory() as temporary, patch.dict(os.environ, {'CODEX_HOME': temporary}):
+            root = Path(temporary)
+            self.assertIsNone(notify.codex_metadata('thread'))
+            self.assertFalse(list(root.iterdir()))
+            for version in (5, 10):
+                with closing(sqlite3.connect(root / f'state_{version}.sqlite')) as db, db:
+                    db.execute('CREATE TABLE threads (id TEXT PRIMARY KEY, title TEXT)')
+                    db.execute('INSERT INTO threads VALUES (?, ?)', ('thread', f'Chat {version}'))
+            before = {p.name: p.read_bytes() for p in root.iterdir()}
+            self.assertEqual(notify.codex_metadata('thread'), {'id': 'thread', 'title': 'Chat 10'})
+            self.assertEqual(notify.codex_metadata('missing'), {})
+            self.assertEqual(before, {p.name: p.read_bytes() for p in root.iterdir()})
+
+    def test_unrecognized_schema_or_corrupt_database_is_optional(self):
+        with tempfile.TemporaryDirectory() as temporary, patch.dict(os.environ, {'CODEX_HOME': temporary}):
+            path = Path(temporary) / 'state_5.sqlite'
+            with closing(sqlite3.connect(path)) as db, db:
+                db.execute('CREATE TABLE changed_schema (id TEXT)')
+            self.assertIsNone(notify.codex_metadata('thread'))
+            path.write_bytes(b'invalid database')
+            self.assertIsNone(notify.codex_metadata('thread'))
+
+    def test_preview_removes_rendering_directives_and_table_separators(self):
+        self.assertEqual(notify.preview('**Fixed** the [bug](https://example.com).\n'
+                                        '::created-thread{threadId="id"}\n'
+                                        '| --- | ---: |\nDetails'), 'Fixed the bug. Details')
+
+    def test_preview_preserves_identifiers_and_issue_numbers(self):
+        self.assertEqual(notify.preview('## Fixed\n**RESOURCE_NOT_FOUND** in `apply_patch`; PR #123 is _ready_.'),
+                         'Fixed RESOURCE_NOT_FOUND in apply_patch; PR #123 is ready.')
+
+
+@unittest.skipUnless(sys.platform == 'darwin', 'macOS adapter integration')
+class CodexHookIntegrationTest(unittest.TestCase):
+    def test_existing_hook_and_notify_wrappers_share_context(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            scripts = root / '.config/scripts'
+            scripts.mkdir(parents=True)
+            for name in ('agent-notify', 'tmux-ai-status', 'codex-notify'):
+                shutil.copy2(Path(__file__).with_name(name), scripts / name)
+            binary = root / 'terminal-notifier'
+            log = root / 'calls.jsonl'
+            binary.write_text(f'#!{sys.executable}\nimport json, os, sys\n'
+                              'with open(os.environ["NOTIFY_TEST_LOG"], "a") as f:\n'
+                              '    f.write(json.dumps(sys.argv[1:]) + "\\n")\n')
+            binary.chmod(0o755)
+            environment = {**os.environ, 'HOME': str(root), 'CODEX_HOME': str(root),
+                           'XDG_STATE_HOME': str(root / 'state'), 'NOTIFY_TEST_LOG': str(log),
+                           'PATH': str(root) + os.pathsep + os.environ['PATH']}
+            environment.pop('TMUX', None)
+            environment.pop('TMUX_PANE', None)
+            hook = {'hook_event_name': 'PermissionRequest', 'session_id': 'thread', 'turn_id': 'turn',
+                    'cwd': '/repo', 'tool_name': 'Bash', 'tool_input': {'description': 'Run the checks'}}
+            result = subprocess.run([str(scripts / 'tmux-ai-status'), 'attention', 'Permission required'],
+                                    input=json.dumps(hook), text=True, capture_output=True,
+                                    env=environment, timeout=10)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout, '')  # Never makes an approval decision.
+            event = {'type': 'agent-turn-complete', 'thread-id': 'thread', 'turn-id': 'turn',
+                     'cwd': '/repo', 'last-assistant-message': 'Checks passed.'}
+            result = subprocess.run([str(scripts / 'codex-notify'), json.dumps(event)],
+                                    text=True, capture_output=True, env=environment, timeout=10)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            calls = [json.loads(line) for line in log.read_text().splitlines()]
+            self.assertEqual(len(calls), 2)
+            self.assertEqual(calls[0][calls[0].index('-title') + 1], 'Codex approval requested')
+            self.assertEqual(calls[0][calls[0].index('-message') + 1], 'Bash: Run the checks')
+            self.assertEqual(calls[1][calls[1].index('-title') + 1], 'Codex response ready')
+            self.assertEqual(calls[0][calls[0].index('-group') + 1], calls[1][calls[1].index('-group') + 1])
 
 
 class VisibilityTest(unittest.TestCase):
