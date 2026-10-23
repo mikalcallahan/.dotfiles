@@ -1,0 +1,9 @@
+{
+  "id": "vim-system-clipboard",
+  "name": "Vim System Clipboard",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "Connect Vim yanks and pastes to the desktop system clipboard.",
+  "author": "Mikal Callahan",
+  "isDesktopOnly": true
+}
