@@ -83,6 +83,14 @@ If intentionally creating another worktree for a branch that is already checked 
 git worktree add --force "<path>" "<branch>"
 ```
 
+After successfully creating a new worktree, copy `.env` from the source repository root resolved before creation into the new worktree root if it exists. Preserve its file permissions with `cp -p`. Skip the copy if the destination already has a `.env` file or symlink. Do not copy when merely switching to an existing worktree.
+
+```sh
+if [[ -f "$repo_root/.env" && ! -e "$worktree_path/.env" && ! -L "$worktree_path/.env" ]]; then
+  cp -p "$repo_root/.env" "$worktree_path/.env" || return 1
+fi
+```
+
 ## Using The Helper Script
 
 Prefer the helper script when it can complete without requiring an interactive terminal prompt:
@@ -91,7 +99,7 @@ Prefer the helper script when it can complete without requiring an interactive t
 source ~/.config/scripts/git-worktrees.sh && ga "<branch>" "<start-point>"
 ```
 
-The `ga` function already implements duplicate detection and existing-local-branch handling. However, it may prompt interactively when conflicts exist. For opencode tool calls, preflight with `git worktree list --porcelain`; if a conflict exists, ask the user for the desired option before running commands.
+The `ga` function already implements duplicate detection, existing-local-branch handling, and copying the repo-root `.env` into newly created worktrees when present. However, it may prompt interactively when conflicts exist. For opencode tool calls, preflight with `git worktree list --porcelain`; if a conflict exists, ask the user for the desired option before running commands.
 
 ## Remove A Worktree
 

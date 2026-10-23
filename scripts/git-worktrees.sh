@@ -171,6 +171,14 @@ ga() {
     git worktree add -b "$branch" "$worktree_path" "$start" || return 1
   fi
 
+  # Carry local environment settings into newly created worktrees.
+  if [[ -f "$top/.env" && ! -e "$worktree_path/.env" && ! -L "$worktree_path/.env" ]]; then
+    cp -p "$top/.env" "$worktree_path/.env" || {
+      echo "Worktree created at $worktree_path, but copying .env failed." >&2
+      return 1
+    }
+  fi
+
   # Optional: trust via mise if you use it
   # mise trust "$worktree_path" 2>/dev/null || true
 
