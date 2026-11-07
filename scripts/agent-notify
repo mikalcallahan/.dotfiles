@@ -191,7 +191,7 @@ def pane_info(context):
     if not context.get('pane'):
         return []
     result = tmux(context, 'display-message', '-p', '-t', context['pane'],
-                  '#{server_pid}\t#{session_id}\t#{window_id}\t#{pane_current_command}\t#{pane_current_path}')
+                  '#{pid}\t#{session_id}\t#{window_id}\t#{pane_current_command}\t#{pane_current_path}')
     return result.stdout.rstrip('\n').split('\t', 4) if result.returncode == 0 else []
 
 
@@ -215,14 +215,45 @@ def frontmost_bundle():
                 'ObjC.import("AppKit"); $.NSWorkspace.sharedWorkspace.frontmostApplication.bundleIdentifier.js']).stdout.strip()
 
 
-def is_viewed(context):
+def context_is_viewed(context, frontmost):
     if not context.get('pane'):
-        return False
-    frontmost = frontmost_bundle()
-    return bool(frontmost) and any(
+        return bool(context.get('bundle')) and context['bundle'] == frontmost
+    return any(
         row[3] == context.get('pane') and 'focused' in row[2].split(',')
         and client_bundle(row[1]) == frontmost for row in clients(context)
     )
+
+
+def is_viewed(context):
+    frontmost = frontmost_bundle()
+    if not frontmost:
+        return False
+    if context_is_viewed(context, frontmost):
+        return True
+    if context.get('agent') != 'opencode' or not context.get('session_id'):
+        return False
+    # A background TUI can receive the same completion as the foreground TUI.
+    # Suppress its copy when that session is displayed in any live, focused client.
+    for path in state_directory().glob('client-*.json'):
+        try:
+            record = json.loads(path.read_text())
+            other = record['context']
+            if (other.get('agent') != 'opencode'
+                    or other.get('session_id') != context['session_id']):
+                continue
+            pid = record['pid']
+            if not isinstance(pid, int) or pid <= 0:
+                continue
+            os.kill(pid, 0)
+            if other.get('pane'):
+                info = pane_info(other)
+                if len(info) != 5 or info[0] != other.get('server_pid'):
+                    continue
+            if context_is_viewed(other, frontmost):
+                return True
+        except (OSError, ValueError, KeyError, TypeError, AttributeError):
+            continue
+    return False
 
 
 def make_context(args):
@@ -239,6 +270,7 @@ def make_context(args):
         context['codex_desktop'] = getattr(args, 'codex_desktop', False)
         if context['codex_desktop']:
             context['pane'] = context['socket'] = ''
+            context['bundle'] = 'com.openai.codex'
     info = pane_info(context)
     if len(info) == 5:
         context.update(server_pid=info[0], session=info[1], window=info[2])

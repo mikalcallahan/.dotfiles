@@ -1,6 +1,9 @@
 import { execFile } from "node:child_process";
+import { randomUUID } from "node:crypto";
+import { mkdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
+import { createEffect } from "solid-js";
 
 function summarize(text) {
   const cleaned = String(text)
@@ -25,6 +28,9 @@ export default {
     const parents = new Map();
     let pending = Promise.resolve();
     let disposed = false;
+    const stateDirectory = join(process.env.XDG_STATE_HOME || join(homedir(), ".local/state"), "agent-notify");
+    const visibilityPath = join(stateDirectory, `client-${process.pid}-${randomUUID()}.json`);
+    let publishedVisibility;
 
     function rootSession(sessionID) {
       const seen = new Set();
@@ -42,6 +48,36 @@ export default {
       return (route.type === "session" && rootSession(route.sessionID) === sessionID) ||
         (ctx.ui.tabs.enabled() && ctx.ui.tabs.list().some((tab) => tab.sessionID === sessionID));
     }
+
+    // Every TUI may have the same session in its persisted tabs. Publish the
+    // displayed session so a background client can see it is being viewed elsewhere.
+    const stopVisibility = ctx.ui.slot({
+      append: "app",
+      render() {
+        createEffect(() => {
+          const route = ctx.ui.router.current();
+          const sessionID = route.type === "session" ? rootSession(route.sessionID) : "";
+          const record = JSON.stringify({
+            pid: process.pid,
+            context: {
+              agent: "opencode", session_id: sessionID, pane: pane || "", socket: socket || "",
+              server_pid: process.env.TMUX?.split(",")[1] || "",
+              bundle: process.env.__CFBundleIdentifier || "",
+            },
+          });
+          if (disposed || record === publishedVisibility) return;
+          try {
+            mkdirSync(stateDirectory, { recursive: true, mode: 0o700 });
+            writeFileSync(`${visibilityPath}.tmp`, record, { mode: 0o600 });
+            renameSync(`${visibilityPath}.tmp`, visibilityPath);
+            publishedVisibility = record;
+          } catch (error) {
+            console.warn(`tmux-ai-status: visibility update failed (${error.code || "unknown"})`);
+          }
+        });
+        return null;
+      },
+    });
 
     function updateStatus(action, detail, sessionID) {
       const directory = ctx.data.session.get(sessionID)?.location.directory ||
@@ -147,6 +183,9 @@ export default {
 
     return () => {
       disposed = true;
+      stopVisibility();
+      rmSync(visibilityPath, { force: true });
+      rmSync(`${visibilityPath}.tmp`, { force: true });
       stop();
       workingSessions.clear();
       responses.clear();

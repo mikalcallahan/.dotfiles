@@ -22,6 +22,7 @@ spec = importlib.util.spec_from_loader(loader.name, loader)
 notify = importlib.util.module_from_spec(spec)
 loader.exec_module(notify)
 make_context = notify.make_context
+is_viewed = notify.is_viewed
 
 
 class NotificationsTest(unittest.TestCase):
@@ -78,6 +79,61 @@ class NotificationsTest(unittest.TestCase):
         self.viewed.return_value = True
         self.invoke('complete', 'Done')
         self.delivery.send.assert_not_called()
+
+    def test_foreground_non_tmux_agents_suppress_all_alerts_and_clear_previous(self):
+        self.viewed.side_effect = is_viewed
+        frontmost = self.patch('frontmost_bundle', return_value='other.app')
+        for agent, bundle in (('opencode', 'com.mitchellh.ghostty'), ('codex', 'com.openai.codex')):
+            with self.subTest(agent=agent):
+                notify.make_context.return_value = {**self.context, 'agent': agent, 'bundle': bundle,
+                                                    'pane': '', 'socket': ''}
+                frontmost.return_value = 'other.app'
+                self.invoke('complete', 'Background result')
+                self.delivery.send.reset_mock()
+                self.delivery.remove.reset_mock()
+                frontmost.return_value = bundle
+                for event in ('complete', 'attention', 'error'):
+                    self.invoke(event, 'Already visible')
+                self.delivery.send.assert_not_called()
+                self.delivery.remove.assert_called_once()
+                self.assertFalse(list(self.directory.glob('agent-*.json')))
+
+    def test_background_copy_does_not_notify_for_session_viewed_in_another_pane(self):
+        self.viewed.side_effect = is_viewed
+        self.patch('frontmost_bundle', return_value=self.context['bundle'])
+        self.patch('client_bundle', return_value=self.context['bundle'])
+        self.patch('clients', return_value=[['tty', '1', 'attached,focused', '%9', '1']])
+        self.patch('pane_info', return_value=['123', '$0', '@0', 'opencode', '/work/project'])
+        record = {'pid': os.getpid(), 'context': {**self.context, 'pane': '%9'}}
+        notify.save(self.directory / 'client-test.json', record)
+        for event in ('complete', 'attention', 'error'):
+            self.invoke(event, 'Visible in another client')
+        self.delivery.send.assert_not_called()
+
+        # The foreground client switches tabs; the old session is backgrounded.
+        record['context']['session_id'] = 'other-session'
+        notify.save(self.directory / 'client-test.json', record)
+        self.invoke('complete', 'Now backgrounded')
+        self.delivery.send.assert_called_once()
+
+    def test_background_copy_still_notifies_if_viewing_client_is_unfocused_or_stale(self):
+        self.viewed.side_effect = is_viewed
+        frontmost = self.patch('frontmost_bundle', return_value=self.context['bundle'])
+        self.patch('client_bundle', return_value=self.context['bundle'])
+        clients = self.patch('clients', return_value=[['tty', '1', 'attached', '%9', '1']])
+        info = self.patch('pane_info', return_value=['123', '$0', '@0', 'opencode', '/work/project'])
+        notify.save(self.directory / 'client-test.json', {
+            'pid': os.getpid(), 'context': {**self.context, 'pane': '%9'}})
+        self.invoke('complete', 'Unfocused terminal')
+        clients.return_value = [['tty', '1', 'attached,focused', '%9', '1']]
+        frontmost.return_value = 'browser'
+        self.invoke('complete', 'Browser foregrounded')
+        frontmost.return_value = self.context['bundle']
+        with patch.object(notify.os, 'kill', side_effect=ProcessLookupError):
+            self.invoke('complete', 'Viewing process exited')
+        info.return_value = ['999', '$0', '@0', 'opencode', '/work/project']
+        self.invoke('complete', 'Tmux server replaced')
+        self.assertEqual(self.delivery.send.call_count, 4)
 
     def test_codex_and_claude_payload_previews(self):
         self.invoke('codex', json.dumps({'type': 'agent-turn-complete', 'thread-id': 'thread',
@@ -266,6 +322,15 @@ class NotificationsTest(unittest.TestCase):
         run.assert_called_once_with(['/usr/bin/open', 'codex://threads/' + thread])
         self.delivery.remove.assert_called_once_with(group)
 
+    def test_desktop_context_uses_codex_instead_of_inherited_terminal(self):
+        notify.codex_metadata.return_value = {'originator': 'Codex Desktop'}
+        with patch.dict(os.environ, {'__CFBundleIdentifier': 'com.mitchellh.ghostty',
+                                     'TMUX_PANE': '%7', 'TMUX': '/tmp/socket,123,0'}):
+            self.codex()
+        context = self.delivery.send.call_args.args[0]['context']
+        self.assertEqual(context['bundle'], 'com.openai.codex')
+        self.assertEqual((context['pane'], context['socket']), ('', ''))
+
     def test_failed_desktop_navigation_keeps_notification(self):
         notify.codex_metadata.return_value = {'originator': 'Codex Desktop'}
         self.codex(**{'thread-id': '01a16901-8f6d-7683-80c2-b03c0651b04a'})
@@ -330,6 +395,8 @@ class CodexHookIntegrationTest(unittest.TestCase):
                            'PATH': str(root) + os.pathsep + os.environ['PATH']}
             environment.pop('TMUX', None)
             environment.pop('TMUX_PANE', None)
+            # Delivery must not depend on which app is running this test.
+            environment['__CFBundleIdentifier'] = 'test.agent-notify.background'
             hook = {'hook_event_name': 'PermissionRequest', 'session_id': 'thread', 'turn_id': 'turn',
                     'cwd': '/repo', 'tool_name': 'Bash', 'tool_input': {'description': 'Run the checks'}}
             result = subprocess.run([str(scripts / 'tmux-ai-status'), 'attention', 'Permission required'],
@@ -351,8 +418,17 @@ class CodexHookIntegrationTest(unittest.TestCase):
 
 
 class VisibilityTest(unittest.TestCase):
+    def test_outside_tmux_requires_matching_known_foreground_app(self):
+        for bundle, frontmost, expected in (
+                ('terminal', 'terminal', True), ('terminal', 'browser', False),
+                ('com.openai.codex', 'com.openai.codex', True),
+                ('terminal', '', False), ('', 'terminal', False), ('', '', False)):
+            with self.subTest(bundle=bundle, frontmost=frontmost), \
+                 patch.object(notify, 'frontmost_bundle', return_value=frontmost):
+                self.assertEqual(notify.is_viewed({'bundle': bundle}), expected)
+
     def test_requires_source_pane_and_focused_frontmost_client(self):
-        context = {'pane': '%7'}
+        context = {'pane': '%7', 'bundle': 'terminal'}
         with patch.object(notify, 'frontmost_bundle', return_value='terminal'), \
              patch.object(notify, 'client_bundle', return_value='terminal'), \
              patch.object(notify, 'clients') as clients:
@@ -362,6 +438,8 @@ class VisibilityTest(unittest.TestCase):
             self.assertFalse(notify.is_viewed(context))
             clients.return_value = [['tty', '1', 'attached,focused', '%7', '1']]
             self.assertTrue(notify.is_viewed(context))
+            with patch.object(notify, 'frontmost_bundle', return_value='browser'):
+                self.assertFalse(notify.is_viewed(context))
 
 
 @unittest.skipUnless(notify.executable('tmux'), 'tmux is not installed')
@@ -382,6 +460,7 @@ class TmuxNavigationTest(unittest.TestCase):
                 context['pane'] = command('new-session', '-d', '-s', 'target', '-P', '-F', '#{pane_id}')
                 command('split-window', '-d', '-t', context['pane'])
                 info = notify.pane_info(context)
+                self.assertTrue(info[0].isdigit(), 'tmux server identity must be populated')
                 context['server_pid'] = info[0]
                 # A control-mode client gives us real client routing without
                 # moving any of the user's terminal windows or sessions.

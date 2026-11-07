@@ -1,6 +1,27 @@
 import assert from "node:assert/strict";
 import childProcess from "node:child_process";
-import { syncBuiltinESMExports } from "node:module";
+import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
+import { registerHooks, syncBuiltinESMExports } from "node:module";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
+// OpenCode supplies Solid at runtime. Drive its reactive effects explicitly in
+// this standalone harness so route/tab changes can be tested without a renderer.
+const effects = new Set();
+globalThis.__notificationTestEffects = effects;
+registerHooks({
+  resolve(specifier, context, nextResolve) {
+    if (specifier === "solid-js") return {
+      url: "data:text/javascript," + encodeURIComponent(
+        "export function createEffect(fn) { globalThis.__notificationTestEffects.add(fn); fn(); }"),
+      shortCircuit: true,
+    };
+    return nextResolve(specifier, context);
+  },
+});
+const temporary = mkdtempSync(join(tmpdir(), "opencode-notify-test-"));
+process.env.XDG_STATE_HOME = temporary;
+process.on("exit", () => rmSync(temporary, { recursive: true, force: true }));
 
 // Exercise V2 event handling without spawning desktop notifications.
 const calls = [];
@@ -38,10 +59,32 @@ const cleanup = plugin.setup({
     },
   },
   ui: {
+    slot({ render }) {
+      render();
+      return () => effects.clear();
+    },
     router: { current: () => route },
     tabs: { enabled: () => true, list: () => tabs },
   },
 });
+const visibility = () => {
+  const directory = join(temporary, "agent-notify");
+  const files = readdirSync(directory).filter((name) => name.startsWith("client-") && name.endsWith(".json"));
+  assert.equal(files.length, 1);
+  return JSON.parse(readFileSync(join(directory, files[0]), "utf8"));
+};
+assert.equal(visibility().pid, process.pid);
+assert.equal(visibility().context.session_id, "root");
+assert.equal(visibility().context.pane, "%7");
+assert.equal(visibility().context.server_pid, "123");
+route = { type: "session", sessionID: "existing-child" };
+for (const effect of effects) effect();
+assert.equal(visibility().context.session_id, "root", "child sessions publish their root");
+route = { type: "session", sessionID: "other" };
+for (const effect of effects) effect();
+assert.equal(visibility().context.session_id, "other", "switching tabs updates visibility");
+route = { type: "session", sessionID: "root" };
+for (const effect of effects) effect();
 const event = (type, data) => listener({ details: { type, data } });
 const flush = () => new Promise((resolve) => setImmediate(resolve));
 const expected = (action, message) => [
@@ -99,6 +142,8 @@ assert.deepEqual(calls.splice(0), []);
 
 // Open background tabs continue to notify; only the final model step is shown.
 route = { type: "home" };
+for (const effect of effects) effect();
+assert.equal(visibility().context.session_id, "", "home does not mark persisted tabs as viewed");
 tabs = [{ sessionID: "root" }];
 start();
 event("session.text.ended", { sessionID: "root", assistantMessageID: "old", ordinal: 0, text: "Let me check." });
@@ -120,4 +165,5 @@ cleanup();
 await flush();
 assert.equal(unsubscribed, true);
 assert.deepEqual(calls, [], "cleanup cancels queued notifications");
-console.log("OpenCode V2 notification tests passed (previews, child attention, errors, interruptions, pane isolation, tabs, cleanup).");
+assert.deepEqual(readdirSync(join(temporary, "agent-notify")), [], "cleanup removes client visibility");
+console.log("OpenCode V2 notification tests passed (previews, child attention, errors, interruptions, pane isolation, tabs, visibility, cleanup).");

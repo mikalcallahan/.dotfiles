@@ -15,13 +15,19 @@ backend interface without changing agent hooks.
   original attached client to the source pane's current session/window. A zoomed
   window is unzoomed to reveal the pane. A missing client or stale pane does not
   cause a different session to be opened.
-- Notifications are suppressed only when the source pane is selected in a focused
-  tmux client belonging to the frontmost terminal application.
+- Notifications are suppressed when the source pane is selected in a focused
+  tmux client belonging to the frontmost terminal application. Outside tmux,
+  notifications are suppressed while the source application is frontmost,
+  including Codex Desktop. This applies to completion, attention, and errors.
+- OpenCode clients publish their displayed session. If the same session is open
+  in multiple clients, a background copy suppresses its alert while another live
+  client is displaying that session in the focused pane.
 - Viewing a pane clears its notifications and unread marker. Resuming work also
   clears notifications where the agent provides a prompt/reply hook.
 - Outside tmux, desktop notifications still work; clicking activates the terminal
-  when its bundle identifier is available. Exact non-tmux tab navigation and
-  focus suppression are not implemented.
+  when its bundle identifier is available. Focus detection outside tmux is
+  application-wide; it does not distinguish windows or tabs in the same app.
+  Unknown application identity or unavailable focus information allows delivery.
 
 tmux retains its existing red completion and yellow attention indicators. The
 legacy `tmux-ai-status` entry point delegates to `agent-notify`.
@@ -33,6 +39,9 @@ when OpenCode uses a shared server. Events are limited to the current session
 and open tabs; child-session attention is routed to its root. V2 execution,
 text, permission, and form events drive the notifications. Headless server
 sessions do not emit desktop notifications through this terminal plugin.
+Displayed-session records (`client-*.json` in the notification state directory)
+update on route changes and are removed when the plugin unloads. Records from
+exited clients or replaced tmux servers are ignored.
 
 ## Setup
 
