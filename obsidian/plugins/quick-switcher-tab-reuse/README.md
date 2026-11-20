@@ -9,13 +9,16 @@ the core **Quick Switcher** enabled. Use the usual **⌘ O** (macOS) or **Ctrl O
 - An already-open file activates its existing tab, preserving its cursor,
   scroll position, and pinned state. This also works for file aliases.
 - A file that is not open uses your configured destination (a new tab by default).
+- Creating a note uses the separate **Open new notes in** destination (the current
+  tab by default), including Shift+Enter, Enter with no matches, and unresolved links.
 - If there are multiple matching tabs, preference is: the active tab, the most
   recently used match in the current tab group, then the most recently used
   match elsewhere. Split panes, popout windows, and deferred tabs are included.
 - Ctrl, Cmd, Alt, Shift, and non-left mouse button selections use the native
-  handler, including explicit new-tab/split/window shortcuts and Shift+Enter
-  note creation. Unresolved links, new note names, and non-file bookmark
-  suggestions also use the native handler.
+  handler for existing files, including explicit new-tab/split/window shortcuts.
+  For note creation, Shift+Enter follows **Open new notes in**; explicit destination
+  shortcuts such as Cmd/Ctrl+Shift+Enter still override it. Non-file bookmark
+  suggestions use the native handler.
 - Disabling the plugin restores the original handlers.
 
 ## Daily Notes commands
@@ -48,8 +51,21 @@ Under **Settings → Quick Switcher Tab Reuse → Open unopened files in**, choo
   normal navigation behavior for pinned tabs (another unpinned tab, or a new tab
   if needed).
 
-This setting applies to the Quick Switcher and is the fallback for Daily Notes
-commands using **Follow existing tab when open**.
+This setting applies to existing files in the Quick Switcher and is the fallback
+for Daily Notes commands using **Follow existing tab when open**.
+
+Under **Open new notes in**, choose separately where notes created from the
+Quick Switcher open:
+
+- **New tab**: create/open the note in a new, focused tab.
+- **Current tab** (default): create/open the note in the current tab, respecting
+  Obsidian's normal pinned-tab protection.
+
+This applies to Shift+Enter, Enter when no suggestion matches, and unresolved-link
+suggestions. Obsidian still handles note creation, including the configured
+new-file location and editing mode. Explicit new-tab/split/window shortcuts take
+precedence. Existing installations keep the native current-tab creation behavior
+until this setting is changed.
 
 The separate **Daily Notes: Today**, **Daily Notes: Previous**, and **Daily Notes:
 Next** settings each offer:
@@ -73,13 +89,14 @@ its current handlers are hooked.
 
 ## Installation
 
-Copy `main.js` and `manifest.json` into
-`<vault>/.obsidian/plugins/quick-switcher-tab-reuse/`, then enable the plugin.
 The source is kept in `~/.config/obsidian/plugins/quick-switcher-tab-reuse/`.
-After updating the installed files, reload this plugin.
+Run `python3 ~/.config/obsidian/sync-plugins.py` to link the runtime files into
+your registered vaults, then enable the plugin. See the
+[shared setup instructions](../../README.md) for Git updates and other machines.
+After updating the source, reload this plugin.
 
 ## Verification
 
 Run `node --test main.test.cjs` here for API-stub regression tests. Live checks
-in Obsidian cover native switcher selection, Daily Notes commands, tab reuse,
-both destinations, settings, and unloading.
+in Obsidian cover native switcher selection, new-note creation, Daily Notes
+commands, tab reuse, both destinations, settings, and unloading.

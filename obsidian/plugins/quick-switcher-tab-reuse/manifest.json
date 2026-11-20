@@ -1,9 +1,10 @@
 {
   "id": "quick-switcher-tab-reuse",
   "name": "Quick Switcher Tab Reuse",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "minAppVersion": "1.7.2",
-  "description": "Reuse open tabs and choose where unopened files open in the native Quick Switcher and Daily Notes commands.",
-  "author": "Mikal Callahan",
+  "description": "Reuse open tabs and choose where existing files and new notes open in the native Quick Switcher and Daily Notes commands.",
+  "author": "mikalcallahan",
+  "authorUrl": "https://github.com/mikalcallahan",
   "isDesktopOnly": false
 }

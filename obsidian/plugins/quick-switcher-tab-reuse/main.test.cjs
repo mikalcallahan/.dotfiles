@@ -10,6 +10,7 @@ async function fixture({ ready = true, available = true, data, dailyEnabled = fa
   const nativeCalls = [];
   const reveals = [];
   const opens = [];
+  const linkOpens = [];
   const activations = [];
   const leaves = [];
   const layoutCallbacks = [];
@@ -44,7 +45,7 @@ async function fixture({ ready = true, available = true, data, dailyEnabled = fa
     }
   }
   class QuickSwitcherModal {
-    constructor(app) { this.app = app; }
+    constructor(app) { this.app = app; this.inputEl = { value: "New note" }; }
     onChooseSuggestion(...args) {
       nativeCalls.push({ modal: this, args });
       return "native";
@@ -73,10 +74,15 @@ async function fixture({ ready = true, available = true, data, dailyEnabled = fa
     workspace: {
       activeLeaf: current,
       getMostRecentLeaf() { return this.activeLeaf; },
+      getActiveFile() { return this.activeLeaf?.view.file ?? null; },
       iterateAllLeaves: (callback) => leaves.forEach(callback),
       onLayoutReady: (callback) => ready ? callback() : layoutCallbacks.push(callback),
       async revealLeaf(item) { reveals.push(item); item.isDeferred = false; },
       setActiveLeaf(item, options) { activations.push({ leaf: item, options }); this.activeLeaf = item; },
+      async openLinkText(linktext, sourcePath, type, options) {
+        linkOpens.push({ linktext, sourcePath, type, options });
+        await this.getLeaf(type).openFile({ path: `${linktext}.md` }, options);
+      },
       getLeaf(type) {
         assert.ok(type === "tab" || type === false);
         if (type === false && !this.activeLeaf.pinned) return this.activeLeaf;
@@ -141,7 +147,7 @@ async function fixture({ ready = true, available = true, data, dailyEnabled = fa
   await plugin.onload();
   return {
     app, plugin, prototype, original, modal, leaf, leaves, current, group,
-    notices, errors, nativeCalls, reveals, opens, activations, controls, saves,
+    notices, errors, nativeCalls, reveals, opens, linkOpens, activations, controls, saves,
     daily, dailyFiles, nativeDailyCalls, originalDaily,
     runDaily: async (id) => {
       const command = app.commands.commands[id];
@@ -254,13 +260,123 @@ test("plain mouse clicks use tab reuse", async () => {
   assert.deepEqual(f.reveals, [f.current]);
 });
 
-test("new note creation, unresolved links, and bookmarks use native handling", async () => {
+test("bookmarks and unsupported suggestions use native handling", async () => {
   const f = await fixture();
-  for (const suggestion of [null, undefined, { type: "unresolved", linktext: "Missing" }, { type: "bookmark", item: {} }]) {
+  for (const suggestion of [{ type: "bookmark", item: {} }, { type: "file" }, { type: "other" }]) {
     assert.equal(f.modal.onChooseSuggestion(suggestion, {}), "native");
     assert.equal(f.nativeCalls.at(-1).args[0], suggestion);
   }
   assert.equal(f.opens.length, 0);
+});
+
+for (const destination of ["new", "current"]) {
+  for (const [label, suggestion, event, linktext] of [
+    ["Enter with no matches", null, {}, "Projects/New note"],
+    ["Shift+Enter", null, { shiftKey: true }, "Projects/New note"],
+    ["an unresolved link", { type: "unresolved", linktext: "Missing#Heading" }, {}, "Missing#Heading"],
+  ]) {
+    test(`${label} creates a note in the configured ${destination} tab`, async () => {
+      const f = await fixture({ data: {
+        openIn: destination === "new" ? "current" : "new",
+        newNoteOpenIn: destination,
+      } });
+      f.current.view.file.path = "Projects/Current.md";
+      f.modal.inputEl.value = "Projects/New note";
+      await f.modal.onChooseSuggestion(suggestion, event);
+      assert.equal(f.linkOpens.length, 1);
+      assert.equal(f.linkOpens[0].linktext, linktext);
+      assert.equal(f.linkOpens[0].sourcePath, "Projects/Current.md");
+      assert.equal(f.linkOpens[0].options.active, true);
+      assert.equal(f.opens[0].leaf === f.current, destination === "current");
+      assert.equal(f.leaves.length, destination === "new" ? 2 : 1);
+      assert.equal(f.nativeCalls.length, 0);
+      if (destination === "new") assert.equal(f.current.view.file.path, "Projects/Current.md");
+    });
+  }
+}
+
+test("new note current-tab mode protects pinned tabs", async () => {
+  const f = await fixture({ data: { newNoteOpenIn: "current" } });
+  f.current.pinned = true;
+  await f.modal.onChooseSuggestion(null, { shiftKey: true });
+  assert.equal(f.current.view.file.path, "Current.md");
+  assert.equal(f.leaves.length, 2);
+  assert.notEqual(f.opens[0].leaf, f.current);
+});
+
+test("new note creation preserves explicit native destinations and mouse modifiers", async () => {
+  const f = await fixture({ data: { newNoteOpenIn: "new" } });
+  for (const suggestion of [null, { type: "unresolved", linktext: "Missing" }]) {
+    for (const event of [
+      { metaKey: true, shiftKey: true }, { ctrlKey: true, shiftKey: true },
+      { metaKey: true, altKey: true }, { ctrlKey: true, altKey: true, shiftKey: true },
+      { altKey: true }, { button: 1 }, { button: 2 },
+    ]) {
+      assert.equal(f.modal.onChooseSuggestion(suggestion, event), "native");
+      assert.equal(f.nativeCalls.at(-1).args[0], suggestion);
+      assert.equal(f.nativeCalls.at(-1).args[1], event);
+    }
+  }
+  assert.equal(f.linkOpens.length, 0);
+});
+
+test("new notes use an empty source path without an active vault file", async () => {
+  const f = await fixture();
+  for (const file of [null, { path: "file:///external.md" }]) {
+    f.current.view.file = file;
+    await f.modal.onChooseSuggestion(undefined, {});
+    assert.equal(f.linkOpens.at(-1).sourcePath, "");
+  }
+});
+
+test("new note navigation failures are reported and can be retried", async () => {
+  const f = await fixture();
+  const openLinkText = f.app.workspace.openLinkText;
+  f.app.workspace.openLinkText = async () => { throw new Error("Unable to create"); };
+  await f.modal.onChooseSuggestion(null, { shiftKey: true });
+  assert.equal(f.errors.length, 1);
+  assert.match(f.notices[0], /could not open/);
+  f.app.workspace.openLinkText = openLinkText;
+  await f.modal.onChooseSuggestion(null, { shiftKey: true });
+  assert.equal(f.opens.length, 1);
+});
+
+test("new note destination defaults to current, applies immediately, and survives reload", async () => {
+  const f = await fixture({ data: { openIn: "new" } });
+  f.plugin.settingTab.display();
+  const dropdown = f.controls.find((control) => control.name === "Open new notes in").dropdown;
+  assert.equal(dropdown.value, "current");
+  await f.modal.onChooseSuggestion(null, {});
+  assert.equal(f.opens[0].leaf, f.current);
+
+  await dropdown.change("new");
+  assert.equal(f.saves.at(-1).newNoteOpenIn, "new");
+  assert.equal(f.saves.at(-1).openIn, "new");
+  f.modal.inputEl.value = "Another note";
+  await f.modal.onChooseSuggestion(null, { shiftKey: true });
+  assert.notEqual(f.opens[1].leaf, f.current);
+
+  const reloaded = await fixture({ data: f.saves.at(-1) });
+  reloaded.plugin.settingTab.display();
+  assert.equal(reloaded.controls[1].dropdown.value, "new");
+  await reloaded.modal.onChooseSuggestion(null, {});
+  assert.notEqual(reloaded.opens[0].leaf, reloaded.current);
+
+  await dropdown.change("current");
+  const current = f.app.workspace.activeLeaf;
+  f.modal.inputEl.value = "Third note";
+  await f.modal.onChooseSuggestion(null, {});
+  assert.equal(f.opens[2].leaf, current);
+  assert.equal(f.saves.at(-1).newNoteOpenIn, "current");
+});
+
+test("new note creation uses native handling after unload or in another vault", async () => {
+  const f = await fixture();
+  assert.equal(f.prototype.onChooseSuggestion.call({ app: {} }, null, {}), "native");
+  const patched = f.prototype.onChooseSuggestion;
+  f.plugin.unload();
+  assert.equal(patched.call(f.modal, null, { shiftKey: true }), "native");
+  assert.equal(f.linkOpens.length, 0);
 });
 
 test("rapid selections of the same unopened file share one open operation", async () => {
@@ -567,17 +683,17 @@ test("Daily Notes hooks work when the Quick Switcher hook is unavailable", async
 test("new Daily Notes settings default to Follow for existing installations", async () => {
   const f = await fixture({ data: { openIn: "current" } });
   f.plugin.settingTab.display();
-  assert.deepEqual(f.controls.map((control) => control.dropdown.value), ["current", "follow", "follow", "follow"]);
-  assert.deepEqual(f.controls.slice(1).map((control) => control.name), ["Daily Notes: Today", "Daily Notes: Previous", "Daily Notes: Next"]);
+  assert.deepEqual(f.controls.map((control) => control.dropdown.value), ["current", "current", "follow", "follow", "follow"]);
+  assert.deepEqual(f.controls.slice(2).map((control) => control.name), ["Daily Notes: Today", "Daily Notes: Previous", "Daily Notes: Next"]);
 });
 
 test("Daily Notes settings apply independently, save all choices, and survive reload", async () => {
   const f = await fixture({ dailyEnabled: true, data: { openIn: "current" } });
   f.plugin.settingTab.display();
-  await f.controls[1].dropdown.change("new");
-  await f.controls[2].dropdown.change("current");
-  await f.controls[3].dropdown.change("follow");
-  const settings = { openIn: "current", dailyToday: "new", dailyPrevious: "current", dailyNext: "follow" };
+  await f.controls[2].dropdown.change("new");
+  await f.controls[3].dropdown.change("current");
+  await f.controls[4].dropdown.change("follow");
+  const settings = { openIn: "current", newNoteOpenIn: "current", dailyToday: "new", dailyPrevious: "current", dailyNext: "follow" };
   assert.deepEqual(f.saves.at(-1), settings);
 
   const existingToday = f.leaf(f.dailyFiles[1].path);
@@ -602,7 +718,7 @@ test("Daily Notes settings apply independently, save all choices, and survive re
 
   const reloaded = await fixture({ dailyEnabled: true, data: f.saves.at(-1) });
   reloaded.plugin.settingTab.display();
-  assert.deepEqual(reloaded.controls.map((control) => control.dropdown.value), ["current", "new", "current", "follow"]);
+  assert.deepEqual(reloaded.controls.map((control) => control.dropdown.value), ["current", "current", "new", "current", "follow"]);
   await reloaded.runDaily("daily-notes");
   assert.notEqual(reloaded.app.workspace.activeLeaf, reloaded.current);
 });

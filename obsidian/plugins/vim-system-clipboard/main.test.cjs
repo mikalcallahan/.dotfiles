@@ -71,16 +71,46 @@ test("linewise and blockwise yank shape is preserved", () => {
   assert.equal(c.getRegister().blockwise, false);
 });
 
-test("named registers, black-hole operations, deletes, and changes do not overwrite clipboard", () => {
+for (const operator of ["delete", "change"]) {
+  test(`${operator} copies whole lines for dd/cc and preserves linewise paste`, () => {
+    const f = load(), c = controller();
+    f.connect(c, f.clipboard, assert.fail);
+    c.pushText(undefined, "yank", "Previously yanked", false, false);
+    c.pushText(undefined, operator, "Removed line", true, false);
+    assert.equal(f.clipboard.readText(), "Removed line\n");
+    assert.equal(c.getRegister().toString(), "Removed line\n");
+    assert.equal(c.getRegister().linewise, true);
+    assert.equal(c.getRegister().blockwise, false);
+  });
+
+  test(`${operator} copies characterwise and blockwise text with its paste shape`, () => {
+    const f = load(), c = controller();
+    f.connect(c, f.clipboard, assert.fail);
+    c.pushText('"', operator, "word", false, false);
+    assert.equal(f.clipboard.readText(), "word");
+    assert.equal(c.getRegister().toString(), "word");
+    assert.equal(c.getRegister().linewise, false);
+    c.pushText(undefined, operator, "abc\ndef", false, true);
+    assert.equal(f.clipboard.readText(), "abc\ndef");
+    assert.equal(c.getRegister().toString(), "abc\ndef");
+    assert.equal(c.getRegister().linewise, false);
+    assert.equal(c.getRegister().blockwise, true);
+    f.clipboard.writeText("External paste");
+    assert.equal(c.getRegister().toString(), "External paste");
+    assert.equal(c.getRegister().blockwise, false);
+  });
+}
+
+test("named registers and black-hole operations do not overwrite clipboard", () => {
   const f = load(), c = controller();
   f.connect(c, f.clipboard, assert.fail);
-  c.pushText("a", "yank", "Named text", false, false);
-  assert.equal(c.getRegister("a").toString(), "Named text");
-  c.pushText("_", "yank", "Discarded", false, false);
-  c.pushText(undefined, "delete", "Deleted", false, false);
-  c.pushText(undefined, "change", "Changed", false, false);
-  assert.equal(f.clipboard.readText(), "External clipboard");
-  assert.equal(c.getRegister().toString(), "External clipboard");
+  for (const operator of ["yank", "delete", "change"]) {
+    c.pushText("a", operator, `Named ${operator}`, false, false);
+    assert.equal(c.getRegister("a").toString(), `Named ${operator}`);
+    c.pushText("_", operator, "Discarded", false, false);
+    assert.equal(f.clipboard.readText(), "External clipboard");
+    assert.equal(c.getRegister().toString(), "External clipboard");
+  }
 });
 
 test("empty clipboard doesn't paste stale text", () => {
@@ -96,7 +126,9 @@ test("clipboard failures retain Vim operation and are reported", () => {
   f.connect(c, { readText() { throw Error("read"); }, writeText() { throw Error("write"); } }, (error) => errors.push(error));
   c.pushText(undefined, "yank", "Still yanked");
   assert.equal(c.getRegister().toString(), "Still yanked");
-  assert.deepEqual(errors.map((error) => error.message), ["write", "read"]);
+  c.pushText(undefined, "delete", "Still deleted", true, false);
+  assert.equal(c.getRegister().toString(), "Still deleted\n");
+  assert.deepEqual(errors.map((error) => error.message), ["write", "read", "write", "read"]);
 });
 
 test("unload restores methods and disables wrappers retained by other plugins", () => {
@@ -113,6 +145,7 @@ test("unload restores methods and disables wrappers retained by other plugins", 
   disconnectAgain();
   assert.equal(c.pushText, otherPlugin);
   c.pushText(undefined, "yank", "Internal only");
+  c.pushText(undefined, "delete", "Internal delete", true, false);
   assert.equal(f.clipboard.readText(), "External clipboard");
 });
 
@@ -149,10 +182,26 @@ test("compatible with the installed Obsidian Vim register controller", { skip: !
   c.pushText(undefined, "yank", "Real linewise yank", true, false);
   assert.equal(f.clipboard.readText(), "Real linewise yank\n");
   assert.equal(c.getRegister().linewise, true);
-  c.pushText(undefined, "delete", "Deleted text", false, false);
-  assert.equal(c.getRegister().toString(), "Real linewise yank\n");
+  c.pushText(undefined, "delete", "Deleted line", true, false);
+  assert.equal(f.clipboard.readText(), "Deleted line\n");
+  assert.equal(c.getRegister().toString(), "Deleted line\n");
+  assert.equal(c.getRegister().linewise, true);
+  assert.equal(c.getRegister("1").toString(), "Deleted line\n");
+  assert.equal(c.getRegister("0").toString(), "Real linewise yank\n");
+  c.pushText(undefined, "delete", "Deleted word", false, false);
+  assert.equal(f.clipboard.readText(), "Deleted word");
+  assert.equal(c.getRegister().linewise, false);
+  assert.equal(c.getRegister("-").toString(), "Deleted word");
+  c.pushText(undefined, "change", "Changed text", false, false);
+  assert.equal(f.clipboard.readText(), "Changed text");
+  assert.equal(c.getRegister().toString(), "Changed text");
+  c.pushText("_", "delete", "Discarded line", true, false);
+  assert.equal(f.clipboard.readText(), "Changed text");
   c.pushText("a", "yank", "Named text", false, false);
   assert.equal(c.getRegister("a").toString(), "Named text");
+  c.pushText("a", "delete", "Named deletion", true, false);
+  assert.equal(c.getRegister("a").toString(), "Named deletion\n");
+  assert.equal(f.clipboard.readText(), "Changed text");
   f.clipboard.writeText("External paste");
   assert.equal(c.getRegister().toString(), "External paste");
   disconnect();

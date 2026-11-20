@@ -5,17 +5,17 @@ function connectClipboard(controller, clipboard, reportError) {
   const originalPush = controller.pushText;
   const originalGet = controller.getRegister;
   let active = true;
-  let lastYank = null;
+  let lastCopy = null;
   const isDefault = (name) => !name || name === '"';
 
   function pushText(name, operator, ...args) {
     const result = originalPush.call(this, name, operator, ...args);
-    if (active && operator === "yank" && isDefault(name)) {
+    if (active && ["yank", "delete", "change"].includes(operator) && isDefault(name)) {
       try {
         const register = originalGet.call(this, '"');
         const text = register.toString();
         clipboard.writeText(text);
-        lastYank = { text, linewise: register.linewise, blockwise: register.blockwise };
+        lastCopy = { text, linewise: register.linewise, blockwise: register.blockwise };
       } catch (error) {
         reportError(error);
       }
@@ -28,9 +28,9 @@ function connectClipboard(controller, clipboard, reportError) {
     if (active && isDefault(name)) {
       try {
         const text = clipboard.readText();
-        // Preserve Vim's shape for our own yanks; infer linewise external text
+        // Preserve Vim's shape for our own copies; infer linewise external text
         // from a trailing newline. Clipboard text alone has no block metadata.
-        const shape = lastYank?.text === text ? lastYank : { linewise: text.endsWith("\n"), blockwise: false };
+        const shape = lastCopy?.text === text ? lastCopy : { linewise: text.endsWith("\n"), blockwise: false };
         register.setText(text, shape.linewise, shape.blockwise);
       } catch (error) {
         reportError(error);

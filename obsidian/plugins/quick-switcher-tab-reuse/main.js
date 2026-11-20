@@ -2,6 +2,7 @@ const { FileView, Keymap, Notice, Plugin, PluginSettingTab, Setting } = require(
 
 const DEFAULT_SETTINGS = {
   openIn: "new",
+  newNoteOpenIn: "current",
   dailyToday: "follow",
   dailyPrevious: "follow",
   dailyNext: "follow",
@@ -65,14 +66,33 @@ function createNavigator(app, settings, reportError) {
   };
 }
 
-function connectSwitcher(prototype, app, navigate) {
+function connectSwitcher(prototype, app, settings, navigate, reportError) {
   const original = prototype.onChooseSuggestion;
   let active = true;
 
+  async function openNewNote(modal, suggestion) {
+    const workspace = app.workspace;
+    const activePath = workspace.getActiveFile()?.path ?? "";
+    const sourcePath = activePath.startsWith("file:") ? "" : activePath;
+    const linktext = suggestion ? suggestion.linktext : modal.inputEl.value;
+    // Let Obsidian resolve/create the note, preserving its new-file location,
+    // link parsing, editing mode, and pinned-tab protection.
+    await workspace.openLinkText(linktext, sourcePath,
+      settings.newNoteOpenIn === "new" ? "tab" : false, { active: true });
+  }
+
   function onChooseSuggestion(suggestion, event) {
-    const modified = event && (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey || event.button > 0);
-    if (!active || this.app !== app || modified
-      || !["file", "alias"].includes(suggestion?.type) || !suggestion.file) {
+    const modified = event && (event.metaKey || event.ctrlKey || event.altKey || event.button > 0);
+    if (!active || this.app !== app || modified) {
+      return original.apply(this, arguments);
+    }
+
+    // Shift+Enter passes a null suggestion to create the typed note. Enter with
+    // no matches and unresolved-link selections also use native note creation.
+    if (!suggestion || suggestion.type === "unresolved") {
+      return openNewNote(this, suggestion).catch(reportError);
+    }
+    if (event?.shiftKey || !["file", "alias"].includes(suggestion.type) || !suggestion.file) {
       return original.apply(this, arguments);
     }
 
@@ -177,7 +197,7 @@ class QuickSwitcherTabReuseSettings extends PluginSettingTab {
     this.containerEl.empty();
     new Setting(this.containerEl)
       .setName("Open unopened files in")
-      .setDesc("Destination for the Quick Switcher and Daily Notes set to Follow existing tab when the note is not already open.")
+      .setDesc("Destination for existing files in the Quick Switcher and Daily Notes set to Follow existing tab when the note is not already open.")
       .addDropdown((dropdown) => dropdown
         .addOption("new", "New tab")
         .addOption("current", "Current tab")
@@ -187,10 +207,22 @@ class QuickSwitcherTabReuseSettings extends PluginSettingTab {
           await this.plugin.saveData(this.plugin.settings);
         }));
 
+    new Setting(this.containerEl)
+      .setName("Open new notes in")
+      .setDesc("Destination when creating a note in the Quick Switcher, including Shift+Enter and unresolved links. Current tab respects pinned tabs; explicit new-tab/split/window shortcuts override this setting.")
+      .addDropdown((dropdown) => dropdown
+        .addOption("new", "New tab")
+        .addOption("current", "Current tab")
+        .setValue(this.plugin.settings.newNoteOpenIn)
+        .onChange(async (value) => {
+          this.plugin.settings.newNoteOpenIn = value;
+          await this.plugin.saveData(this.plugin.settings);
+        }));
+
     for (const [key, label] of [["dailyToday", "Today"], ["dailyPrevious", "Previous"], ["dailyNext", "Next"]]) {
       new Setting(this.containerEl)
         .setName(`Daily Notes: ${label}`)
-        .setDesc("Follow uses the destination above if no tab is open. Always modes use their destination even if the note is already open; Current tab also uses pinned tabs.")
+        .setDesc("Follow uses Open unopened files in if no tab is open. Always modes use their destination even if the note is already open; Current tab also uses pinned tabs.")
         .addDropdown((dropdown) => dropdown
           .addOption("follow", "Follow existing tab when open")
           .addOption("new", "Always open in new tab")
@@ -223,7 +255,7 @@ module.exports = class QuickSwitcherTabReuse extends Plugin {
       if (typeof prototype?.onChooseSuggestion !== "function") {
         new Notice("Quick Switcher Tab Reuse: enable the core Quick Switcher, then reload this plugin. The native selection hook is unavailable.");
       } else {
-        this.register(connectSwitcher(prototype, this.app, navigate));
+        this.register(connectSwitcher(prototype, this.app, this.settings, navigate, reportError));
       }
       this.register(connectDailyNotes(this.app, this.settings, navigate, reportError));
     });
