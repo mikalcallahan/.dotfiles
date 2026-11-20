@@ -38,6 +38,7 @@ alias ....='cd ../../..'
 
 # Git
 alias gst='git status'
+alias lg='lazygit'
 
 # Tmux
 alias ta="tmux attach"
